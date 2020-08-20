@@ -1,0 +1,10 @@
+{
+    "css": [],
+    "js": [
+        "js/dataTables.searchBuilder.js",
+        "js/dataTables.searchBuilder.min.js"
+    ],
+    "src-repo": "http://github.com/DataTables/SearchBuilder",
+    "last-sync": "",
+    "last-tag": "1.0.0"
+}
