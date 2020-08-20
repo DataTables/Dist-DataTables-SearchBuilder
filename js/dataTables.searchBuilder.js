@@ -2247,6 +2247,9 @@
 	        var condition = that.s.conditions.get(that.s.condition);
 	        that.s.filled = condition.isInputValid(that.dom.value, that);
 	        that.s.value = condition.inputValue(that.dom.value, that);
+	        if (!Array.isArray(that.s.value)) {
+	            that.s.value = [that.s.value];
+	        }
 	        // Take note of the cursor position so that we can refocus there later
 	        var idx = null;
 	        var cursorPos = null;
