@@ -3433,7 +3433,6 @@
 	    function SearchBuilder(builderSettings, opts) {
 	        var _this = this;
 	        // Check that the required version of DataTables is included
-	        console.log('colin');
 	        if (!DataTable$2 || !DataTable$2.versionCheck || !DataTable$2.versionCheck('1.10.0')) {
 	            throw new Error('SearchBuilder requires DataTables 1.10 or newer');
 	        }
