@@ -3709,8 +3709,8 @@
 	    return SearchBuilder;
 	}());
 
-	/*! SearchBuilder 0.0.1
-	 * 2019-2020 SpryMedia Ltd - datatables.net/license
+	/*! SearchBuilder 1.0.0
+	 * ©2020 SpryMedia Ltd - datatables.net/license/mit
 	 */
 	// DataTables extensions common UMD. Note that this allows for AMD, CommonJS
 	// (with window and jQuery being allowed as parameters to the returned
