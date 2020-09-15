@@ -2976,7 +2976,7 @@
 	            if (!this.s.isChild) {
 	                $$1(this.dom.container).trigger('dtsb-destroy');
 	                // Set criteria left margin
-	                $$1(this.dom.container).css('margin-left', 10);
+	                $$1(this.dom.container).css('margin-left', 0);
 	            }
 	            return;
 	        }
@@ -3567,7 +3567,7 @@
 	     * @param count the number of filters in the SearchBuilder
 	     */
 	    SearchBuilder.prototype._updateTitle = function (count) {
-	        $$2(this.dom.title).text(this.s.dt.i18n('searchBuilder.title', { 0: 'Search Builder', _: 'Search Builder (%d)' }, count));
+	        $$2(this.dom.title).text(this.s.dt.i18n('searchBuilder.title', { 0: 'Custom Search Builder', _: 'Custom Search Builder (%d)' }, count));
 	    };
 	    /**
 	     * Builds all of the dom elements together
@@ -3575,7 +3575,6 @@
 	    SearchBuilder.prototype._build = function () {
 	        var _this = this;
 	        // Empty and setup the container
-	        $$2(this.dom.clearAll).remove();
 	        $$2(this.dom.container).empty();
 	        var count = this.s.topGroup.count();
 	        this._updateTitle(count);
