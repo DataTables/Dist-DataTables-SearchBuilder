@@ -3575,6 +3575,7 @@
 	    SearchBuilder.prototype._build = function () {
 	        var _this = this;
 	        // Empty and setup the container
+	        $$2(this.dom.clearAll).remove();
 	        $$2(this.dom.container).empty();
 	        var count = this.s.topGroup.count();
 	        this._updateTitle(count);
