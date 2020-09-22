@@ -1401,6 +1401,7 @@
 	        this.classes = $.extend(true, {}, Criteria.classes);
 	        // Get options from user and any extra conditions/column types defined by plug-ins
 	        this.c = $.extend(true, {}, Criteria.defaults, $.fn.dataTable.ext.searchBuilder, opts);
+	        var i18n = this.c.i18n;
 	        this.s = {
 	            condition: undefined,
 	            conditions: new Map(),
@@ -1424,7 +1425,7 @@
 	                .addClass(this.classes.dropDown)
 	                .addClass(this.classes.italic),
 	            conditionTitle: $('<option value="" disabled selected hidden/>')
-	                .text(this.s.dt.i18n('searchBuilder.condition', 'Condition')),
+	                .text(this.s.dt.i18n('searchBuilder.condition', i18n.condition)),
 	            container: $('<div/>')
 	                .addClass(this.classes.container),
 	            data: $('<select/>')
@@ -1432,26 +1433,26 @@
 	                .addClass(this.classes.dropDown)
 	                .addClass(this.classes.italic),
 	            dataTitle: $('<option value="" disabled selected hidden/>')
-	                .text(this.s.dt.i18n('searchBuilder.data', 'Data')),
+	                .text(this.s.dt.i18n('searchBuilder.data', i18n.data)),
 	            defaultValue: $('<select disabled/>')
 	                .addClass(this.classes.value)
 	                .addClass(this.classes.dropDown),
 	            "delete": $('<button>&times</button>')
 	                .addClass(this.classes["delete"])
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', 'Delete filtering rule')),
+	                .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', i18n.deleteTitle)),
 	            left: $('<button>\<</button>')
 	                .addClass(this.classes.left)
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', 'Outdent criteria')),
+	                .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', i18n.leftTitle)),
 	            right: $('<button>\></button>')
 	                .addClass(this.classes.right)
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', 'Indent criteria')),
+	                .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', i18n.rightTitle)),
 	            value: [
 	                $('<select disabled/>').addClass(this.classes.value).addClass(this.classes.dropDown).addClass(this.classes.italic)
 	            ],
-	            valueTitle: $('<option value="" disabled selected hidden/>').text(this.s.dt.i18n('searchBuilder.value', 'Value'))
+	            valueTitle: $('<option value="" disabled selected hidden/>').text(this.s.dt.i18n('searchBuilder.value', i18n.value))
 	        };
 	        // If the greyscale option is selected then add the class to add the grey colour to SearchBuilder
 	        if (this.c.greyscale) {
@@ -2881,7 +2882,9 @@
 	            return;
 	        }
 	        this.s.logic = loadedDetails.logic;
-	        $$1(this.dom.logic).text(this.s.logic === 'OR' ? this.s.dt.i18n('searchBuilder.logicOr', 'Or') : this.s.dt.i18n('searchBuilder.logicAnd', 'And'));
+	        $$1(this.dom.logic).text(this.s.logic === 'OR'
+	            ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
+	            : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
 	        // Add all of the criteria, be it a sub group or a criteria
 	        for (var _i = 0, _a = loadedDetails.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
@@ -3353,8 +3356,10 @@
 	     */
 	    Group.prototype._setup = function () {
 	        this.setListeners();
-	        $$1(this.dom.add).text(this.s.dt.i18n('searchBuilder.add', 'Add Condition'));
-	        $$1(this.dom.logic).text(this.c.logic === 'OR' ? this.s.dt.i18n('searchBuilder.logicOr', 'Or') : this.s.dt.i18n('searchBuilder.logicAnd', 'And'));
+	        $$1(this.dom.add).text(this.s.dt.i18n('searchBuilder.add', this.c.i18n.add));
+	        $$1(this.dom.logic).text(this.c.logic === 'OR'
+	            ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
+	            : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
 	        this.s.logic = this.c.logic === 'OR' ? 'OR' : 'AND';
 	        if (this.c.greyscale) {
 	            $$1(this.dom.logic).addClass(this.classes.greyscale);
@@ -3389,11 +3394,11 @@
 	    Group.prototype._toggleLogic = function () {
 	        if (this.s.logic === 'OR') {
 	            this.s.logic = 'AND';
-	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicAnd', 'And'));
+	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
 	        }
 	        else if (this.s.logic === 'AND') {
 	            this.s.logic = 'OR';
-	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicOr', 'Or'));
+	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
 	        }
 	    };
 	    Group.version = '0.0.1';
@@ -3441,7 +3446,7 @@
 	        // Get options from user
 	        this.c = $$2.extend(true, {}, SearchBuilder.defaults, opts);
 	        this.dom = {
-	            clearAll: $$2('<button type="button">' + table.i18n('searchBuilder.clearAll', 'Clear All') + '</button>')
+	            clearAll: $$2('<button type="button">' + table.i18n('searchBuilder.clearAll', this.c.i18n.clearAll) + '</button>')
 	                .addClass(this.classes.clearAll)
 	                .addClass(this.classes.button),
 	            container: $$2('<div/>')
@@ -3567,7 +3572,7 @@
 	     * @param count the number of filters in the SearchBuilder
 	     */
 	    SearchBuilder.prototype._updateTitle = function (count) {
-	        $$2(this.dom.title).text(this.s.dt.i18n('searchBuilder.title', { 0: 'Custom Search Builder', _: 'Custom Search Builder (%d)' }, count));
+	        $$2(this.dom.title).text(this.s.dt.i18n('searchBuilder.title', this.c.i18n.title, count));
 	    };
 	    /**
 	     * Builds all of the dom elements together
@@ -3625,22 +3630,29 @@
 	        }
 	    };
 	    /**
+	     * Update the count in the title/button
+	     * @param count Number of filters applied
+	     */
+	    SearchBuilder.prototype._filterChanged = function (count) {
+	        var fn = this.c.filterChanged;
+	        if (typeof fn === 'function') {
+	            fn(count, this.s.dt.i18n('searchBuilder.button', this.c.i18n.button, count));
+	        }
+	    };
+	    /**
 	     * Set the listener for the clear button
 	     */
 	    SearchBuilder.prototype._setClearListener = function () {
 	        var _this = this;
 	        $$2(this.dom.clearAll).unbind('click');
 	        $$2(this.dom.clearAll).on('click', function () {
-	            _this.s.topGroup = new Group(_this.s.dt, _this.s.opts, undefined);
+	            _this.s.topGroup = new Group(_this.s.dt, _this.c, undefined);
 	            _this._build();
 	            _this.s.dt.draw();
 	            _this.s.topGroup.setListeners();
 	            $$2(_this.dom.clearAll).remove();
 	            _this._setEmptyListener();
-	            // Update the count in the title/button
-	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
-	                _this.c.filterChanged(0);
-	            }
+	            _this._filterChanged(0);
 	            return false;
 	        });
 	    };
@@ -3657,28 +3669,19 @@
 	            _this._setEmptyListener();
 	            var count = _this.s.topGroup.count();
 	            _this._updateTitle(count);
-	            // Update the count in the title/button
-	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
-	                _this.c.filterChanged(count);
-	            }
+	            _this._filterChanged(count);
 	            _this.s.dt.state.save();
 	        });
 	        $$2(this.s.topGroup.dom.container).unbind('dtsb-clearContents');
 	        $$2(this.s.topGroup.dom.container).on('dtsb-clearContents', function () {
 	            _this._setUp(false);
-	            // Update the count in the title/button
-	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
-	                _this.c.filterChanged(0);
-	            }
+	            _this._filterChanged(0);
 	            _this.s.dt.draw();
 	        });
 	        $$2(this.s.topGroup.dom.container).on('dtsb-updateTitle', function () {
 	            var count = _this.s.topGroup.count();
 	            _this._updateTitle(count);
-	            // Update the count in the title/button
-	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
-	                _this.c.filterChanged(count);
-	            }
+	            _this._filterChanged(count);
 	        });
 	    };
 	    /**
@@ -3704,7 +3707,27 @@
 	    };
 	    SearchBuilder.defaults = {
 	        filterChanged: undefined,
-	        preDefined: false
+	        preDefined: false,
+	        i18n: {
+	            add: 'Add Condition',
+	            button: {
+	                0: 'Search Builder',
+	                _: 'Search Builder (%d)'
+	            },
+	            clearAll: 'Clear All',
+	            condition: 'Condition',
+	            data: 'Data',
+	            deleteTitle: 'Delete filtering rule',
+	            logicAnd: 'And',
+	            logicOr: 'Or',
+	            leftTitle: 'Outdent criteria',
+	            rightTitle: 'Indent criteria',
+	            title: {
+	                0: 'Custom Search Builder',
+	                _: 'Custom Search Builder (%d)'
+	            },
+	            value: 'Value'
+	        }
 	    };
 	    return SearchBuilder;
 	}());
@@ -3764,15 +3787,14 @@
 	        config: {},
 	        init: function (dt, node, config) {
 	            var sb = new $.fn.dataTable.SearchBuilder(dt, $.extend({
-	                filterChanged: function (count) {
-	                    dt.button(node).text(dt.i18n('searchBuilder.button', { 0: 'Search Builder', _: 'Search Builder (%d)' }, count));
+	                filterChanged: function (count, text) {
+	                    dt.button(node).text(text);
 	                }
 	            }, config.config));
-	            var message = dt.i18n('searchBuilder.button', 'Search Builder', 0);
-	            dt.button(node).text(message);
+	            dt.button(node).text(config.text || dt.i18n('searchBuilder.button', sb.c.i18n.button, 0));
 	            config._searchBuilder = sb;
 	        },
-	        text: 'Search Builder'
+	        text: null
 	    };
 	    apiRegister('searchBuilder.getDetails()', function () {
 	        var ctx = this.context[0];
@@ -3792,9 +3814,11 @@
 	     * @param settings the settings to be applied
 	     * @returns JQUERY<HTMLElement> Returns the node of the SearchBuilder
 	     */
-	    function _init(settings) {
+	    function _init(settings, options) {
 	        var api = new DataTable.Api(settings);
-	        var opts = api.init().searchBuilder || DataTable.defaults.searchBuilder;
+	        var opts = options
+	            ? options
+	            : api.init().searchBuilder || DataTable.defaults.searchBuilder;
 	        var searchBuilder = new SearchBuilder(api, opts);
 	        var node = searchBuilder.getNode();
 	        return node;
