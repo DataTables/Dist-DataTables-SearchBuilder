@@ -1401,7 +1401,6 @@
 	        this.classes = $.extend(true, {}, Criteria.classes);
 	        // Get options from user and any extra conditions/column types defined by plug-ins
 	        this.c = $.extend(true, {}, Criteria.defaults, $.fn.dataTable.ext.searchBuilder, opts);
-	        var i18n = this.c.i18n;
 	        this.s = {
 	            condition: undefined,
 	            conditions: new Map(),
@@ -1425,7 +1424,7 @@
 	                .addClass(this.classes.dropDown)
 	                .addClass(this.classes.italic),
 	            conditionTitle: $('<option value="" disabled selected hidden/>')
-	                .text(this.s.dt.i18n('searchBuilder.condition', i18n.condition)),
+	                .text(this.s.dt.i18n('searchBuilder.condition', 'Condition')),
 	            container: $('<div/>')
 	                .addClass(this.classes.container),
 	            data: $('<select/>')
@@ -1433,26 +1432,26 @@
 	                .addClass(this.classes.dropDown)
 	                .addClass(this.classes.italic),
 	            dataTitle: $('<option value="" disabled selected hidden/>')
-	                .text(this.s.dt.i18n('searchBuilder.data', i18n.data)),
+	                .text(this.s.dt.i18n('searchBuilder.data', 'Data')),
 	            defaultValue: $('<select disabled/>')
 	                .addClass(this.classes.value)
 	                .addClass(this.classes.dropDown),
 	            "delete": $('<button>&times</button>')
 	                .addClass(this.classes["delete"])
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', i18n.deleteTitle)),
+	                .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', 'Delete filtering rule')),
 	            left: $('<button>\<</button>')
 	                .addClass(this.classes.left)
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', i18n.leftTitle)),
+	                .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', 'Outdent criteria')),
 	            right: $('<button>\></button>')
 	                .addClass(this.classes.right)
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', i18n.rightTitle)),
+	                .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', 'Indent criteria')),
 	            value: [
 	                $('<select disabled/>').addClass(this.classes.value).addClass(this.classes.dropDown).addClass(this.classes.italic)
 	            ],
-	            valueTitle: $('<option value="" disabled selected hidden/>').text(this.s.dt.i18n('searchBuilder.value', i18n.value))
+	            valueTitle: $('<option value="" disabled selected hidden/>').text(this.s.dt.i18n('searchBuilder.value', 'Value'))
 	        };
 	        // If the greyscale option is selected then add the class to add the grey colour to SearchBuilder
 	        if (this.c.greyscale) {
@@ -1759,10 +1758,7 @@
 	                $(val).remove();
 	            }
 	            // Call the init function to get the value elements for this condition
-	            var value = this.s.conditions.get(this.s.condition).init(this, Criteria.updateListener);
-	            this.dom.value = Array.isArray(value) ?
-	                value :
-	                [value];
+	            this.dom.value = [].concat(this.s.conditions.get(this.s.condition).init(this, Criteria.updateListener));
 	            $(this.dom.value[0]).insertAfter(this.dom.condition).trigger('dtsb-inserted');
 	            // Insert all of the value elements
 	            for (var i = 1; i < this.dom.value.length; i++) {
@@ -1964,13 +1960,10 @@
 	            });
 	        }
 	        // Initialise the value elements based on the condition
-	        var value = this.s.conditions.get(this.s.condition).init(this, Criteria.updateListener, loadedCriteria !== undefined ? loadedCriteria.value : undefined);
+	        this.dom.value = [].concat(this.s.conditions.get(this.s.condition).init(this, Criteria.updateListener, loadedCriteria !== undefined ? loadedCriteria.value : undefined));
 	        if (loadedCriteria !== undefined && loadedCriteria.value !== undefined) {
 	            this.s.value = loadedCriteria.value;
 	        }
-	        this.dom.value = Array.isArray(value) ?
-	            value :
-	            [value];
 	        // Insert value elements and trigger the inserted event
 	        $(this.dom.value[0])
 	            .insertAfter(this.dom.condition)
@@ -1989,7 +1982,7 @@
 	            this.setListeners();
 	        }
 	    };
-	    Criteria.version = '0.0.1';
+	    Criteria.version = '1.0.0';
 	    Criteria.classes = {
 	        button: 'dtsb-button',
 	        buttonContainer: 'dtsb-buttonContainer',
@@ -2306,7 +2299,7 @@
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return !(value === null || value === undefined || value.length === 0);
 	            }
 	        },
@@ -2362,7 +2355,7 @@
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return (value === null || value === undefined || value.length === 0);
 	            }
 	        }
@@ -2401,7 +2394,7 @@
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return !(value === null || value === undefined || value.length === 0);
 	            }
 	        },
@@ -2456,7 +2449,7 @@
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return (value === null || value === undefined || value.length === 0);
 	            }
 	        }
@@ -2492,7 +2485,7 @@
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return !(value === null || value === undefined || value.length === 0);
 	            }
 	        },
@@ -2560,7 +2553,7 @@
 	            init: function () { return; },
 	            inputValue: function () { return; },
 	            isInputValid: function () { return true; },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return (value === null || value === undefined || value.length === 0);
 	            }
 	        }
@@ -2601,7 +2594,7 @@
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return !(value === null || value === undefined || value.length === 0);
 	            }
 	        },
@@ -2682,7 +2675,7 @@
 	            init: function () { return; },
 	            inputValue: function () { return; },
 	            isInputValid: function () { return true; },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return (value === null || value === undefined || value.length === 0);
 	            }
 	        }
@@ -2704,7 +2697,7 @@
 	            inputValue: function () {
 	                return;
 	            },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return !(value === null || value === undefined || value.length === 0);
 	            }
 	        },
@@ -2740,7 +2733,7 @@
 	            init: function () { return; },
 	            inputValue: function () { return; },
 	            isInputValid: function () { return true; },
-	            search: function (value, comparison) {
+	            search: function (value) {
 	                return (value === null || value === undefined || value.length === 0);
 	            }
 	        },
@@ -2767,11 +2760,14 @@
 	            'string': Criteria.stringConditions
 	        },
 	        depthLimit: false,
+	        filterChanged: undefined,
 	        greyscale: false,
+	        logic: 'AND',
 	        orthogonal: {
 	            conditionName: 'Condition Name',
 	            search: 'filter'
-	        }
+	        },
+	        preDefined: false
 	    };
 	    return Criteria;
 	}());
@@ -2882,9 +2878,7 @@
 	            return;
 	        }
 	        this.s.logic = loadedDetails.logic;
-	        $$1(this.dom.logic).text(this.s.logic === 'OR'
-	            ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
-	            : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
+	        $$1(this.dom.logic).text(this.s.logic === 'OR' ? this.s.dt.i18n('searchBuilder.logicOr', 'Or') : this.s.dt.i18n('searchBuilder.logicAnd', 'And'));
 	        // Add all of the criteria, be it a sub group or a criteria
 	        for (var _i = 0, _a = loadedDetails.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
@@ -2898,7 +2892,7 @@
 	        // For all of the criteria children, update the arrows incase they require changing and set the listeners
 	        for (var _b = 0, _c = this.s.criteria; _b < _c.length; _b++) {
 	            var crit = _c[_b];
-	            if (crit.logic === undefined) {
+	            if (crit.criteria instanceof Criteria) {
 	                crit.criteria.updateArrows(this.s.criteria.length > 1, false);
 	                this._setCriteriaListeners(crit.criteria);
 	            }
@@ -2925,25 +2919,26 @@
 	        });
 	        this.setListeners();
 	        for (var i = 0; i < this.s.criteria.length; i++) {
-	            if (this.s.criteria[i].logic === undefined) {
+	            var crit = this.s.criteria[i].criteria;
+	            if (crit instanceof Criteria) {
 	                // Reset the index to the new value
 	                this.s.criteria[i].index = i;
 	                this.s.criteria[i].criteria.s.index = i;
 	                // Add to the group
 	                $$1(this.s.criteria[i].criteria.dom.container).insertBefore(this.dom.add);
 	                // Set listeners for various points
-	                this._setCriteriaListeners(this.s.criteria[i].criteria);
+	                this._setCriteriaListeners(crit);
 	                this.s.criteria[i].criteria.rebuild(this.s.criteria[i].criteria.getDetails());
 	            }
-	            else if (this.s.criteria[i].criteria.s.criteria.length > 0) {
+	            else if (crit instanceof Group && crit.s.criteria.length > 0) {
 	                // Reset the index to the new value
 	                this.s.criteria[i].index = i;
 	                this.s.criteria[i].criteria.s.index = i;
 	                // Add the sub group to the group
 	                $$1(this.s.criteria[i].criteria.dom.container).insertBefore(this.dom.add);
 	                // Redraw the contents of the group
-	                this.s.criteria[i].criteria.redrawContents();
-	                this._setGroupListeners(this.s.criteria[i].criteria);
+	                crit.redrawContents();
+	                this._setGroupListeners(crit);
 	            }
 	            else {
 	                // The group is empty so remove it
@@ -3077,7 +3072,7 @@
 	        });
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var opt = _a[_i];
-	            if (opt.logic === undefined) {
+	            if (opt.criteria instanceof Criteria) {
 	                opt.criteria.updateArrows(this.s.criteria.length > 1, redraw);
 	            }
 	        }
@@ -3091,8 +3086,8 @@
 	    Group.prototype.checkFilled = function () {
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
-	            if ((crit.logic === undefined && crit.criteria.s.filled) ||
-	                (crit.logic !== undefined && crit.criteria.checkFilled())) {
+	            if ((crit.criteria instanceof Criteria && crit.criteria.s.filled) ||
+	                (crit.criteria instanceof Group && crit.criteria.checkFilled())) {
 	                return true;
 	            }
 	        }
@@ -3105,7 +3100,7 @@
 	        var count = 0;
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
-	            if (crit.logic !== undefined) {
+	            if (crit.criteria instanceof Group) {
 	                count += crit.criteria.count();
 	            }
 	            else {
@@ -3164,7 +3159,7 @@
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
 	            // If the criteria is not complete then skip it
-	            if (crit.logic === undefined && !crit.criteria.s.filled) {
+	            if (crit.criteria instanceof Criteria && !crit.criteria.s.filled) {
 	                continue;
 	            }
 	            // Otherwise if a single one fails return false
@@ -3189,7 +3184,7 @@
 	        var filledfound = false;
 	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
 	            var crit = _a[_i];
-	            if (crit.criteria.s.filled) {
+	            if (crit.criteria instanceof Criteria && crit.criteria.s.filled) {
 	                // A completed criteria has been found so set the flag
 	                filledfound = true;
 	                // If the search passes then return true
@@ -3197,7 +3192,7 @@
 	                    return true;
 	                }
 	            }
-	            else if (crit.logic !== undefined && crit.criteria.checkFilled()) {
+	            else if (crit.criteria instanceof Group && crit.criteria.checkFilled()) {
 	                filledfound = true;
 	                if (crit.criteria.search(rowData)) {
 	                    return true;
@@ -3250,7 +3245,7 @@
 	            _this.setupLogic();
 	            for (var _i = 0, _a = _this.s.criteria; _i < _a.length; _i++) {
 	                var crit = _a[_i];
-	                if (crit.logic === undefined) {
+	                if (crit.criteria instanceof Criteria) {
 	                    crit.criteria.updateArrows(_this.s.criteria.length > 1);
 	                }
 	            }
@@ -3356,10 +3351,8 @@
 	     */
 	    Group.prototype._setup = function () {
 	        this.setListeners();
-	        $$1(this.dom.add).text(this.s.dt.i18n('searchBuilder.add', this.c.i18n.add));
-	        $$1(this.dom.logic).text(this.c.logic === 'OR'
-	            ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
-	            : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
+	        $$1(this.dom.add).text(this.s.dt.i18n('searchBuilder.add', 'Add Condition'));
+	        $$1(this.dom.logic).text(this.c.logic === 'OR' ? this.s.dt.i18n('searchBuilder.logicOr', 'Or') : this.s.dt.i18n('searchBuilder.logicAnd', 'And'));
 	        this.s.logic = this.c.logic === 'OR' ? 'OR' : 'AND';
 	        if (this.c.greyscale) {
 	            $$1(this.dom.logic).addClass(this.classes.greyscale);
@@ -3394,14 +3387,14 @@
 	    Group.prototype._toggleLogic = function () {
 	        if (this.s.logic === 'OR') {
 	            this.s.logic = 'AND';
-	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
+	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicAnd', 'And'));
 	        }
 	        else if (this.s.logic === 'AND') {
 	            this.s.logic = 'OR';
-	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
+	            $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicOr', 'Or'));
 	        }
 	    };
-	    Group.version = '0.0.1';
+	    Group.version = '1.0.0';
 	    Group.classes = {
 	        add: 'dtsb-add',
 	        button: 'dtsb-button',
@@ -3413,9 +3406,26 @@
 	        logicContainer: 'dtsb-logicContainer'
 	    };
 	    Group.defaults = {
+	        columns: true,
+	        conditions: {
+	            'date': Criteria.dateConditions,
+	            'html': Criteria.stringConditions,
+	            'html-num': Criteria.numConditions,
+	            'html-num-fmt': Criteria.numFmtConditions,
+	            'moment': Criteria.momentDateConditions,
+	            'num': Criteria.numConditions,
+	            'num-fmt': Criteria.numFmtConditions,
+	            'string': Criteria.stringConditions
+	        },
 	        depthLimit: false,
+	        filterChanged: undefined,
 	        greyscale: false,
-	        logic: 'AND'
+	        logic: 'AND',
+	        orthogonal: {
+	            conditionName: 'Condition Name',
+	            search: 'filter'
+	        },
+	        preDefined: false
 	    };
 	    return Group;
 	}());
@@ -3446,7 +3456,7 @@
 	        // Get options from user
 	        this.c = $$2.extend(true, {}, SearchBuilder.defaults, opts);
 	        this.dom = {
-	            clearAll: $$2('<button type="button">' + table.i18n('searchBuilder.clearAll', this.c.i18n.clearAll) + '</button>')
+	            clearAll: $$2('<button type="button">' + table.i18n('searchBuilder.clearAll', 'Clear All') + '</button>')
 	                .addClass(this.classes.clearAll)
 	                .addClass(this.classes.button),
 	            container: $$2('<div/>')
@@ -3572,7 +3582,7 @@
 	     * @param count the number of filters in the SearchBuilder
 	     */
 	    SearchBuilder.prototype._updateTitle = function (count) {
-	        $$2(this.dom.title).text(this.s.dt.i18n('searchBuilder.title', this.c.i18n.title, count));
+	        $$2(this.dom.title).text(this.s.dt.i18n('searchBuilder.title', { 0: 'Custom Search Builder', _: 'Custom Search Builder (%d)' }, count));
 	    };
 	    /**
 	     * Builds all of the dom elements together
@@ -3630,29 +3640,22 @@
 	        }
 	    };
 	    /**
-	     * Update the count in the title/button
-	     * @param count Number of filters applied
-	     */
-	    SearchBuilder.prototype._filterChanged = function (count) {
-	        var fn = this.c.filterChanged;
-	        if (typeof fn === 'function') {
-	            fn(count, this.s.dt.i18n('searchBuilder.button', this.c.i18n.button, count));
-	        }
-	    };
-	    /**
 	     * Set the listener for the clear button
 	     */
 	    SearchBuilder.prototype._setClearListener = function () {
 	        var _this = this;
 	        $$2(this.dom.clearAll).unbind('click');
 	        $$2(this.dom.clearAll).on('click', function () {
-	            _this.s.topGroup = new Group(_this.s.dt, _this.c, undefined);
+	            _this.s.topGroup = new Group(_this.s.dt, _this.s.opts, undefined);
 	            _this._build();
 	            _this.s.dt.draw();
 	            _this.s.topGroup.setListeners();
 	            $$2(_this.dom.clearAll).remove();
 	            _this._setEmptyListener();
-	            _this._filterChanged(0);
+	            // Update the count in the title/button
+	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
+	                _this.c.filterChanged(0);
+	            }
 	            return false;
 	        });
 	    };
@@ -3669,19 +3672,28 @@
 	            _this._setEmptyListener();
 	            var count = _this.s.topGroup.count();
 	            _this._updateTitle(count);
-	            _this._filterChanged(count);
+	            // Update the count in the title/button
+	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
+	                _this.c.filterChanged(count);
+	            }
 	            _this.s.dt.state.save();
 	        });
 	        $$2(this.s.topGroup.dom.container).unbind('dtsb-clearContents');
 	        $$2(this.s.topGroup.dom.container).on('dtsb-clearContents', function () {
 	            _this._setUp(false);
-	            _this._filterChanged(0);
+	            // Update the count in the title/button
+	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
+	                _this.c.filterChanged(0);
+	            }
 	            _this.s.dt.draw();
 	        });
 	        $$2(this.s.topGroup.dom.container).on('dtsb-updateTitle', function () {
 	            var count = _this.s.topGroup.count();
 	            _this._updateTitle(count);
-	            _this._filterChanged(count);
+	            // Update the count in the title/button
+	            if (_this.c.filterChanged !== undefined && typeof _this.c.filterChanged === 'function') {
+	                _this.c.filterChanged(count);
+	            }
 	        });
 	    };
 	    /**
@@ -3696,7 +3708,7 @@
 	            $$2(_this.dom.clearAll).remove();
 	        });
 	    };
-	    SearchBuilder.version = '0.0.1';
+	    SearchBuilder.version = '1.0.0';
 	    SearchBuilder.classes = {
 	        button: 'dtsb-button',
 	        clearAll: 'dtsb-clearAll',
@@ -3706,28 +3718,26 @@
 	        titleRow: 'dtsb-titleRow'
 	    };
 	    SearchBuilder.defaults = {
+	        columns: true,
+	        conditions: {
+	            'date': Criteria.dateConditions,
+	            'html': Criteria.stringConditions,
+	            'html-num': Criteria.numConditions,
+	            'html-num-fmt': Criteria.numFmtConditions,
+	            'moment': Criteria.momentDateConditions,
+	            'num': Criteria.numConditions,
+	            'num-fmt': Criteria.numFmtConditions,
+	            'string': Criteria.stringConditions
+	        },
+	        depthLimit: false,
 	        filterChanged: undefined,
-	        preDefined: false,
-	        i18n: {
-	            add: 'Add Condition',
-	            button: {
-	                0: 'Search Builder',
-	                _: 'Search Builder (%d)'
-	            },
-	            clearAll: 'Clear All',
-	            condition: 'Condition',
-	            data: 'Data',
-	            deleteTitle: 'Delete filtering rule',
-	            logicAnd: 'And',
-	            logicOr: 'Or',
-	            leftTitle: 'Outdent criteria',
-	            rightTitle: 'Indent criteria',
-	            title: {
-	                0: 'Custom Search Builder',
-	                _: 'Custom Search Builder (%d)'
-	            },
-	            value: 'Value'
-	        }
+	        greyscale: false,
+	        logic: 'AND',
+	        orthogonal: {
+	            conditionName: 'Condition Name',
+	            search: 'filter'
+	        },
+	        preDefined: false
 	    };
 	    return SearchBuilder;
 	}());
@@ -3787,14 +3797,15 @@
 	        config: {},
 	        init: function (dt, node, config) {
 	            var sb = new $.fn.dataTable.SearchBuilder(dt, $.extend({
-	                filterChanged: function (count, text) {
-	                    dt.button(node).text(text);
+	                filterChanged: function (count) {
+	                    dt.button(node).text(dt.i18n('searchBuilder.button', { 0: 'Search Builder', _: 'Search Builder (%d)' }, count));
 	                }
 	            }, config.config));
-	            dt.button(node).text(config.text || dt.i18n('searchBuilder.button', sb.c.i18n.button, 0));
+	            var message = dt.i18n('searchBuilder.button', 'Search Builder', 0);
+	            dt.button(node).text(message);
 	            config._searchBuilder = sb;
 	        },
-	        text: null
+	        text: 'Search Builder'
 	    };
 	    apiRegister('searchBuilder.getDetails()', function () {
 	        var ctx = this.context[0];
@@ -3814,11 +3825,9 @@
 	     * @param settings the settings to be applied
 	     * @returns JQUERY<HTMLElement> Returns the node of the SearchBuilder
 	     */
-	    function _init(settings, options) {
+	    function _init(settings) {
 	        var api = new DataTable.Api(settings);
-	        var opts = options
-	            ? options
-	            : api.init().searchBuilder || DataTable.defaults.searchBuilder;
+	        var opts = api.init().searchBuilder || DataTable.defaults.searchBuilder;
 	        var searchBuilder = new SearchBuilder(api, opts);
 	        var node = searchBuilder.getNode();
 	        return node;
