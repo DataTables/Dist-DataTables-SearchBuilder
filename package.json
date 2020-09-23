@@ -5,7 +5,7 @@
     "files": [
         "js/**/*.js"
     ],
-    "main": "index.js",
+    "main": "js/dataTables.searchBuilder.js",
     "keywords": [
         "Search",
         "Filtering",
