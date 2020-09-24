@@ -1820,8 +1820,12 @@
 	                var condition = _a[_i];
 	                if (conditionObj[condition] !== null) {
 	                    this.s.conditions[condition] = conditionObj[condition];
+	                    var condName = conditionObj[condition].conditionName;
+	                    if (typeof condName === 'function') {
+	                        condName = condName(this.s.dt, this.c.i18n);
+	                    }
 	                    conditionOpts.push($('<option>', {
-	                        text: conditionObj[condition].conditionName,
+	                        text: condName,
 	                        value: condition
 	                    })
 	                        .addClass(this.classes.option)
@@ -1835,6 +1839,9 @@
 	            for (var _b = 0, _c = Object.keys(this.s.conditions); _b < _c.length; _b++) {
 	                var condition = _c[_b];
 	                var condName = this.s.conditions[condition].conditionName;
+	                if (typeof condName === 'function') {
+	                    condName = condName(this.s.dt, this.c.i18n);
+	                }
 	                var newOpt = $('<option>', {
 	                    text: condName,
 	                    value: condition
@@ -2269,7 +2276,9 @@
 	    };
 	    Criteria.dateConditions = {
 	        '!=': {
-	            conditionName: 'Not',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.not', i18n.conditions.date.not);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2279,7 +2288,9 @@
 	            }
 	        },
 	        '!between': {
-	            conditionName: 'Not Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.notBetween', i18n.conditions.date.notBetween);
+	            },
 	            init: Criteria.init2Date,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2294,7 +2305,9 @@
 	            }
 	        },
 	        '!null': {
-	            conditionName: 'Not Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.notEmpty', i18n.conditions.date.notEmpty);
+	            },
 	            isInputValid: function () { return true; },
 	            init: function () { return; },
 	            inputValue: function () {
@@ -2305,7 +2318,9 @@
 	            }
 	        },
 	        '<': {
-	            conditionName: 'Before',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.before', i18n.conditions.date.before);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2315,7 +2330,9 @@
 	            }
 	        },
 	        '=': {
-	            conditionName: 'Equals',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.equals', i18n.conditions.date.equals);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2325,7 +2342,9 @@
 	            }
 	        },
 	        '>': {
-	            conditionName: 'After',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.after', i18n.conditions.date.after);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2335,7 +2354,9 @@
 	            }
 	        },
 	        'between': {
-	            conditionName: 'Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.between', i18n.conditions.date.between);
+	            },
 	            init: Criteria.init2Date,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2350,7 +2371,9 @@
 	            }
 	        },
 	        'null': {
-	            conditionName: 'Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.date.empty', i18n.conditions.date.empty);
+	            },
 	            isInputValid: function () { return true; },
 	            init: function () { return; },
 	            inputValue: function () {
@@ -2363,7 +2386,9 @@
 	    };
 	    Criteria.momentDateConditions = {
 	        '!=': {
-	            conditionName: 'Not',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.not', i18n.conditions.moment.not);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2372,7 +2397,9 @@
 	            }
 	        },
 	        '!between': {
-	            conditionName: 'Not Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.notBetween', i18n.conditions.moment.notBetween);
+	            },
 	            init: Criteria.init2Date,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2389,7 +2416,9 @@
 	            }
 	        },
 	        '!null': {
-	            conditionName: 'Not Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.notEmpty', i18n.conditions.moment.notEmpty);
+	            },
 	            isInputValid: function () { return true; },
 	            init: function () { return; },
 	            inputValue: function () {
@@ -2400,7 +2429,9 @@
 	            }
 	        },
 	        '<': {
-	            conditionName: 'Before',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.before', i18n.conditions.moment.before);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2409,7 +2440,9 @@
 	            }
 	        },
 	        '=': {
-	            conditionName: 'Equals',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.equals', i18n.conditions.moment.equals);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2418,7 +2451,9 @@
 	            }
 	        },
 	        '>': {
-	            conditionName: 'After',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.after', i18n.conditions.moment.after);
+	            },
 	            init: Criteria.initDate,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2427,7 +2462,9 @@
 	            }
 	        },
 	        'between': {
-	            conditionName: 'Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.between', i18n.conditions.moment.between);
+	            },
 	            init: Criteria.init2Date,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2444,7 +2481,9 @@
 	            }
 	        },
 	        'null': {
-	            conditionName: 'Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.moment.empty', i18n.conditions.moment.empty);
+	            },
 	            isInputValid: function () { return true; },
 	            init: function () { return; },
 	            inputValue: function () {
@@ -2457,7 +2496,9 @@
 	    };
 	    Criteria.numConditions = {
 	        '!=': {
-	            conditionName: 'Not',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.not', i18n.conditions.number.not);
+	            },
 	            init: Criteria.initSelect,
 	            inputValue: Criteria.inputValueSelect,
 	            isInputValid: Criteria.isInputValidSelect,
@@ -2466,7 +2507,9 @@
 	            }
 	        },
 	        '!between': {
-	            conditionName: 'Not Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.notBetween', i18n.conditions.number.notBetween);
+	            },
 	            init: Criteria.init2Input,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2480,7 +2523,9 @@
 	            }
 	        },
 	        '!null': {
-	            conditionName: 'Not Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.notEmpty', i18n.conditions.number.notEmpty);
+	            },
 	            isInputValid: function () { return true; },
 	            init: function () { return; },
 	            inputValue: function () {
@@ -2491,7 +2536,9 @@
 	            }
 	        },
 	        '<': {
-	            conditionName: 'Less Than',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.lt', i18n.conditions.number.lt);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2500,7 +2547,9 @@
 	            }
 	        },
 	        '<=': {
-	            conditionName: 'Less Than Equal To',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.lte', i18n.conditions.number.lte);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2509,7 +2558,9 @@
 	            }
 	        },
 	        '=': {
-	            conditionName: 'Equals',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.equals', i18n.conditions.number.equals);
+	            },
 	            init: Criteria.initSelect,
 	            inputValue: Criteria.inputValueSelect,
 	            isInputValid: Criteria.isInputValidSelect,
@@ -2518,7 +2569,9 @@
 	            }
 	        },
 	        '>': {
-	            conditionName: 'Greater Than',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.gt', i18n.conditions.number.gt);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2527,7 +2580,9 @@
 	            }
 	        },
 	        '>=': {
-	            conditionName: 'Greater Than Equal To',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.gte', i18n.conditions.number.gte);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2536,7 +2591,9 @@
 	            }
 	        },
 	        'between': {
-	            conditionName: 'Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.between', i18n.conditions.number.between);
+	            },
 	            init: Criteria.init2Input,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2550,7 +2607,9 @@
 	            }
 	        },
 	        'null': {
-	            conditionName: 'Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.empty', i18n.conditions.number.empty);
+	            },
 	            init: function () { return; },
 	            inputValue: function () { return; },
 	            isInputValid: function () { return true; },
@@ -2561,7 +2620,9 @@
 	    };
 	    Criteria.numFmtConditions = {
 	        '!=': {
-	            conditionName: 'Not',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.not', i18n.conditions.number.not);
+	            },
 	            init: Criteria.initSelect,
 	            inputValue: Criteria.inputValueSelect,
 	            isInputValid: Criteria.isInputValidSelect,
@@ -2572,7 +2633,9 @@
 	            }
 	        },
 	        '!between': {
-	            conditionName: 'Not Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.notBetween', i18n.conditions.number.notBetween);
+	            },
 	            init: Criteria.init2Input,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2589,7 +2652,9 @@
 	            }
 	        },
 	        '!null': {
-	            conditionName: 'Not Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.notEmpty', i18n.conditions.number.notEmpty);
+	            },
 	            isInputValid: function () { return true; },
 	            init: function () { return; },
 	            inputValue: function () {
@@ -2600,7 +2665,9 @@
 	            }
 	        },
 	        '<': {
-	            conditionName: 'Less Than',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.lt', i18n.conditions.number.lt);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2611,7 +2678,9 @@
 	            }
 	        },
 	        '<=': {
-	            conditionName: 'Less Than Equal To',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.lte', i18n.conditions.number.lte);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2622,7 +2691,9 @@
 	            }
 	        },
 	        '=': {
-	            conditionName: 'Equals',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.equals', i18n.conditions.number.equals);
+	            },
 	            init: Criteria.initSelect,
 	            inputValue: Criteria.inputValueSelect,
 	            isInputValid: Criteria.isInputValidSelect,
@@ -2633,7 +2704,9 @@
 	            }
 	        },
 	        '>': {
-	            conditionName: 'Greater Than',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.gt', i18n.conditions.number.gt);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2644,7 +2717,9 @@
 	            }
 	        },
 	        '>=': {
-	            conditionName: 'Greater Than Equal To',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.gte', i18n.conditions.number.gte);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2655,7 +2730,9 @@
 	            }
 	        },
 	        'between': {
-	            conditionName: 'Between',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.between', i18n.conditions.number.between);
+	            },
 	            init: Criteria.init2Input,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2672,7 +2749,9 @@
 	            }
 	        },
 	        'null': {
-	            conditionName: 'Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.number.empty', i18n.conditions.number.empty);
+	            },
 	            init: function () { return; },
 	            inputValue: function () { return; },
 	            isInputValid: function () { return true; },
@@ -2683,7 +2762,9 @@
 	    };
 	    Criteria.stringConditions = {
 	        '!=': {
-	            conditionName: 'Not',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.not', i18n.conditions.string.not);
+	            },
 	            init: Criteria.initSelect,
 	            inputValue: Criteria.inputValueSelect,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2692,7 +2773,9 @@
 	            }
 	        },
 	        '!null': {
-	            conditionName: 'Not Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.notEmpty', i18n.conditions.string.notEmpty);
+	            },
 	            isInputValid: function () { return true; },
 	            init: function () { return; },
 	            inputValue: function () {
@@ -2703,7 +2786,9 @@
 	            }
 	        },
 	        '=': {
-	            conditionName: 'Equals',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.equals', i18n.conditions.string.equals);
+	            },
 	            init: Criteria.initSelect,
 	            inputValue: Criteria.inputValueSelect,
 	            isInputValid: Criteria.isInputValidSelect,
@@ -2712,7 +2797,9 @@
 	            }
 	        },
 	        'contains': {
-	            conditionName: 'Contains',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.contains', i18n.conditions.string.contains);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2721,7 +2808,9 @@
 	            }
 	        },
 	        'ends': {
-	            conditionName: 'Ends With',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.endsWidth', i18n.conditions.string.endsWith);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -2730,7 +2819,9 @@
 	            }
 	        },
 	        'null': {
-	            conditionName: 'Empty',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.empty', i18n.conditions.string.empty);
+	            },
 	            init: function () { return; },
 	            inputValue: function () { return; },
 	            isInputValid: function () { return true; },
@@ -2739,7 +2830,9 @@
 	            }
 	        },
 	        'starts': {
-	            conditionName: 'Starts With',
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.string.startsWith', i18n.conditions.string.startsWith);
+	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
@@ -3783,6 +3876,49 @@
 	            },
 	            clearAll: 'Clear All',
 	            condition: 'Condition',
+	            conditions: {
+	                date: {
+	                    not: 'Not',
+	                    notBetween: 'Not Between',
+	                    notEmpty: 'Not Empty',
+	                    before: 'Before',
+	                    equals: 'Equals',
+	                    after: 'After',
+	                    between: 'Between',
+	                    empty: 'Empty'
+	                },
+	                moment: {
+	                    not: 'Not',
+	                    notBetween: 'Not Between',
+	                    notEmpty: 'Not Empty',
+	                    before: 'Before',
+	                    equals: 'Equals',
+	                    after: 'After',
+	                    between: 'Between',
+	                    empty: 'Empty'
+	                },
+	                number: {
+	                    not: 'Not',
+	                    notBetween: 'Not Between',
+	                    notEmpty: 'Not Empty',
+	                    lt: 'Less Than',
+	                    lte: 'Less Than Equal To',
+	                    equals: 'Equals',
+	                    gt: 'Greater Than',
+	                    gte: 'Greater Than Equal To',
+	                    between: 'Between',
+	                    empty: 'Empty'
+	                },
+	                string: {
+	                    not: 'Not',
+	                    notEmpty: 'Not Empty',
+	                    equals: 'Equals',
+	                    contains: 'Contains',
+	                    endsWith: 'Ends With',
+	                    empty: 'Empty',
+	                    startsWith: 'Starts With'
+	                }
+	            },
 	            data: 'Data',
 	            deleteTitle: 'Delete filtering rule',
 	            leftTitle: 'Outdent criteria',
