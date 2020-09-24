@@ -1404,7 +1404,7 @@
 	        var i18n = this.c.i18n;
 	        this.s = {
 	            condition: undefined,
-	            conditions: new Map(),
+	            conditions: {},
 	            data: undefined,
 	            dataIdx: -1,
 	            dataPoints: [],
@@ -1530,7 +1530,7 @@
 	     * @returns boolean Whether the criteria has passed
 	     */
 	    Criteria.prototype.search = function (rowData) {
-	        var condition = this.s.conditions.get(this.s.condition);
+	        var condition = this.s.conditions[this.s.condition];
 	        if (this.s.condition !== undefined && condition !== undefined) {
 	            return condition.search(rowData[this.s.dataIdx], this.s.value, this);
 	        }
@@ -1596,7 +1596,6 @@
 	            this._populateCondition();
 	            $(this.dom.conditionTitle).remove();
 	            var condition_1;
-	            var conditions = this.s.conditions;
 	            // Check to see if the previously selected condition exists, if so select it
 	            $(this.dom.condition).children('option').each(function () {
 	                if ((loadedCriteria.condition !== undefined &&
@@ -1649,7 +1648,7 @@
 	            $(_this.dom.condition).removeClass(_this.classes.italic);
 	            var condDisp = $(_this.dom.condition).children('option:selected').val();
 	            // Find the condition that has been selected and store it internally
-	            for (var _i = 0, _a = Array.from(_this.s.conditions.keys()); _i < _a.length; _i++) {
+	            for (var _i = 0, _a = Object.keys(_this.s.conditions); _i < _a.length; _i++) {
 	                var cond = _a[_i];
 	                if (cond === condDisp) {
 	                    _this.s.condition = condDisp;
@@ -1745,7 +1744,7 @@
 	        $(this.dom.condition).empty();
 	        $(this.dom.conditionTitle).attr('selected', true).attr('disabled', true);
 	        $(this.dom.condition).append(this.dom.conditionTitle);
-	        this.s.conditions = new Map();
+	        this.s.conditions = {};
 	        this.s.condition = undefined;
 	    };
 	    /**
@@ -1759,7 +1758,7 @@
 	                $(val).remove();
 	            }
 	            // Call the init function to get the value elements for this condition
-	            this.dom.value = [].concat(this.s.conditions.get(this.s.condition).init(this, Criteria.updateListener));
+	            this.dom.value = [].concat(this.s.conditions[this.s.condition].init(this, Criteria.updateListener));
 	            $(this.dom.value[0]).insertAfter(this.dom.condition).trigger('dtsb-inserted');
 	            // Insert all of the value elements
 	            for (var i = 1; i < this.dom.value.length; i++) {
@@ -1787,8 +1786,9 @@
 	     */
 	    Criteria.prototype._populateCondition = function () {
 	        var conditionOpts = [];
+	        var conditionsLength = Object.keys(this.s.conditions).length;
 	        // If there are no conditions stored then we need to get them from the appropriate type
-	        if (this.s.conditions.size === 0) {
+	        if (conditionsLength === 0) {
 	            var column = $(this.dom.data).children('option:selected').val();
 	            this.s.type = this.s.dt.columns().type().toArray()[column];
 	            // If the column type is unknown, call a draw to try reading it again
@@ -1819,7 +1819,7 @@
 	            for (var _i = 0, _a = Object.keys(conditionObj); _i < _a.length; _i++) {
 	                var condition = _a[_i];
 	                if (conditionObj[condition] !== null) {
-	                    this.s.conditions.set(condition, conditionObj[condition]);
+	                    this.s.conditions[condition] = conditionObj[condition];
 	                    conditionOpts.push($('<option>', {
 	                        text: conditionObj[condition].conditionName,
 	                        value: condition
@@ -1830,11 +1830,11 @@
 	            }
 	        }
 	        // Otherwise we can just load them in
-	        else if (this.s.conditions.size > 0) {
+	        else if (conditionsLength > 0) {
 	            $(this.dom.condition).empty().attr('disabled', false).addClass(this.classes.italic);
-	            for (var _b = 0, _c = Array.from(this.s.conditions.keys()); _b < _c.length; _b++) {
+	            for (var _b = 0, _c = Object.keys(this.s.conditions); _b < _c.length; _b++) {
 	                var condition = _c[_b];
-	                var condName = this.s.conditions.get(condition).conditionName;
+	                var condName = this.s.conditions[condition].conditionName;
 	                var newOpt = $('<option>', {
 	                    text: condName,
 	                    value: condition
@@ -1961,7 +1961,7 @@
 	            });
 	        }
 	        // Initialise the value elements based on the condition
-	        this.dom.value = [].concat(this.s.conditions.get(this.s.condition).init(this, Criteria.updateListener, loadedCriteria !== undefined ? loadedCriteria.value : undefined));
+	        this.dom.value = [].concat(this.s.conditions[this.s.condition].init(this, Criteria.updateListener, loadedCriteria !== undefined ? loadedCriteria.value : undefined));
 	        if (loadedCriteria !== undefined && loadedCriteria.value !== undefined) {
 	            this.s.value = loadedCriteria.value;
 	        }
@@ -1975,7 +1975,7 @@
 	                .trigger('dtsb-inserted');
 	        }
 	        // Check if the criteria can be used in a search
-	        this.s.filled = this.s.conditions.get(this.s.condition).isInputValid(this.dom.value, this);
+	        this.s.filled = this.s.conditions[this.s.condition].isInputValid(this.dom.value, this);
 	        this.setListeners();
 	        // If it can and this is different to before then trigger a draw
 	        if (prevFilled !== this.s.filled) {
@@ -2239,7 +2239,7 @@
 	    Criteria.updateListener = function (that, el) {
 	        // When the value is changed the criteria is now complete so can be included in searches
 	        // Get the condition from the map based on the key that has been selected for the condition
-	        var condition = that.s.conditions.get(that.s.condition);
+	        var condition = that.s.conditions[that.s.condition];
 	        that.s.filled = condition.isInputValid(that.dom.value, that);
 	        that.s.value = condition.inputValue(that.dom.value, that);
 	        if (!Array.isArray(that.s.value)) {
