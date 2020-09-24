@@ -1808,7 +1808,7 @@
 	            // Select which conditions are going to be used based on the column type
 	            var conditionObj = this.c.conditions[this.s.type] !== undefined ?
 	                this.c.conditions[this.s.type] :
-	                this.s.type.indexOf('moment') !== -1 && $.fn.dataTable.moment !== undefined ?
+	                this.s.type.indexOf('moment') !== -1 ?
 	                    this.c.conditions.moment :
 	                    this.c.conditions.string;
 	            // If it is a moment format then extract the date format
