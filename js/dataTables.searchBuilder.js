@@ -1624,8 +1624,8 @@
 	    Criteria.prototype.setListeners = function () {
 	        var _this = this;
 	        $(this.dom.data)
-	            .unbind('input')
-	            .on('input', function () {
+	            .unbind('input change')
+	            .on('input change', function () {
 	            $(_this.dom.dataTitle).attr('selected', false);
 	            $(_this.dom.data).removeClass(_this.classes.italic);
 	            _this.s.dataIdx = $(_this.dom.data).children('option:selected').val();
@@ -1643,8 +1643,8 @@
 	            _this.s.dt.state.save();
 	        });
 	        $(this.dom.condition)
-	            .unbind('input')
-	            .on('input', function () {
+	            .unbind('input change')
+	            .on('input change', function () {
 	            $(_this.dom.conditionTitle).attr('selected', false);
 	            $(_this.dom.condition).removeClass(_this.classes.italic);
 	            var condDisp = $(_this.dom.condition).children('option:selected').val();
@@ -2017,7 +2017,7 @@
 	            .addClass(Criteria.classes.dropDown)
 	            .addClass(Criteria.classes.italic)
 	            .append(that.dom.valueTitle)
-	            .on('input', function () {
+	            .on('input change', function () {
 	            $(this).removeClass(Criteria.classes.italic);
 	            fn(that, this);
 	        });
