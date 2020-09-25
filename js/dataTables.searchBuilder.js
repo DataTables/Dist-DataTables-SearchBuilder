@@ -3878,44 +3878,44 @@
 	            condition: 'Condition',
 	            conditions: {
 	                date: {
+	                    after: 'After',
+	                    before: 'Before',
+	                    between: 'Between',
+	                    empty: 'Empty',
+	                    equals: 'Equals',
 	                    not: 'Not',
 	                    notBetween: 'Not Between',
-	                    notEmpty: 'Not Empty',
-	                    before: 'Before',
-	                    equals: 'Equals',
-	                    after: 'After',
-	                    between: 'Between',
-	                    empty: 'Empty'
+	                    notEmpty: 'Not Empty'
 	                },
 	                moment: {
+	                    after: 'After',
+	                    before: 'Before',
+	                    between: 'Between',
+	                    empty: 'Empty',
+	                    equals: 'Equals',
 	                    not: 'Not',
 	                    notBetween: 'Not Between',
-	                    notEmpty: 'Not Empty',
-	                    before: 'Before',
-	                    equals: 'Equals',
-	                    after: 'After',
-	                    between: 'Between',
-	                    empty: 'Empty'
+	                    notEmpty: 'Not Empty'
 	                },
 	                number: {
-	                    not: 'Not',
-	                    notBetween: 'Not Between',
-	                    notEmpty: 'Not Empty',
-	                    lt: 'Less Than',
-	                    lte: 'Less Than Equal To',
+	                    between: 'Between',
+	                    empty: 'Empty',
 	                    equals: 'Equals',
 	                    gt: 'Greater Than',
 	                    gte: 'Greater Than Equal To',
-	                    between: 'Between',
-	                    empty: 'Empty'
+	                    lt: 'Less Than',
+	                    lte: 'Less Than Equal To',
+	                    not: 'Not',
+	                    notBetween: 'Not Between',
+	                    notEmpty: 'Not Empty'
 	                },
 	                string: {
+	                    contains: 'Contains',
+	                    empty: 'Empty',
+	                    endsWith: 'Ends With',
+	                    equals: 'Equals',
 	                    not: 'Not',
 	                    notEmpty: 'Not Empty',
-	                    equals: 'Equals',
-	                    contains: 'Contains',
-	                    endsWith: 'Ends With',
-	                    empty: 'Empty',
 	                    startsWith: 'Starts With'
 	                }
 	            },
