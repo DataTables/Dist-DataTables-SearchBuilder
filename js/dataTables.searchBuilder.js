@@ -1502,6 +1502,9 @@
 	        if ((this.c.depthLimit === false || this.s.depth < this.c.depthLimit) && hasSiblings) {
 	            $(this.dom.buttons).append(this.dom.right);
 	        }
+	        else {
+	            $(this.dom.right).remove();
+	        }
 	        $(this.dom.buttons).append(this.dom["delete"]);
 	        $(this.dom.container).append(this.dom.buttons);
 	        if (redraw) {
