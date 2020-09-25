@@ -3358,7 +3358,7 @@
 	            .on('click', function () {
 	            _this._removeCriteria(criteria);
 	            $$1(criteria.dom.container).remove();
-	            _this.setupLogic();
+	            $$1(_this.s.topGroup).trigger('dtsb-redrawContents');
 	            for (var _i = 0, _a = _this.s.criteria; _i < _a.length; _i++) {
 	                var crit = _a[_i];
 	                if (crit.criteria instanceof Criteria) {
