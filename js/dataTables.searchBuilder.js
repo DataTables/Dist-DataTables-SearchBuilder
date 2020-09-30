@@ -1463,7 +1463,8 @@
 	            condition: $('<select disabled/>')
 	                .addClass(this.classes.condition)
 	                .addClass(this.classes.dropDown)
-	                .addClass(this.classes.italic),
+	                .addClass(this.classes.italic)
+	                .attr('autocomplete', 'hacking'),
 	            conditionTitle: $('<option value="" disabled selected hidden/>')
 	                .text(this.s.dt.i18n('searchBuilder.condition', i18n.condition)),
 	            container: $('<div/>')
@@ -1787,7 +1788,7 @@
 	    Criteria.prototype._clearCondition = function () {
 	        $(this.dom.condition).empty();
 	        $(this.dom.conditionTitle).attr('selected', true).attr('disabled', true);
-	        $(this.dom.condition).append(this.dom.conditionTitle);
+	        $(this.dom.condition).prepend(this.dom.conditionTitle).prop('selectedIndex', 0);
 	        this.s.conditions = {};
 	        this.s.condition = undefined;
 	    };
@@ -1909,6 +1910,7 @@
 	            var opt = conditionOpts_1[_d];
 	            $(this.dom.condition).append(opt);
 	        }
+	        $(this.dom.condition).prop('selectedIndex', 0);
 	    };
 	    /**
 	     * Populates the data select element
