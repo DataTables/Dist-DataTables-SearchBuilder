@@ -1905,18 +1905,6 @@
 	                .addClass(this.classes.italic);
 	            return;
 	        }
-	        // Sort the conditions so that they are displayed alphabetically
-	        conditionOpts.sort(function (a, b) {
-	            if ($(a).val() < $(b).val()) {
-	                return -1;
-	            }
-	            else if ($(a).val() < $(b).val()) {
-	                return 1;
-	            }
-	            else {
-	                return 0;
-	            }
-	        });
 	        for (var _d = 0, conditionOpts_1 = conditionOpts; _d < conditionOpts_1.length; _d++) {
 	            var opt = conditionOpts_1[_d];
 	            $(this.dom.condition).append(opt);
