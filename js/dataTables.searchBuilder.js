@@ -1498,6 +1498,7 @@
 	        if (this.c.greyscale) {
 	            $(this.dom.data).addClass(this.classes.greyscale);
 	            $(this.dom.condition).addClass(this.classes.greyscale);
+	            $(this.dom.defaultValue).addClass(this.classes.greyscale);
 	            for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
 	                var val = _a[_i];
 	                $(val).addClass(this.classes.greyscale);
@@ -2071,6 +2072,9 @@
 	            $(this).removeClass(Criteria.classes.italic);
 	            fn(that, this);
 	        });
+	        if (that.c.greyscale) {
+	            $(el).addClass(Criteria.classes.greyscale);
+	        }
 	        var added = [];
 	        var options = [];
 	        // Add all of the options from the table to the select element.
@@ -2143,6 +2147,9 @@
 	            .addClass(Criteria.classes.value)
 	            .addClass(Criteria.classes.input)
 	            .on('input', function () { fn(that, this); });
+	        if (that.c.greyscale) {
+	            $(el).addClass(Criteria.classes.greyscale);
+	        }
 	        // If there is a preDefined value then add it
 	        if (preDefined !== null) {
 	            $(el).val(preDefined[0]);
@@ -2167,6 +2174,10 @@
 	                .addClass(Criteria.classes.input)
 	                .on('input', function () { fn(that, this); })
 	        ];
+	        if (that.c.greyscale) {
+	            $(els[0]).addClass(Criteria.classes.greyscale);
+	            $(els[2]).addClass(Criteria.classes.greyscale);
+	        }
 	        // If there is a preDefined value then add it
 	        if (preDefined !== null) {
 	            $(els[0]).val(preDefined[0]);
@@ -2188,6 +2199,9 @@
 	            format: that.s.momentFormat ? that.s.momentFormat : undefined
 	        })
 	            .on('input change', function () { fn(that, this); });
+	        if (that.c.greyscale) {
+	            $(el).addClass(Criteria.classes.greyscale);
+	        }
 	        // If there is a preDefined value then add it
 	        if (preDefined !== null) {
 	            $(el).val(preDefined[0]);
@@ -2218,6 +2232,10 @@
 	            })
 	                .on('input change', function () { fn(that, this); })
 	        ];
+	        if (that.c.greyscale) {
+	            $(els[0]).addClass(Criteria.classes.greyscale);
+	            $(els[2]).addClass(Criteria.classes.greyscale);
+	        }
 	        // If there are and preDefined values then add them
 	        if (preDefined !== null && preDefined.length > 0) {
 	            $(els[0]).val(preDefined[0]);
