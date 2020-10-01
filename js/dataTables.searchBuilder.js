@@ -2861,7 +2861,7 @@
 	        },
 	        'ends': {
 	            conditionName: function (dt, i18n) {
-	                return dt.i18n('searchBuilder.conditions.string.endsWidth', i18n.conditions.string.endsWith);
+	                return dt.i18n('searchBuilder.conditions.string.endsWith', i18n.conditions.string.endsWith);
 	            },
 	            init: Criteria.initInput,
 	            inputValue: Criteria.inputValueInput,
