@@ -2706,8 +2706,8 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp = comparison[0].replace(/[^0-9.]/g, '');
+	                var val = value.replace(/[^0-9-.]/g, '');
+	                var comp = comparison[0].replace(/[^0-9-.]/g, '');
 	                return +val < +comp;
 	            }
 	        },
@@ -2719,8 +2719,8 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp0 = comparison[0].replace(/[^0-9.]/g, '');
+	                var val = value.replace(/[^0-9-.]/g, '');
+	                var comp0 = comparison[0].replace(/[^0-9-.]/g, '');
 	                return +val <= +comp0;
 	            }
 	        },
@@ -2732,8 +2732,8 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp0 = comparison[0].replace(/[^0-9.]/g, '');
+	                var val = value.replace(/[^0-9-.]/g, '');
+	                var comp0 = comparison[0].replace(/[^0-9-.]/g, '');
 	                return +val >= +comp0;
 	            }
 	        },
@@ -2745,8 +2745,8 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                var val = value.replace(/[^0-9.]/g, '');
-	                var comp0 = comparison[0].replace(/[^0-9.]/g, '');
+	                var val = value.replace(/[^0-9-.]/g, '');
+	                var comp0 = comparison[0].replace(/[^0-9-.]/g, '');
 	                return +val > +comp0;
 	            }
 	        },
