@@ -2077,7 +2077,7 @@
 	            };
 	            // Add text and value, stripping out any html if that is the column type
 	            var opt = $('<option>', {
-	                text: typeof value.text === 'string' ? value.text.replace(/(<([^>]+)>)/ig, '') : value.text,
+	                text: that.s.type.indexOf('html') !== -1 ? value.text.replace(/(<([^>]+)>)/ig, '') : value.text,
 	                value: that.s.type.indexOf('html') !== -1 ? value.filter.replace(/(<([^>]+)>)/ig, '') : value.filter
 	            })
 	                .addClass(that.classes.option)
@@ -2867,7 +2867,7 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison) {
-	                return value.toLowerCase().indexOf(comparison[0].toLowerCase()) === value.length - comparison[0].length;
+	                return value.toLowerCase().endsWith(comparison[0].toLowerCase());
 	            }
 	        },
 	        'null': {
