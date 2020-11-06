@@ -2156,7 +2156,7 @@
 	                .addClass(Criteria.classes.input)
 	                .on('input', function () { fn(that, this); }),
 	            $('<span>')
-	                .addClass(that.classes.joiner).text('and'),
+	                .addClass(that.classes.joiner).text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
 	            $('<input/>')
 	                .addClass(Criteria.classes.value)
 	                .addClass(Criteria.classes.input)
@@ -2210,7 +2210,7 @@
 	                .on('input change', function () { fn(that, this); }),
 	            $('<span>')
 	                .addClass(that.classes.joiner)
-	                .text('and'),
+	                .text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
 	            $('<input/>')
 	                .addClass(Criteria.classes.value)
 	                .addClass(Criteria.classes.input)
@@ -2964,7 +2964,8 @@
 	                0: 'Custom Search Builder',
 	                _: 'Custom Search Builder (%d)'
 	            },
-	            value: 'Value'
+	            value: 'Value',
+	            valueJoiner: 'and'
 	        },
 	        logic: 'AND',
 	        orthogonal: {
@@ -3646,7 +3647,8 @@
 	                0: 'Custom Search Builder',
 	                _: 'Custom Search Builder (%d)'
 	            },
-	            value: 'Value'
+	            value: 'Value',
+	            valueJoiner: 'and'
 	        },
 	        logic: 'AND',
 	        orthogonal: {
@@ -4019,7 +4021,8 @@
 	                0: 'Custom Search Builder',
 	                _: 'Custom Search Builder (%d)'
 	            },
-	            value: 'Value'
+	            value: 'Value',
+	            valueJoiner: 'and'
 	        },
 	        logic: 'AND',
 	        orthogonal: {
