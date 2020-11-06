@@ -1577,6 +1577,10 @@
 	    Criteria.prototype.search = function (rowData) {
 	        var condition = this.s.conditions[this.s.condition];
 	        if (this.s.condition !== undefined && condition !== undefined) {
+	            // This check is in place for if a custom decimal character is in place
+	            if (this.s.type.indexOf('num') !== -1 && this.s.dt.settings()[0].oLanguage.sDecimal !== '') {
+	                rowData[this.s.dataIdx] = rowData[this.s.dataIdx].replace(this.s.dt.settings()[0].oLanguage.sDecimal, '.');
+	            }
 	            return condition.search(rowData[this.s.dataIdx], this.s.value, this);
 	        }
 	    };
@@ -1584,10 +1588,19 @@
 	     * Gets the details required to rebuild the criteria
 	     */
 	    Criteria.prototype.getDetails = function () {
+	        var value = this.s.value;
+	        // This check is in place for if a custom decimal character is in place
+	        if (this.s.type.indexOf('num') !== -1 && this.s.dt.settings()[0].oLanguage.sDecimal !== '') {
+	            for (var i = 0; i < this.s.value.length; i++) {
+	                if (this.s.value[i].indexOf('.') !== -1) {
+	                    value[i] = this.s.value[i].replace('.', this.s.dt.settings()[0].oLanguage.sDecimal);
+	                }
+	            }
+	        }
 	        return {
 	            condition: this.s.condition,
 	            data: this.s.data,
-	            value: this.s.value
+	            value: value
 	        };
 	    };
 	    /**
@@ -1849,6 +1862,16 @@
 	                .addClass(this.classes.italic);
 	            $(this.dom.conditionTitle)
 	                .attr('selected', true);
+	            var decimal = this.s.dt.settings()[0].oLanguage.sDecimal;
+	            // This check is in place for if a custom decimal character is in place
+	            if (decimal !== '' && this.s.type.indexOf(decimal) === this.s.type.length - decimal.length) {
+	                if (this.s.type.indexOf('num-fmt') !== -1) {
+	                    this.s.type = this.s.type.replace(decimal, '');
+	                }
+	                else if (this.s.type.indexOf('num') !== -1) {
+	                    this.s.type = this.s.type.replace(decimal, '');
+	                }
+	            }
 	            // Select which conditions are going to be used based on the column type
 	            var conditionObj = this.c.conditions[this.s.type] !== undefined ?
 	                this.c.conditions[this.s.type] :
@@ -2300,6 +2323,11 @@
 	        that.s.value = condition.inputValue(that.dom.value, that);
 	        if (!Array.isArray(that.s.value)) {
 	            that.s.value = [that.s.value];
+	        }
+	        for (var i = 0; i < that.s.value.length; i++) {
+	            if (that.s.dt.settings()[0].oLanguage.sDecimal !== '') {
+	                that.s.value[i] = that.s.value[i].replace(that.s.dt.settings()[0].oLanguage.sDecimal, '.');
+	            }
 	        }
 	        // Take note of the cursor position so that we can refocus there later
 	        var idx = null;
