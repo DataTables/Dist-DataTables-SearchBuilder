@@ -1688,6 +1688,8 @@
 	            $(_this.dom.data).removeClass(_this.classes.italic);
 	            _this.s.dataIdx = $(_this.dom.data).children('option:selected').val();
 	            _this.s.data = $(_this.dom.data).children('option:selected').text();
+	            _this.c.orthogonal = _this._getOptions().orthogonal;
+	            console.log(_this.c);
 	            // When the data is changed, the values in condition and value may also change so need to renew them
 	            _this._clearCondition();
 	            _this._clearValue();
@@ -1838,6 +1840,15 @@
 	                .insertAfter(this.dom.condition);
 	        }
 	        this.s.value = [];
+	    };
+	    /**
+	     * Gets the options for the column
+	     * @returns {object} The options for the column
+	     */
+	    Criteria.prototype._getOptions = function () {
+	        var table = this.s.dt;
+	        console.log(table.settings()[0].aoColumns, this.s.dataIdx);
+	        return $.extend(true, {}, Criteria.defaults, table.settings()[0].aoColumns[this.s.dataIdx].searchBuilder);
 	    };
 	    /**
 	     * Populates the condition dropdown
@@ -2113,7 +2124,6 @@
 	            var val = $(opt).val();
 	            // Check that this value has not already been added
 	            if (added.indexOf(val) === -1) {
-	                // $(el).append(opt);
 	                added.push(val);
 	                options.push(opt);
 	                // If this value was previously selected as indicated by preDefined, then select it again
@@ -3003,6 +3013,7 @@
 	        logic: 'AND',
 	        orthogonal: {
 	            conditionName: 'Condition Name',
+	            display: 'display',
 	            search: 'filter'
 	        },
 	        preDefined: false
@@ -3686,6 +3697,7 @@
 	        logic: 'AND',
 	        orthogonal: {
 	            conditionName: 'Condition Name',
+	            display: 'display',
 	            search: 'filter'
 	        },
 	        preDefined: false
@@ -4060,6 +4072,7 @@
 	        logic: 'AND',
 	        orthogonal: {
 	            conditionName: 'Condition Name',
+	            display: 'display',
 	            search: 'filter'
 	        },
 	        preDefined: false
