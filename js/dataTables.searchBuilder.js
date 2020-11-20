@@ -2109,7 +2109,7 @@
 	            var value = {
 	                filter: settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
 	                    that.c.orthogonal :
-	                    that.c.orthogonal.search),
+	                    that.c.orthogonal.search).replace(/[\r\n\u2028]/g, ' '),
 	                index: index,
 	                text: settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
 	                    that.c.orthogonal :
