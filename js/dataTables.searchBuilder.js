@@ -1482,15 +1482,18 @@
 	            "delete": $('<button>&times</button>')
 	                .addClass(this.classes["delete"])
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', i18n.deleteTitle)),
+	                .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', i18n.deleteTitle))
+	                .attr('type', 'button'),
 	            left: $('<button>\<</button>')
 	                .addClass(this.classes.left)
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', i18n.leftTitle)),
+	                .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', i18n.leftTitle))
+	                .attr('type', 'button'),
 	            right: $('<button>\></button>')
 	                .addClass(this.classes.right)
 	                .addClass(this.classes.button)
-	                .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', i18n.rightTitle)),
+	                .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', i18n.rightTitle))
+	                .attr('type', 'button'),
 	            value: [
 	                $('<select disabled/>').addClass(this.classes.value).addClass(this.classes.dropDown).addClass(this.classes.italic)
 	            ],
@@ -3062,15 +3065,18 @@
 	        this.dom = {
 	            add: $$1('<button/>')
 	                .addClass(this.classes.add)
-	                .addClass(this.classes.button),
+	                .addClass(this.classes.button)
+	                .attr('type', 'button'),
 	            clear: $$1('<button>&times</button>')
 	                .addClass(this.classes.button)
-	                .addClass(this.classes.clearGroup),
+	                .addClass(this.classes.clearGroup)
+	                .attr('type', 'button'),
 	            container: $$1('<div/>')
 	                .addClass(this.classes.group),
 	            logic: $$1('<button/>')
 	                .addClass(this.classes.logic)
-	                .addClass(this.classes.button),
+	                .addClass(this.classes.button)
+	                .attr('type', 'button'),
 	            logicContainer: $$1('<div/>')
 	                .addClass(this.classes.logicContainer)
 	        };
@@ -3735,7 +3741,8 @@
 	        this.dom = {
 	            clearAll: $$2('<button type="button">' + table.i18n('searchBuilder.clearAll', this.c.i18n.clearAll) + '</button>')
 	                .addClass(this.classes.clearAll)
-	                .addClass(this.classes.button),
+	                .addClass(this.classes.button)
+	                .attr('type', 'button'),
 	            container: $$2('<div/>')
 	                .addClass(this.classes.container),
 	            title: $$2('<div/>')
