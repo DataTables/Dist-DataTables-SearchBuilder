@@ -2104,9 +2104,13 @@
 	        for (var _i = 0, indexArray_1 = indexArray; _i < indexArray_1.length; _i++) {
 	            var index = indexArray_1[_i];
 	            var value = {
-	                filter: settings.oApi._fnGetCellData(settings, index, column, that.c.orthogonal.search),
+	                filter: settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
+	                    that.c.orthogonal :
+	                    that.c.orthogonal.search),
 	                index: index,
-	                text: settings.oApi._fnGetCellData(settings, index, column, that.c.orthogonal.display)
+	                text: settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
+	                    that.c.orthogonal :
+	                    that.c.orthogonal.display)
 	            };
 	            // Add text and value, stripping out any html if that is the column type
 	            var opt = $('<option>', {
