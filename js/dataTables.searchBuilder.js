@@ -3017,7 +3017,6 @@
 	        },
 	        logic: 'AND',
 	        orthogonal: {
-	            conditionName: 'Condition Name',
 	            display: 'display',
 	            search: 'filter'
 	        },
@@ -3704,7 +3703,6 @@
 	        },
 	        logic: 'AND',
 	        orthogonal: {
-	            conditionName: 'Condition Name',
 	            display: 'display',
 	            search: 'filter'
 	        },
@@ -4080,7 +4078,6 @@
 	        },
 	        logic: 'AND',
 	        orthogonal: {
-	            conditionName: 'Condition Name',
 	            display: 'display',
 	            search: 'filter'
 	        },
