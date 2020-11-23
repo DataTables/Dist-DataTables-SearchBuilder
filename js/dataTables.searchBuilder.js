@@ -2106,10 +2106,13 @@
 	        // Only add one option for each possible value
 	        for (var _i = 0, indexArray_1 = indexArray; _i < indexArray_1.length; _i++) {
 	            var index = indexArray_1[_i];
+	            var filter = settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
+	                that.c.orthogonal :
+	                that.c.orthogonal.search);
 	            var value = {
-	                filter: settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
-	                    that.c.orthogonal :
-	                    that.c.orthogonal.search).replace(/[\r\n\u2028]/g, ' '),
+	                filter: typeof filter === 'string' ?
+	                    filter.replace(/[\r\n\u2028]/g, ' ') : // Need to replace certain characters to match the search values
+	                    filter,
 	                index: index,
 	                text: settings.oApi._fnGetCellData(settings, index, column, typeof that.c.orthogonal === 'string' ?
 	                    that.c.orthogonal :
