@@ -2217,6 +2217,10 @@
 	            $(els[0]).val(preDefined[0]);
 	            $(els[2]).val(preDefined[1]);
 	        }
+	        that.s.dt.off('draw');
+	        that.s.dt.one('draw', function () {
+	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	        });
 	        return els;
 	    };
 	    /**
@@ -2241,6 +2245,12 @@
 	            $(el).val(preDefined[0]);
 	        }
 	        return el;
+	    };
+	    Criteria.initNoValue = function (that) {
+	        that.s.dt.off('draw');
+	        that.s.dt.one('draw', function () {
+	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	        });
 	    };
 	    Criteria.init2Date = function (that, fn, preDefined) {
 	        if (preDefined === void 0) { preDefined = null; }
@@ -2275,6 +2285,10 @@
 	            $(els[0]).val(preDefined[0]);
 	            $(els[2]).val(preDefined[1]);
 	        }
+	        that.s.dt.off('draw');
+	        that.s.dt.one('draw', function () {
+	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	        });
 	        return els;
 	    };
 	    /**
@@ -2463,7 +2477,7 @@
 	                return dt.i18n('searchBuilder.conditions.date.empty', i18n.conditions.date.empty);
 	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
@@ -2476,7 +2490,7 @@
 	                return dt.i18n('searchBuilder.conditions.date.notEmpty', i18n.conditions.date.notEmpty);
 	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
@@ -2574,7 +2588,7 @@
 	                return dt.i18n('searchBuilder.conditions.moment.empty', i18n.conditions.moment.empty);
 	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
@@ -2587,7 +2601,7 @@
 	                return dt.i18n('searchBuilder.conditions.moment.notEmpty', i18n.conditions.moment.notEmpty);
 	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
@@ -2700,7 +2714,7 @@
 	            conditionName: function (dt, i18n) {
 	                return dt.i18n('searchBuilder.conditions.number.empty', i18n.conditions.number.empty);
 	            },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () { return; },
 	            isInputValid: function () { return true; },
 	            search: function (value) {
@@ -2712,7 +2726,7 @@
 	                return dt.i18n('searchBuilder.conditions.number.notEmpty', i18n.conditions.number.notEmpty);
 	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
@@ -2879,7 +2893,7 @@
 	            conditionName: function (dt, i18n) {
 	                return dt.i18n('searchBuilder.conditions.number.empty', i18n.conditions.number.empty);
 	            },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () { return; },
 	            isInputValid: function () { return true; },
 	            search: function (value) {
@@ -2891,7 +2905,7 @@
 	                return dt.i18n('searchBuilder.conditions.number.notEmpty', i18n.conditions.number.notEmpty);
 	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
@@ -2961,7 +2975,7 @@
 	            conditionName: function (dt, i18n) {
 	                return dt.i18n('searchBuilder.conditions.string.empty', i18n.conditions.string.empty);
 	            },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () { return; },
 	            isInputValid: function () { return true; },
 	            search: function (value) {
@@ -2973,7 +2987,7 @@
 	                return dt.i18n('searchBuilder.conditions.string.notEmpty', i18n.conditions.string.notEmpty);
 	            },
 	            isInputValid: function () { return true; },
-	            init: function () { return; },
+	            init: Criteria.initNoValue,
 	            inputValue: function () {
 	                return;
 	            },
