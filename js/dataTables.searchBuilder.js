@@ -1578,14 +1578,29 @@
 	     * @param rowData The data for the row to be compared
 	     * @returns boolean Whether the criteria has passed
 	     */
-	    Criteria.prototype.search = function (rowData) {
+	    Criteria.prototype.search = function (rowData, rowIdx) {
 	        var condition = this.s.conditions[this.s.condition];
 	        if (this.s.condition !== undefined && condition !== undefined) {
 	            // This check is in place for if a custom decimal character is in place
 	            if (this.s.type.indexOf('num') !== -1 && this.s.dt.settings()[0].oLanguage.sDecimal !== '') {
 	                rowData[this.s.dataIdx] = rowData[this.s.dataIdx].replace(this.s.dt.settings()[0].oLanguage.sDecimal, '.');
 	            }
-	            return condition.search(rowData[this.s.dataIdx], this.s.value, this);
+	            var filter = rowData[this.s.dataIdx];
+	            // If orthogonal data is in place we need to get it's values for searching
+	            if (this.c.orthogonal.search !== 'search') {
+	                var settings = this.s.dt.settings()[0];
+	                filter = settings.oApi._fnGetCellData(settings, rowIdx, this.s.dataIdx, typeof this.c.orthogonal === 'string' ?
+	                    this.c.orthogonal :
+	                    this.c.orthogonal.search);
+	            }
+	            if (this.s.type === 'array') {
+	                // Make sure we are working with an array
+	                if (!Array.isArray(filter)) {
+	                    filter = [filter];
+	                }
+	                filter.sort();
+	            }
+	            return condition.search(filter, this.s.value, this);
 	        }
 	    };
 	    /**
@@ -2082,8 +2097,9 @@
 	    /**
 	     * Default initialisation function for select conditions
 	     */
-	    Criteria.initSelect = function (that, fn, preDefined) {
+	    Criteria.initSelect = function (that, fn, preDefined, array) {
 	        if (preDefined === void 0) { preDefined = null; }
+	        if (array === void 0) { array = false; }
 	        var column = $(that.dom.data).children('option:selected').val();
 	        var indexArray = that.s.dt.rows().indexes().toArray();
 	        var settings = that.s.dt.settings()[0];
@@ -2118,27 +2134,53 @@
 	                    that.c.orthogonal :
 	                    that.c.orthogonal.display)
 	            };
-	            // Add text and value, stripping out any html if that is the column type
-	            var opt = $('<option>', {
-	                text: typeof value.text === 'string' ?
-	                    value.text.replace(/(<([^>]+)>)/ig, '') :
-	                    value.text,
-	                value: that.s.type.indexOf('html') !== -1 && value.filter !== null ?
-	                    value.filter.replace(/(<([^>]+)>)/ig, '') :
-	                    value.filter
-	            })
-	                .addClass(that.classes.option)
-	                .addClass(that.classes.notItalic);
-	            var val = $(opt).val();
-	            // Check that this value has not already been added
-	            if (added.indexOf(val) === -1) {
-	                added.push(val);
-	                options.push(opt);
-	                // If this value was previously selected as indicated by preDefined, then select it again
-	                if (preDefined !== null && opt.val() === preDefined[0]) {
-	                    opt.attr('selected', true);
-	                    $(el).removeClass(Criteria.classes.italic);
+	            // If we are dealing with an array type, either make sure we are working with arrays, or sort them
+	            if (that.s.type === 'array') {
+	                value.filter = !Array.isArray(value.filter) ?
+	                    [value.filter] :
+	                    value.filter = value.filter.sort();
+	                value.text = !Array.isArray(value.text) ?
+	                    [value.text] :
+	                    value.text = value.text.sort();
+	            }
+	            // Function to add an option to the select element
+	            var addOption = function (filt, text) {
+	                // Add text and value, stripping out any html if that is the column type
+	                var opt = $('<option>', {
+	                    text: typeof text === 'string' ?
+	                        text.replace(/(<([^>]+)>)/ig, '') :
+	                        text,
+	                    type: Array.isArray(filt) ? 'Array' : 'String',
+	                    value: that.s.type.indexOf('html') !== -1 && filt !== null && typeof filt === 'string' ?
+	                        filt.replace(/(<([^>]+)>)/ig, '') :
+	                        filt
+	                })
+	                    .addClass(that.classes.option)
+	                    .addClass(that.classes.notItalic);
+	                var val = $(opt).val();
+	                // Check that this value has not already been added
+	                if (added.indexOf(val) === -1) {
+	                    added.push(val);
+	                    options.push(opt);
+	                    if (preDefined !== null && Array.isArray(preDefined[0])) {
+	                        preDefined[0] = preDefined[0].sort().join(',');
+	                    }
+	                    // If this value was previously selected as indicated by preDefined, then select it again
+	                    if (preDefined !== null && opt.val() === preDefined[0]) {
+	                        opt.attr('selected', true);
+	                        $(el).removeClass(Criteria.classes.italic);
+	                    }
 	                }
+	            };
+	            // If this is to add the individual values within the array we need to loop over the array
+	            if (array) {
+	                for (var i = 0; i < value.filter.length; i++) {
+	                    addOption(value.filter[i], value.text[i]);
+	                }
+	            }
+	            // Otherwise the value that is in the cell is to be added
+	            else {
+	                addOption(value.filter, value.text);
 	            }
 	        }
 	        options.sort(function (a, b) {
@@ -2170,6 +2212,15 @@
 	            $(el).append(opt);
 	        }
 	        return el;
+	    };
+	    /**
+	     * Default initialisation function for select array conditions
+	     *
+	     * This exists because there needs to be different select functionality for contains/without and equals/not
+	     */
+	    Criteria.initSelectArray = function (that, fn, preDefined) {
+	        if (preDefined === void 0) { preDefined = null; }
+	        return Criteria.initSelect(that, fn, preDefined, true);
 	    };
 	    /**
 	     * Default initialisation function for input conditions
@@ -2330,7 +2381,11 @@
 	        for (var _i = 0, el_3 = el; _i < el_3.length; _i++) {
 	            var element = el_3[_i];
 	            if ($(element).is('select')) {
-	                values.push($(element).children('option:selected').val());
+	                var val = $(element).children('option:selected').val();
+	                // If the type of the option is an array we need to split it up and sort it
+	                values.push($(element).children('option:selected').attr('type') === 'Array' ?
+	                    val.split(',').sort() :
+	                    val);
 	            }
 	        }
 	        return values;
@@ -2362,7 +2417,12 @@
 	            that.s.value = [that.s.value];
 	        }
 	        for (var i = 0; i < that.s.value.length; i++) {
-	            if (that.s.dt.settings()[0].oLanguage.sDecimal !== '') {
+	            // If the value is an array we need to sort it
+	            if (Array.isArray(that.s.value[i])) {
+	                that.s.value[i].sort();
+	            }
+	            // Otherwise replace the decimal place character for i18n
+	            else if (that.s.dt.settings()[0].oLanguage.sDecimal !== '') {
 	                that.s.value[i] = that.s.value[i].replace(that.s.dt.settings()[0].oLanguage.sDecimal, '.');
 	            }
 	        }
@@ -2996,9 +3056,95 @@
 	            }
 	        }
 	    };
+	    // The order of the conditions will make tslint sad :(
+	    Criteria.arrayConditions = {
+	        'contains': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.contains', i18n.conditions.array.contains);
+	            },
+	            init: Criteria.initSelectArray,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                return value.indexOf(comparison[0]) !== -1;
+	            }
+	        },
+	        'without': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.without', i18n.conditions.array.without);
+	            },
+	            init: Criteria.initSelectArray,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                return value.indexOf(comparison[0]) === -1;
+	            }
+	        },
+	        '=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.equals', i18n.conditions.array.equals);
+	            },
+	            init: Criteria.initSelect,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                if (value.length === comparison[0].length) {
+	                    for (var i = 0; i < value.length; i++) {
+	                        if (value[i] !== comparison[0][i]) {
+	                            return false;
+	                        }
+	                    }
+	                    return true;
+	                }
+	                return false;
+	            }
+	        },
+	        '!=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.not', i18n.conditions.array.not);
+	            },
+	            init: Criteria.initSelect,
+	            inputValue: Criteria.inputValueSelect,
+	            isInputValid: Criteria.isInputValidSelect,
+	            search: function (value, comparison) {
+	                if (value.length === comparison[0].length) {
+	                    for (var i = 0; i < value.length; i++) {
+	                        if (value[i] !== comparison[0][i]) {
+	                            return true;
+	                        }
+	                    }
+	                    return false;
+	                }
+	                return true;
+	            }
+	        },
+	        'null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.empty', i18n.conditions.array.empty);
+	            },
+	            init: Criteria.initNoValue,
+	            isInputValid: function () { return true; },
+	            inputValue: function () { return; },
+	            search: function (value) {
+	                return (value === null || value === undefined || value.length === 0);
+	            }
+	        },
+	        '!null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.array.notEmpty', i18n.conditions.array.notEmpty);
+	            },
+	            isInputValid: function () { return true; },
+	            init: Criteria.initNoValue,
+	            inputValue: function () { return; },
+	            search: function (value) {
+	                return (value !== null && value !== undefined && value.length !== 0);
+	            }
+	        }
+	    };
 	    Criteria.defaults = {
 	        columns: true,
 	        conditions: {
+	            'array': Criteria.arrayConditions,
 	            'date': Criteria.dateConditions,
 	            'html': Criteria.stringConditions,
 	            'html-num': Criteria.numConditions,
@@ -3228,12 +3374,12 @@
 	     * @param rowData The row data to be compared
 	     * @returns boolean The result of the search
 	     */
-	    Group.prototype.search = function (rowData) {
+	    Group.prototype.search = function (rowData, rowIdx) {
 	        if (this.s.logic === 'AND') {
-	            return this._andSearch(rowData);
+	            return this._andSearch(rowData, rowIdx);
 	        }
 	        else if (this.s.logic === 'OR') {
-	            return this._orSearch(rowData);
+	            return this._orSearch(rowData, rowIdx);
 	        }
 	        return true;
 	    };
@@ -3426,7 +3572,7 @@
 	     * @param rowData The row data to be checked against the search criteria
 	     * @returns boolean The result of the AND search
 	     */
-	    Group.prototype._andSearch = function (rowData) {
+	    Group.prototype._andSearch = function (rowData, rowIdx) {
 	        // If there are no criteria then return true for this group
 	        if (this.s.criteria.length === 0) {
 	            return true;
@@ -3438,7 +3584,7 @@
 	                continue;
 	            }
 	            // Otherwise if a single one fails return false
-	            else if (!crit.criteria.search(rowData)) {
+	            else if (!crit.criteria.search(rowData, rowIdx)) {
 	                return false;
 	            }
 	        }
@@ -3450,7 +3596,7 @@
 	     * @param rowData The row data to be checked against the search criteria
 	     * @returns boolean The result of the OR search
 	     */
-	    Group.prototype._orSearch = function (rowData) {
+	    Group.prototype._orSearch = function (rowData, rowIdx) {
 	        // If there are no criteria in the group then return true
 	        if (this.s.criteria.length === 0) {
 	            return true;
@@ -3463,13 +3609,13 @@
 	                // A completed criteria has been found so set the flag
 	                filledfound = true;
 	                // If the search passes then return true
-	                if (crit.criteria.search(rowData)) {
+	                if (crit.criteria.search(rowData, rowIdx)) {
 	                    return true;
 	                }
 	            }
 	            else if (crit.criteria instanceof Group && crit.criteria.checkFilled()) {
 	                filledfound = true;
-	                if (crit.criteria.search(rowData)) {
+	                if (crit.criteria.search(rowData, rowIdx)) {
 	                    return true;
 	                }
 	            }
@@ -3905,7 +4051,7 @@
 	                if (settings.nTable !== tableNode) {
 	                    return true;
 	                }
-	                return _this.s.topGroup.search(searchData);
+	                return _this.s.topGroup.search(searchData, dataIndex);
 	            };
 	            // Add SearchBuilder search function to the dataTables search array
 	            $$2.fn.dataTable.ext.search.push(this.s.search);
@@ -4038,6 +4184,14 @@
 	            clearAll: 'Clear All',
 	            condition: 'Condition',
 	            conditions: {
+	                array: {
+	                    contains: 'Contains',
+	                    empty: 'Empty',
+	                    equals: 'Equals',
+	                    not: 'Not',
+	                    notEmpty: 'Not Empty',
+	                    without: 'Without'
+	                },
 	                date: {
 	                    after: 'After',
 	                    before: 'Before',
