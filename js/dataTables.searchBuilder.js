@@ -1986,7 +1986,7 @@
 	                        }
 	                    }
 	                    if (!found) {
-	                        var opt = { text: _this.s.dt.settings()[0].aoColumns[index].sTitle, index: index };
+	                        var opt = { text: _this.s.dt.settings()[0].aoColumns[index].sTitle.replace(/(<([^>]+)>)/ig, ''), index: index };
 	                        _this.s.dataPoints.push(opt);
 	                        $(_this.dom.data).append($('<option>', {
 	                            text: opt.text,
@@ -2007,7 +2007,7 @@
 	                    }
 	                });
 	                var newOpt = $('<option>', {
-	                    text: data.text,
+	                    text: data.text.replace(/(<([^>]+)>)/ig, ''),
 	                    value: data.index
 	                })
 	                    .addClass(this_1.classes.option)
