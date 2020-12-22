@@ -1781,9 +1781,10 @@
 	                rightOffset.left :
 	                clearOffset.left;
 	        // Perform the responsive calculations and redraw where necessary
-	        if (buttonsLeft - valRight < 15 ||
+	        if ((buttonsLeft - valRight < 15 ||
 	            (hasLeft && leftOffset.top !== clearOffset.top) ||
-	            (hasRight && rightOffset.top !== clearOffset.top)) {
+	            (hasRight && rightOffset.top !== clearOffset.top)) &&
+	            !$(this.dom.container).parent().hasClass(this.classes.vertical)) {
 	            $(this.dom.container).parent().addClass(this.classes.vertical);
 	            $(this.s.topGroup).trigger('dtsb-redrawContents');
 	        }
@@ -1791,7 +1792,8 @@
 	            ($(this.dom.data).offset().left +
 	                $(this.dom.data).outerWidth(true) +
 	                $(this.dom.condition).outerWidth(true) +
-	                valWidth) > 15) {
+	                valWidth) > 15
+	            && $(this.dom.container).parent().hasClass(this.classes.vertical)) {
 	            $(this.dom.container).parent().removeClass(this.classes.vertical);
 	            $(this.s.topGroup).trigger('dtsb-redrawContents');
 	        }
@@ -2214,6 +2216,11 @@
 	            var opt = options_1[_a];
 	            $(el).append(opt);
 	        }
+	        // This is partly for responsive and partly for editor integration
+	        that.s.dt.off('draw');
+	        that.s.dt.one('draw', function () {
+	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	        });
 	        return el;
 	    };
 	    /**
@@ -2229,12 +2236,18 @@
 	     * Default initialisation function for input conditions
 	     */
 	    Criteria.initInput = function (that, fn, preDefined) {
+	        var _this = this;
 	        if (preDefined === void 0) { preDefined = null; }
 	        // Declare the input element
+	        var searchDelay = that.s.dt.settings()[0].searchDelay;
 	        var el = $('<input/>')
 	            .addClass(Criteria.classes.value)
 	            .addClass(Criteria.classes.input)
-	            .on('input', function () { fn(that, this); });
+	            .on('input', searchDelay !== null ?
+	            that.s.dt.settings()[0].oApi._fnThrottle(function () {
+	                return fn(that, this);
+	            }, searchDelay) :
+	            function () { fn(that, _this); });
 	        if (that.c.greyscale) {
 	            $(el).addClass(Criteria.classes.greyscale);
 	        }
@@ -2242,25 +2255,40 @@
 	        if (preDefined !== null) {
 	            $(el).val(preDefined[0]);
 	        }
+	        // This is add responsive functionality to the logic button without redrawing everything else
+	        that.s.dt.off('draw');
+	        that.s.dt.one('draw', function () {
+	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
+	        });
 	        return el;
 	    };
 	    /**
 	     * Default initialisation function for conditions requiring 2 inputs
 	     */
 	    Criteria.init2Input = function (that, fn, preDefined) {
+	        var _this = this;
 	        if (preDefined === void 0) { preDefined = null; }
 	        // Declare all of the necessary jQuery elements
+	        var searchDelay = that.s.dt.settings()[0].searchDelay;
 	        var els = [
 	            $('<input/>')
 	                .addClass(Criteria.classes.value)
 	                .addClass(Criteria.classes.input)
-	                .on('input', function () { fn(that, this); }),
+	                .on('input', searchDelay !== null ?
+	                that.s.dt.settings()[0].oApi._fnThrottle(function () {
+	                    return fn(that, this);
+	                }, searchDelay) :
+	                function () { fn(that, _this); }),
 	            $('<span>')
 	                .addClass(that.classes.joiner).text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
 	            $('<input/>')
 	                .addClass(Criteria.classes.value)
 	                .addClass(Criteria.classes.input)
-	                .on('input', function () { fn(that, this); })
+	                .on('input', searchDelay !== null ?
+	                that.s.dt.settings()[0].oApi._fnThrottle(function () {
+	                    return fn(that, this);
+	                }, searchDelay) :
+	                function () { fn(that, _this); })
 	        ];
 	        if (that.c.greyscale) {
 	            $(els[0]).addClass(Criteria.classes.greyscale);
@@ -2271,9 +2299,10 @@
 	            $(els[0]).val(preDefined[0]);
 	            $(els[2]).val(preDefined[1]);
 	        }
+	        // This is add responsive functionality to the logic button without redrawing everything else
 	        that.s.dt.off('draw');
 	        that.s.dt.one('draw', function () {
-	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
 	        });
 	        return els;
 	    };
@@ -2281,7 +2310,9 @@
 	     * Default initialisation function for date conditions
 	     */
 	    Criteria.initDate = function (that, fn, preDefined) {
+	        var _this = this;
 	        if (preDefined === void 0) { preDefined = null; }
+	        var searchDelay = that.s.dt.settings()[0].searchDelay;
 	        // Declare date element using DataTables dateTime plugin
 	        var el = $('<input/>')
 	            .addClass(Criteria.classes.value)
@@ -2290,7 +2321,11 @@
 	            attachTo: 'input',
 	            format: that.s.momentFormat ? that.s.momentFormat : undefined
 	        })
-	            .on('input change', function () { fn(that, this); });
+	            .on('input change', searchDelay !== null ?
+	            that.s.dt.settings()[0].oApi._fnThrottle(function () {
+	                return fn(that, this);
+	            }, searchDelay) :
+	            function () { fn(that, _this); });
 	        if (that.c.greyscale) {
 	            $(el).addClass(Criteria.classes.greyscale);
 	        }
@@ -2298,16 +2333,24 @@
 	        if (preDefined !== null) {
 	            $(el).val(preDefined[0]);
 	        }
+	        // This is add responsive functionality to the logic button without redrawing everything else
+	        that.s.dt.off('draw');
+	        that.s.dt.one('draw', function () {
+	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
+	        });
 	        return el;
 	    };
 	    Criteria.initNoValue = function (that) {
+	        // This is add responsive functionality to the logic button without redrawing everything else
 	        that.s.dt.off('draw');
 	        that.s.dt.one('draw', function () {
-	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
 	        });
 	    };
 	    Criteria.init2Date = function (that, fn, preDefined) {
+	        var _this = this;
 	        if (preDefined === void 0) { preDefined = null; }
+	        var searchDelay = that.s.dt.settings()[0].searchDelay;
 	        // Declare all of the date elements that are required using DataTables dateTime plugin
 	        var els = [
 	            $('<input/>')
@@ -2317,7 +2360,11 @@
 	                attachTo: 'input',
 	                format: that.s.momentFormat ? that.s.momentFormat : undefined
 	            })
-	                .on('input change', function () { fn(that, this); }),
+	                .on('input change', searchDelay !== null ?
+	                that.s.dt.settings()[0].oApi._fnThrottle(function () {
+	                    return fn(that, this);
+	                }, searchDelay) :
+	                function () { fn(that, _this); }),
 	            $('<span>')
 	                .addClass(that.classes.joiner)
 	                .text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
@@ -2328,7 +2375,11 @@
 	                attachTo: 'input',
 	                format: that.s.momentFormat ? that.s.momentFormat : undefined
 	            })
-	                .on('input change', function () { fn(that, this); })
+	                .on('input change', searchDelay !== null ?
+	                that.s.dt.settings()[0].oApi._fnThrottle(function () {
+	                    return fn(that, this);
+	                }, searchDelay) :
+	                function () { fn(that, _this); }),
 	        ];
 	        if (that.c.greyscale) {
 	            $(els[0]).addClass(Criteria.classes.greyscale);
@@ -2339,9 +2390,10 @@
 	            $(els[0]).val(preDefined[0]);
 	            $(els[2]).val(preDefined[1]);
 	        }
+	        // This is add responsive functionality to the logic button without redrawing everything else
 	        that.s.dt.off('draw');
 	        that.s.dt.one('draw', function () {
-	            $(that.s.topGroup).trigger('dtsb-redrawContents');
+	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
 	        });
 	        return els;
 	    };
@@ -3373,6 +3425,18 @@
 	        this.setupLogic();
 	    };
 	    /**
+	     * Resizes the logic button only rather than the entire dom.
+	     */
+	    Group.prototype.redrawLogic = function () {
+	        for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
+	            var crit = _a[_i];
+	            if (crit instanceof Group) {
+	                crit.redrawLogic();
+	            }
+	        }
+	        this.setupLogic();
+	    };
+	    /**
 	     * Search method, checking the row data against the criteria in the group
 	     * @param rowData The row data to be compared
 	     * @returns boolean The result of the search
@@ -4129,6 +4193,22 @@
 	            _this._updateTitle(count);
 	            _this._filterChanged(count);
 	            _this.s.dt.state.save();
+	        });
+	        $$2(this.s.topGroup.dom.container).unbind('dtsb-redrawLogic');
+	        $$2(this.s.topGroup.dom.container).on('dtsb-redrawLogic', function () {
+	            _this.s.topGroup.redrawLogic();
+	            var count = _this.s.topGroup.count();
+	            _this._updateTitle(count);
+	            _this._filterChanged(count);
+	        });
+	        $$2(this.s.topGroup.dom.container).on('dtsb-add', function () {
+	            var count = _this.s.topGroup.count();
+	            _this._updateTitle(count);
+	            _this._filterChanged(count);
+	        });
+	        $$2(this.s.dt).on('postEdit postCreate postRemove', function () {
+	            console.log("editor event");
+	            _this.s.topGroup.redrawContents();
 	        });
 	        $$2(this.s.topGroup.dom.container).unbind('dtsb-clearContents');
 	        $$2(this.s.topGroup.dom.container).on('dtsb-clearContents', function () {
