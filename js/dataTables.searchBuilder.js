@@ -1442,6 +1442,10 @@
 	        if (!DataTable || !DataTable.versionCheck || !DataTable.versionCheck('1.10.0')) {
 	            throw new Error('SearchPane requires DataTables 1.10 or newer');
 	        }
+	        // Check that Select is included
+	        if (!DataTable.DateTime) {
+	            throw new Error('SearchPane requires DateTime');
+	        }
 	        this.classes = $.extend(true, {}, Criteria.classes);
 	        // Get options from user and any extra conditions/column types defined by plug-ins
 	        this.c = $.extend(true, {}, Criteria.defaults, $.fn.dataTable.ext.searchBuilder, opts);
@@ -3279,6 +3283,10 @@
 	        if (!DataTable$1 || !DataTable$1.versionCheck || !DataTable$1.versionCheck('1.10.0')) {
 	            throw new Error('SearchBuilder requires DataTables 1.10 or newer');
 	        }
+	        // Check that Select is included
+	        if (!DataTable$1.DateTime) {
+	            throw new Error('SearchPane requires DateTime');
+	        }
 	        this.classes = $$1.extend(true, {}, Group.classes);
 	        // Get options from user
 	        this.c = $$1.extend(true, {}, Group.defaults, opts);
@@ -3975,6 +3983,10 @@
 	        // Check that the required version of DataTables is included
 	        if (!DataTable$2 || !DataTable$2.versionCheck || !DataTable$2.versionCheck('1.10.0')) {
 	            throw new Error('SearchBuilder requires DataTables 1.10 or newer');
+	        }
+	        // Check that Select is included
+	        if (!DataTable$2.DateTime) {
+	            throw new Error('SearchPane requires DateTime');
 	        }
 	        var table = new DataTable$2.Api(builderSettings);
 	        this.classes = $$2.extend(true, {}, SearchBuilder.classes);
