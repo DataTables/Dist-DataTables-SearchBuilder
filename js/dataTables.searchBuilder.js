@@ -2157,16 +2157,17 @@
 	            var addOption = function (filt, text) {
 	                // Add text and value, stripping out any html if that is the column type
 	                var opt = $('<option>', {
-	                    text: typeof text === 'string' ?
-	                        text.replace(/(<([^>]+)>)/ig, '') :
-	                        text,
 	                    type: Array.isArray(filt) ? 'Array' : 'String',
 	                    value: that.s.type.indexOf('html') !== -1 && filt !== null && typeof filt === 'string' ?
 	                        filt.replace(/(<([^>]+)>)/ig, '') :
 	                        filt
 	                })
 	                    .addClass(that.classes.option)
-	                    .addClass(that.classes.notItalic);
+	                    .addClass(that.classes.notItalic)
+	                    // Have to add the text this way so that special html characters are not escaped - &amp; etc.
+	                    .html(typeof text === 'string' ?
+	                    text.replace(/(<([^>]+)>)/ig, '') :
+	                    text);
 	                var val = $(opt).val();
 	                // Check that this value has not already been added
 	                if (added.indexOf(val) === -1) {
