@@ -1537,6 +1537,7 @@
 	            .append(this.dom.data)
 	            .append(this.dom.condition)
 	            .append(this.dom.value[0]);
+	        this.setListeners();
 	        // Trigger the inserted events for the value elements as they are inserted
 	        $(this.dom.value[0]).trigger('dtsb-inserted');
 	        for (var i = 1; i < this.dom.value.length; i++) {
@@ -1867,6 +1868,13 @@
 	                .insertAfter(this.dom.condition);
 	        }
 	        this.s.value = [];
+	        this.dom.value = [
+	            $('<select disabled/>')
+	                .addClass(this.classes.value)
+	                .addClass(this.classes.dropDown)
+	                .addClass(this.classes.italic)
+	                .append($(this.dom.valueTitle).clone())
+	        ];
 	    };
 	    /**
 	     * Gets the options for the column
