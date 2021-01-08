@@ -2235,7 +2235,6 @@
 	            $(el).append(opt);
 	        }
 	        // This is partly for responsive and partly for editor integration
-	        that.s.dt.off('draw');
 	        that.s.dt.one('draw', function () {
 	            $(that.s.topGroup).trigger('dtsb-redrawContents');
 	        });
@@ -2274,7 +2273,6 @@
 	            $(el).val(preDefined[0]);
 	        }
 	        // This is add responsive functionality to the logic button without redrawing everything else
-	        that.s.dt.off('draw');
 	        that.s.dt.one('draw', function () {
 	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
 	        });
@@ -2318,7 +2316,6 @@
 	            $(els[2]).val(preDefined[1]);
 	        }
 	        // This is add responsive functionality to the logic button without redrawing everything else
-	        that.s.dt.off('draw');
 	        that.s.dt.one('draw', function () {
 	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
 	        });
@@ -2352,7 +2349,6 @@
 	            $(el).val(preDefined[0]);
 	        }
 	        // This is add responsive functionality to the logic button without redrawing everything else
-	        that.s.dt.off('draw');
 	        that.s.dt.one('draw', function () {
 	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
 	        });
@@ -2360,7 +2356,6 @@
 	    };
 	    Criteria.initNoValue = function (that) {
 	        // This is add responsive functionality to the logic button without redrawing everything else
-	        that.s.dt.off('draw');
 	        that.s.dt.one('draw', function () {
 	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
 	        });
@@ -2409,7 +2404,6 @@
 	            $(els[2]).val(preDefined[1]);
 	        }
 	        // This is add responsive functionality to the logic button without redrawing everything else
-	        that.s.dt.off('draw');
 	        that.s.dt.one('draw', function () {
 	            $(that.s.topGroup).trigger('dtsb-redrawLogic');
 	        });
