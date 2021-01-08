@@ -1603,6 +1603,11 @@
 	                }
 	                filter.sort();
 	            }
+	            // Not ideal, but jqueries .val() returns an empty string even
+	            // when the value set is null, so we shall assume the two are equal
+	            if (filter === null) {
+	                filter = '';
+	            }
 	            return condition.search(filter, this.s.value, this);
 	        }
 	    };
