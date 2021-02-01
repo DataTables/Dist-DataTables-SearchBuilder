@@ -2243,10 +2243,13 @@
 	            var opt = options_1[_a];
 	            $(el).append(opt);
 	        }
-	        // This is partly for responsive and partly for editor integration
-	        that.s.dt.one('draw', function () {
-	            $(that.s.topGroup).trigger('dtsb-redrawContents');
-	        });
+	        // // This is partly for responsive and partly for editor integration
+	        // that.s.dt.one('draw', () => {
+	        // 	if (!that.s.suspendDraw) {
+	        // 		console.log(270)
+	        // 		$(that.s.topGroup).trigger('dtsb-redrawContents');
+	        // 	}
+	        // });
 	        return el;
 	    };
 	    /**
@@ -4236,7 +4239,6 @@
 	            _this._filterChanged(count);
 	        });
 	        $$2(this.s.dt).on('postEdit postCreate postRemove', function () {
-	            console.log("editor event");
 	            _this.s.topGroup.redrawContents();
 	        });
 	        $$2(this.s.topGroup.dom.container).unbind('dtsb-clearContents');
