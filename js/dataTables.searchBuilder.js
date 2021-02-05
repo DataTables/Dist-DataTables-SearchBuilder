@@ -1863,10 +1863,15 @@
 	     */
 	    Criteria.prototype._clearValue = function () {
 	        if (this.s.condition !== undefined) {
+	            var _loop_1 = function (val) {
+	                setTimeout(function () {
+	                    $(val).remove();
+	                }, 50);
+	            };
 	            // Remove all of the value elements
 	            for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
 	                var val = _a[_i];
-	                $(val).remove();
+	                _loop_1(val);
 	            }
 	            // Call the init function to get the value elements for this condition
 	            this.dom.value = [].concat(this.s.conditions[this.s.condition].init(this, Criteria.updateListener));
@@ -1877,10 +1882,15 @@
 	            }
 	        }
 	        else {
+	            var _loop_2 = function (val) {
+	                setTimeout(function () {
+	                    $(val).remove();
+	                }, 50);
+	            };
 	            // Remove all of the value elements
 	            for (var _b = 0, _c = this.dom.value; _b < _c.length; _b++) {
 	                var val = _c[_b];
-	                $(val).remove();
+	                _loop_2(val);
 	            }
 	            // Append the default valueTitle to the default select element
 	            $(this.dom.valueTitle)
@@ -2038,7 +2048,7 @@
 	        }
 	        // Otherwise we can just load them in
 	        else {
-	            var _loop_1 = function (data) {
+	            var _loop_3 = function (data) {
 	                this_1.s.dt.columns().every(function (index) {
 	                    if (_this.s.dt.settings()[0].aoColumns[index].sTitle === data.text) {
 	                        data.index = index;
@@ -2060,7 +2070,7 @@
 	            var this_1 = this;
 	            for (var _i = 0, _a = this.s.dataPoints; _i < _a.length; _i++) {
 	                var data = _a[_i];
-	                _loop_1(data);
+	                _loop_3(data);
 	            }
 	        }
 	    };
@@ -2073,10 +2083,17 @@
 	        var prevFilled = this.s.filled;
 	        this.s.filled = false;
 	        // Remove any previous value elements
-	        $(this.dom.defaultValue).remove();
+	        setTimeout(function () {
+	            $(_this.dom.defaultValue).remove();
+	        }, 50);
+	        var _loop_4 = function (val) {
+	            setTimeout(function () {
+	                $(val).remove();
+	            }, 50);
+	        };
 	        for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
 	            var val = _a[_i];
-	            $(val).remove();
+	            _loop_4(val);
 	        }
 	        var children = $(this.dom.container).children();
 	        if (children.length > 3) {
