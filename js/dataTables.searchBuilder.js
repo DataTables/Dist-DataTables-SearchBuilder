@@ -1864,6 +1864,7 @@
 	    Criteria.prototype._clearValue = function () {
 	        if (this.s.condition !== undefined) {
 	            var _loop_1 = function (val) {
+	                // Timeout is annoying but because of IOS
 	                setTimeout(function () {
 	                    $(val).remove();
 	                }, 50);
@@ -1883,6 +1884,7 @@
 	        }
 	        else {
 	            var _loop_2 = function (val) {
+	                // Timeout is annoying but because of IOS
 	                setTimeout(function () {
 	                    $(val).remove();
 	                }, 50);
@@ -2083,10 +2085,12 @@
 	        var prevFilled = this.s.filled;
 	        this.s.filled = false;
 	        // Remove any previous value elements
+	        // Timeout is annoying but because of IOS
 	        setTimeout(function () {
 	            $(_this.dom.defaultValue).remove();
 	        }, 50);
 	        var _loop_4 = function (val) {
+	            // Timeout is annoying but because of IOS
 	            setTimeout(function () {
 	                $(val).remove();
 	            }, 50);
