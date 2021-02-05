@@ -1622,6 +1622,9 @@
 	            else if (filter !== null) {
 	                filter = filter.replace(/[\r\n\u2028]/g, ' ');
 	            }
+	            if (this.s.type.indexOf('html') !== -1) {
+	                filter = filter.replace(/(<([^>]+)>)/ig, '');
+	            }
 	            // Not ideal, but jqueries .val() returns an empty string even
 	            // when the value set is null, so we shall assume the two are equal
 	            if (filter === null) {
