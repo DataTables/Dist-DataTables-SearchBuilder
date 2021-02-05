@@ -1422,6 +1422,7 @@
 	var $;
 	var DataTable;
 	var moment = window.moment;
+	var luxon = window.luxon;
 	/**
 	 * Sets the value of jQuery for use in the file
 	 * @param jq the instance of jQuery to be set
@@ -1460,7 +1461,7 @@
 	            dt: table,
 	            filled: false,
 	            index: index,
-	            momentFormat: false,
+	            dateFormat: false,
 	            topGroup: topGroup,
 	            type: '',
 	            value: []
@@ -1958,10 +1959,15 @@
 	                this.c.conditions[this.s.type] :
 	                this.s.type.indexOf('moment') !== -1 ?
 	                    this.c.conditions.moment :
-	                    this.c.conditions.string;
+	                    this.s.type.indexOf('luxon') !== -1 ?
+	                        this.c.conditions.luxon :
+	                        this.c.conditions.string;
 	            // If it is a moment format then extract the date format
 	            if (this.s.type.indexOf('moment') !== -1) {
-	                this.s.momentFormat = this.s.type.replace(/moment\-/g, '');
+	                this.s.dateFormat = this.s.type.replace(/moment\-/g, '');
+	            }
+	            else if (this.s.type.indexOf('luxon') !== -1) {
+	                this.s.dateFormat = this.s.type.replace(/luxon\-/g, '');
 	            }
 	            // Add all of the conditions to the select element
 	            for (var _i = 0, _a = Object.keys(conditionObj); _i < _a.length; _i++) {
@@ -2372,7 +2378,7 @@
 	            .addClass(Criteria.classes.input)
 	            .dtDateTime({
 	            attachTo: 'input',
-	            format: that.s.momentFormat ? that.s.momentFormat : undefined
+	            format: that.s.dateFormat ? that.s.dateFormat : undefined
 	        })
 	            .on('input change', searchDelay !== null ?
 	            that.s.dt.settings()[0].oApi._fnThrottle(function () {
@@ -2409,7 +2415,7 @@
 	                .addClass(Criteria.classes.input)
 	                .dtDateTime({
 	                attachTo: 'input',
-	                format: that.s.momentFormat ? that.s.momentFormat : undefined
+	                format: that.s.dateFormat ? that.s.dateFormat : undefined
 	            })
 	                .on('input change', searchDelay !== null ?
 	                that.s.dt.settings()[0].oApi._fnThrottle(function () {
@@ -2424,7 +2430,7 @@
 	                .addClass(Criteria.classes.input)
 	                .dtDateTime({
 	                attachTo: 'input',
-	                format: that.s.momentFormat ? that.s.momentFormat : undefined
+	                format: that.s.dateFormat ? that.s.dateFormat : undefined
 	            })
 	                .on('input change', searchDelay !== null ?
 	                that.s.dt.settings()[0].oApi._fnThrottle(function () {
@@ -2674,7 +2680,7 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison, that) {
-	                return moment(value, that.s.momentFormat).valueOf() === moment(comparison[0], that.s.momentFormat).valueOf();
+	                return moment(value, that.s.dateFormat).valueOf() === moment(comparison[0], that.s.dateFormat).valueOf();
 	            }
 	        },
 	        '!=': {
@@ -2685,7 +2691,7 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison, that) {
-	                return moment(value, that.s.momentFormat).valueOf() !== moment(comparison[0], that.s.momentFormat).valueOf();
+	                return moment(value, that.s.dateFormat).valueOf() !== moment(comparison[0], that.s.dateFormat).valueOf();
 	            }
 	        },
 	        '<': {
@@ -2696,7 +2702,7 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison, that) {
-	                return moment(value, that.s.momentFormat).valueOf() < moment(comparison[0], that.s.momentFormat).valueOf();
+	                return moment(value, that.s.dateFormat).valueOf() < moment(comparison[0], that.s.dateFormat).valueOf();
 	            }
 	        },
 	        '>': {
@@ -2707,7 +2713,7 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison, that) {
-	                return moment(value, that.s.momentFormat).valueOf() > moment(comparison[0], that.s.momentFormat).valueOf();
+	                return moment(value, that.s.dateFormat).valueOf() > moment(comparison[0], that.s.dateFormat).valueOf();
 	            }
 	        },
 	        'between': {
@@ -2718,9 +2724,9 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison, that) {
-	                var val = moment(value, that.s.momentFormat).valueOf();
-	                var comp0 = moment(comparison[0], that.s.momentFormat).valueOf();
-	                var comp1 = moment(comparison[1], that.s.momentFormat).valueOf();
+	                var val = moment(value, that.s.dateFormat).valueOf();
+	                var comp0 = moment(comparison[0], that.s.dateFormat).valueOf();
+	                var comp1 = moment(comparison[1], that.s.dateFormat).valueOf();
 	                if (comp0 < comp1) {
 	                    return comp0 <= val && val <= comp1;
 	                }
@@ -2737,9 +2743,9 @@
 	            inputValue: Criteria.inputValueInput,
 	            isInputValid: Criteria.isInputValidInput,
 	            search: function (value, comparison, that) {
-	                var val = moment(value, that.s.momentFormat).valueOf();
-	                var comp0 = moment(comparison[0], that.s.momentFormat).valueOf();
-	                var comp1 = moment(comparison[1], that.s.momentFormat).valueOf();
+	                var val = moment(value, that.s.dateFormat).valueOf();
+	                var comp0 = moment(comparison[0], that.s.dateFormat).valueOf();
+	                var comp1 = moment(comparison[1], that.s.dateFormat).valueOf();
 	                if (comp0 < comp1) {
 	                    return !(+comp0 <= +val && +val <= +comp1);
 	                }
@@ -2764,6 +2770,121 @@
 	        '!null': {
 	            conditionName: function (dt, i18n) {
 	                return dt.i18n('searchBuilder.conditions.moment.notEmpty', i18n.conditions.moment.notEmpty);
+	            },
+	            isInputValid: function () { return true; },
+	            init: Criteria.initNoValue,
+	            inputValue: function () {
+	                return;
+	            },
+	            search: function (value) {
+	                return !(value === null || value === undefined || value.length === 0);
+	            }
+	        }
+	    };
+	    // The order of the conditions will make tslint sad :(
+	    Criteria.luxonDateConditions = {
+	        '=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.luxon.equals', i18n.conditions.luxon.equals);
+	            },
+	            init: Criteria.initDate,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison, that) {
+	                return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
+	                    === luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+	            }
+	        },
+	        '!=': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.luxon.not', i18n.conditions.luxon.not);
+	            },
+	            init: Criteria.initDate,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison, that) {
+	                return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
+	                    !== luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+	            }
+	        },
+	        '<': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.luxon.before', i18n.conditions.luxon.before);
+	            },
+	            init: Criteria.initDate,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison, that) {
+	                return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
+	                    < luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+	            }
+	        },
+	        '>': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.luxon.after', i18n.conditions.luxon.after);
+	            },
+	            init: Criteria.initDate,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison, that) {
+	                return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
+	                    > luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+	            }
+	        },
+	        'between': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.luxon.between', i18n.conditions.luxon.between);
+	            },
+	            init: Criteria.init2Date,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison, that) {
+	                var val = luxon.DateTime.fromFormat(value, that.s.dateFormat).ts;
+	                var comp0 = luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+	                var comp1 = luxon.DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
+	                if (comp0 < comp1) {
+	                    return comp0 <= val && val <= comp1;
+	                }
+	                else {
+	                    return comp1 <= val && val <= comp0;
+	                }
+	            }
+	        },
+	        '!between': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.luxon.notBetween', i18n.conditions.luxon.notBetween);
+	            },
+	            init: Criteria.init2Date,
+	            inputValue: Criteria.inputValueInput,
+	            isInputValid: Criteria.isInputValidInput,
+	            search: function (value, comparison, that) {
+	                var val = luxon.DateTime.fromFormat(value, that.s.dateFormat).ts;
+	                var comp0 = luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+	                var comp1 = luxon.DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
+	                if (comp0 < comp1) {
+	                    return !(+comp0 <= +val && +val <= +comp1);
+	                }
+	                else {
+	                    return !(+comp1 <= +val && +val <= +comp0);
+	                }
+	            }
+	        },
+	        'null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.luxon.empty', i18n.conditions.luxon.empty);
+	            },
+	            isInputValid: function () { return true; },
+	            init: Criteria.initNoValue,
+	            inputValue: function () {
+	                return;
+	            },
+	            search: function (value) {
+	                return (value === null || value === undefined || value.length === 0);
+	            }
+	        },
+	        '!null': {
+	            conditionName: function (dt, i18n) {
+	                return dt.i18n('searchBuilder.conditions.luxon.notEmpty', i18n.conditions.luxon.notEmpty);
 	            },
 	            isInputValid: function () { return true; },
 	            init: Criteria.initNoValue,
@@ -3254,6 +3375,7 @@
 	            'html': Criteria.stringConditions,
 	            'html-num': Criteria.numConditions,
 	            'html-num-fmt': Criteria.numFmtConditions,
+	            'luxon': Criteria.luxonDateConditions,
 	            'moment': Criteria.momentDateConditions,
 	            'num': Criteria.numConditions,
 	            'num-fmt': Criteria.numFmtConditions,
@@ -3956,6 +4078,7 @@
 	            'html': Criteria.stringConditions,
 	            'html-num': Criteria.numConditions,
 	            'html-num-fmt': Criteria.numFmtConditions,
+	            'luxon': Criteria.luxonDateConditions,
 	            'moment': Criteria.momentDateConditions,
 	            'num': Criteria.numConditions,
 	            'num-fmt': Criteria.numFmtConditions,
@@ -4307,6 +4430,7 @@
 	            'html': Criteria.stringConditions,
 	            'html-num': Criteria.numConditions,
 	            'html-num-fmt': Criteria.numFmtConditions,
+	            'luxon': Criteria.luxonDateConditions,
 	            'moment': Criteria.momentDateConditions,
 	            'num': Criteria.numConditions,
 	            'num-fmt': Criteria.numFmtConditions,
@@ -4333,6 +4457,16 @@
 	                    without: 'Without'
 	                },
 	                date: {
+	                    after: 'After',
+	                    before: 'Before',
+	                    between: 'Between',
+	                    empty: 'Empty',
+	                    equals: 'Equals',
+	                    not: 'Not',
+	                    notBetween: 'Not Between',
+	                    notEmpty: 'Not Empty'
+	                },
+	                luxon: {
 	                    after: 'After',
 	                    before: 'Before',
 	                    between: 'Between',
