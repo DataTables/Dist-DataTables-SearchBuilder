@@ -1612,12 +1612,14 @@
 	                    filter = [filter];
 	                }
 	                filter.sort();
-	                for (var _i = 0, filter_1 = filter; _i < filter_1.length; _i++) {
-	                    var filt = filter_1[_i];
-	                    filt = filt.replace(/[\r\n\u2028]/g, ' ');
+	                if (filter !== null) {
+	                    for (var _i = 0, filter_1 = filter; _i < filter_1.length; _i++) {
+	                        var filt = filter_1[_i];
+	                        filt = filt.replace(/[\r\n\u2028]/g, ' ');
+	                    }
 	                }
 	            }
-	            else {
+	            else if (filter !== null) {
 	                filter = filter.replace(/[\r\n\u2028]/g, ' ');
 	            }
 	            // Not ideal, but jqueries .val() returns an empty string even
