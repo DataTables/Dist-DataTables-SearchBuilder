@@ -2551,8 +2551,18 @@
 	                that.s.value[i].sort();
 	            }
 	            // Otherwise replace the decimal place character for i18n
-	            else if (that.s.dt.settings()[0].oLanguage.sDecimal !== '') {
-	                that.s.value[i] = that.s.value[i].replace(that.s.dt.settings()[0].oLanguage.sDecimal, '.');
+	            else if (that.s.type.indexOf('num') !== -1 &&
+	                (that.s.dt.settings()[0].oLanguage.sDecimal !== '' || that.s.dt.settings()[0].oLanguage.sThousands !== '')) {
+	                var splitRD = [that.s.value[i].toString()];
+	                if (that.s.dt.settings()[0].oLanguage.sDecimal !== '') {
+	                    splitRD = that.s.value[i].split(that.s.dt.settings()[0].oLanguage.sDecimal);
+	                }
+	                if (that.s.dt.settings()[0].oLanguage.sThousands !== '') {
+	                    for (var j = 0; j < splitRD.length; j++) {
+	                        splitRD[j] = splitRD[j].replace(that.s.dt.settings()[0].oLanguage.sThousands, ',');
+	                    }
+	                }
+	                that.s.value[i] = splitRD.join('.');
 	            }
 	        }
 	        // Take note of the cursor position so that we can refocus there later
