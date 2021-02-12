@@ -1595,13 +1595,23 @@
 	    Criteria.prototype.search = function (rowData, rowIdx) {
 	        var condition = this.s.conditions[this.s.condition];
 	        if (this.s.condition !== undefined && condition !== undefined) {
-	            // This check is in place for if a custom decimal character is in place
-	            if (this.s.type.indexOf('num') !== -1 && this.s.dt.settings()[0].oLanguage.sDecimal !== '') {
-	                rowData[this.s.dataIdx] = rowData[this.s.dataIdx].replace(this.s.dt.settings()[0].oLanguage.sDecimal, '.');
-	            }
 	            var filter = rowData[this.s.dataIdx];
+	            // This check is in place for if a custom decimal character is in place
+	            if (this.s.type.indexOf('num') !== -1 &&
+	                (this.s.dt.settings()[0].oLanguage.sDecimal !== '' || this.s.dt.settings()[0].oLanguage.sThousands !== '')) {
+	                var splitRD = [rowData[this.s.dataIdx]];
+	                if (this.s.dt.settings()[0].oLanguage.sDecimal !== '') {
+	                    splitRD = rowData[this.s.dataIdx].split(this.s.dt.settings()[0].oLanguage.sDecimal);
+	                }
+	                if (this.s.dt.settings()[0].oLanguage.sThousands !== '') {
+	                    for (var i = 0; i < splitRD.length; i++) {
+	                        splitRD[i] = splitRD[i].replace(this.s.dt.settings()[0].oLanguage.sThousands, ',');
+	                    }
+	                }
+	                filter = splitRD.join('.');
+	            }
 	            // If orthogonal data is in place we need to get it's values for searching
-	            if (this.c.orthogonal.search !== 'search') {
+	            if (this.c.orthogonal.search !== 'filter') {
 	                var settings = this.s.dt.settings()[0];
 	                filter = settings.oApi._fnGetCellData(settings, rowIdx, this.s.dataIdx, typeof this.c.orthogonal === 'string' ?
 	                    this.c.orthogonal :
