@@ -4606,16 +4606,15 @@
 	    apiRegister('searchBuilder.getDetails()', function () {
 	        var ctx = this.context[0];
 	        // If SearchBuilder has not been initialised on this instance then return
-	        if (ctx._searchBuilder === undefined) {
-	            return;
-	        }
-	        return ctx._searchBuilder.getDetails();
+	        return ctx._searchBuilder ?
+	            ctx._searchBuilder.getDetails() :
+	            null;
 	    });
 	    apiRegister('searchBuilder.rebuild()', function (details) {
 	        var ctx = this.context[0];
 	        // If SearchBuilder has not been initialised on this instance then return
 	        if (ctx._searchBuilder === undefined) {
-	            return;
+	            return null;
 	        }
 	        ctx._searchBuilder.rebuild(details);
 	        return this;
@@ -4623,10 +4622,9 @@
 	    apiRegister('searchBuilder.container()', function () {
 	        var ctx = this.context[0];
 	        // If SearchBuilder has not been initialised on this instance then return
-	        if (ctx._searchBuilder === undefined) {
-	            return;
-	        }
-	        return ctx._searchBuilder.getNode();
+	        return ctx._searchBuilder ?
+	            ctx._searchBuilder.getNode() :
+	            null;
 	    });
 	    /**
 	     * Init function for SearchBuilder
