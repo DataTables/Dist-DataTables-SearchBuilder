@@ -4605,15 +4605,27 @@
 	    };
 	    apiRegister('searchBuilder.getDetails()', function () {
 	        var ctx = this.context[0];
+	        // If SearchBuilder has not been initialised on this instance then return
+	        if (ctx._searchBuilder === undefined) {
+	            return;
+	        }
 	        return ctx._searchBuilder.getDetails();
 	    });
 	    apiRegister('searchBuilder.rebuild()', function (details) {
 	        var ctx = this.context[0];
+	        // If SearchBuilder has not been initialised on this instance then return
+	        if (ctx._searchBuilder === undefined) {
+	            return;
+	        }
 	        ctx._searchBuilder.rebuild(details);
 	        return this;
 	    });
 	    apiRegister('searchBuilder.container()', function () {
 	        var ctx = this.context[0];
+	        // If SearchBuilder has not been initialised on this instance then return
+	        if (ctx._searchBuilder === undefined) {
+	            return;
+	        }
 	        return ctx._searchBuilder.getNode();
 	    });
 	    /**
