@@ -2277,7 +2277,7 @@
 	                if ($(a).val() < $(b).val()) {
 	                    return -1;
 	                }
-	                else if ($(a).val() < $(b).val()) {
+	                else if ($(a).val() > $(b).val()) {
 	                    return 1;
 	                }
 	                else {
