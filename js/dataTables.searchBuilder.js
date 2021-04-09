@@ -741,7 +741,7 @@
                 this.setListeners();
             }
         };
-        Criteria.version = '1.0.0';
+        Criteria.version = '1.1.0';
         Criteria.classes = {
             button: 'dtsb-button',
             buttonContainer: 'dtsb-buttonContainer',
@@ -2665,7 +2665,7 @@
                 $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
             }
         };
-        Group.version = '1.0.0';
+        Group.version = '1.1.0';
         Group.classes = {
             add: 'dtsb-add',
             button: 'dtsb-button',
@@ -3042,7 +3042,7 @@
                 $$2(_this.dom.clearAll).remove();
             });
         };
-        SearchBuilder.version = '1.0.1';
+        SearchBuilder.version = '1.1.0';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
