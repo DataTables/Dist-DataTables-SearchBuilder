@@ -4590,6 +4590,8 @@
 	            this.popover(config._searchBuilder.getNode(), {
 	                align: 'dt-container'
 	            });
+	            // Need to redraw the contents to calculate the correct positions for the elements
+	            config._searchBuilder.s.topGroup.dom.container.trigger('dtsb-redrawContents');
 	        },
 	        config: {},
 	        init: function (dt, node, config) {
