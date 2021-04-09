@@ -1623,9 +1623,9 @@
 	                    filter = [filter];
 	                }
 	                filter.sort();
-	                if (filter !== null) {
-	                    for (var _i = 0, filter_1 = filter; _i < filter_1.length; _i++) {
-	                        var filt = filter_1[_i];
+	                for (var _i = 0, filter_1 = filter; _i < filter_1.length; _i++) {
+	                    var filt = filter_1[_i];
+	                    if (filt) {
 	                        filt = filt.replace(/[\r\n\u2028]/g, ' ');
 	                    }
 	                }
