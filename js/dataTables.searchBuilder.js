@@ -641,7 +641,8 @@
                             }
                         }
                         if (!found) {
-                            var opt = { text: _this.s.dt.settings()[0].aoColumns[index].sTitle.replace(/(<([^>]+)>)/ig, ''), index: index };
+                            var col = _this.s.dt.settings()[0].aoColumns[index];
+                            var opt = { text: (col.searchBuilderTitle === undefined ? col.sTitle : col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, ''), index: index };
                             _this.s.dataPoints.push(opt);
                             $(_this.dom.data).append($('<option>', {
                                 text: opt.text,
@@ -657,7 +658,8 @@
             else {
                 var _loop_3 = function (data) {
                     this_1.s.dt.columns().every(function (index) {
-                        if (_this.s.dt.settings()[0].aoColumns[index].sTitle === data.text) {
+                        var col = _this.s.dt.settings()[0].aoColumns[index];
+                        if ((col.searchBuilderTitle === undefined ? col.sTitle : col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, '') === data.text) {
                             data.index = index;
                         }
                     });
