@@ -905,11 +905,18 @@
             var el = $('<input/>')
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.input)
-                .on('input', searchDelay !== null ?
+                .on('input keypress', !that.c.enterSearch || searchDelay !== null ?
                 that.s.dt.settings()[0].oApi._fnThrottle(function () {
                     return fn(that, this);
                 }, searchDelay) :
-                function () { fn(that, _this); });
+                that.c.enterSearch ?
+                    function (e) {
+                        var code = e.keyCode || e.which;
+                        if (code == 13) {
+                            fn(that, _this);
+                        }
+                    } :
+                    function () { fn(that, _this); });
             if (that.c.greyscale) {
                 $(el).addClass(Criteria.classes.greyscale);
             }
@@ -935,21 +942,35 @@
                 $('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
-                    .on('input', searchDelay !== null ?
+                    .on('input keypress', searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
                         return fn(that, this);
                     }, searchDelay) :
-                    function () { fn(that, _this); }),
+                    that.c.enterSearch ?
+                        function (e) {
+                            var code = e.keyCode || e.which;
+                            if (code == 13) {
+                                fn(that, _this);
+                            }
+                        } :
+                        function () { fn(that, _this); }),
                 $('<span>')
                     .addClass(that.classes.joiner).text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
                 $('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
-                    .on('input', searchDelay !== null ?
+                    .on('input keypress', searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
                         return fn(that, this);
                     }, searchDelay) :
-                    function () { fn(that, _this); })
+                    that.c.enterSearch ?
+                        function (e) {
+                            var code = e.keyCode || e.which;
+                            if (code == 13) {
+                                fn(that, _this);
+                            }
+                        } :
+                        function () { fn(that, _this); })
             ];
             if (that.c.greyscale) {
                 $(els[0]).addClass(Criteria.classes.greyscale);
@@ -981,11 +1002,23 @@
                 attachTo: 'input',
                 format: that.s.dateFormat ? that.s.dateFormat : undefined
             })
-                .on('input change', searchDelay !== null ?
+                .on('change', searchDelay !== null ?
                 that.s.dt.settings()[0].oApi._fnThrottle(function () {
                     return fn(that, this);
                 }, searchDelay) :
-                function () { fn(that, _this); });
+                function () { fn(that, _this); })
+                .on('input keypress', !that.c.enterSearch && searchDelay !== null ?
+                that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                    return fn(that, this);
+                }, searchDelay) :
+                that.c.enterSearch ?
+                    function (e) {
+                        var code = e.keyCode || e.which;
+                        if (code == 13) {
+                            fn(that, _this);
+                        }
+                    } :
+                    function () { fn(that, _this); });
             if (that.c.greyscale) {
                 $(el).addClass(Criteria.classes.greyscale);
             }
@@ -1018,11 +1051,23 @@
                     attachTo: 'input',
                     format: that.s.dateFormat ? that.s.dateFormat : undefined
                 })
-                    .on('input change', searchDelay !== null ?
+                    .on('change', searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
                         return fn(that, this);
                     }, searchDelay) :
-                    function () { fn(that, _this); }),
+                    function () { fn(that, _this); })
+                    .on('input keypress', !that.c.enterSearch && searchDelay !== null ?
+                    that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                        return fn(that, this);
+                    }, searchDelay) :
+                    that.c.enterSearch ?
+                        function (e) {
+                            var code = e.keyCode || e.which;
+                            if (code == 13) {
+                                fn(that, _this);
+                            }
+                        } :
+                        function () { fn(that, _this); }),
                 $('<span>')
                     .addClass(that.classes.joiner)
                     .text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
@@ -1033,11 +1078,23 @@
                     attachTo: 'input',
                     format: that.s.dateFormat ? that.s.dateFormat : undefined
                 })
-                    .on('input change', searchDelay !== null ?
+                    .on('change', searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
                         return fn(that, this);
                     }, searchDelay) :
-                    function () { fn(that, _this); }),
+                    function () { fn(that, _this); })
+                    .on('input keypress', !that.c.enterSearch && searchDelay !== null ?
+                    that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                        return fn(that, this);
+                    }, searchDelay) :
+                    that.c.enterSearch ?
+                        function (e) {
+                            var code = e.keyCode || e.which;
+                            if (code == 13) {
+                                fn(that, _this);
+                            }
+                        } :
+                        function () { fn(that, _this); })
             ];
             if (that.c.greyscale) {
                 $(els[0]).addClass(Criteria.classes.greyscale);
@@ -1993,6 +2050,7 @@
                 'string': Criteria.stringConditions
             },
             depthLimit: false,
+            enterSearch: false,
             filterChanged: undefined,
             greyscale: false,
             i18n: {
@@ -2692,6 +2750,7 @@
                 'string': Criteria.stringConditions
             },
             depthLimit: false,
+            enterSearch: false,
             filterChanged: undefined,
             greyscale: false,
             i18n: {
@@ -3067,6 +3126,7 @@
                 'string': Criteria.stringConditions
             },
             depthLimit: false,
+            enterSearch: false,
             filterChanged: undefined,
             greyscale: false,
             i18n: {
