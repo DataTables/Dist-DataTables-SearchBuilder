@@ -1,32 +1,44 @@
 {
     "name": "datatables.net-searchbuilder",
+    "description": "SearchBuilder for DataTables",
+    "main": "js/dataTables.searchBuilder.js",
     "version": "1.0.1",
-    "description": "Advanced Search Builder for DataTables",
     "files": [
         "js/**/*.js"
     ],
-    "main": "js/dataTables.searchBuilder.js",
     "keywords": [
-        "Search",
-        "Filtering",
-        "DataTables",
+        "SearchBuilder",
+ "Filtering",
+ "Search",
+        "Datatables",
         "jQuery",
         "table",
-        "DataTables"
+        "filter",
+        "sort"
     ],
+    "dependencies": {
+        "datatables.net": ">=1.10.24",
+        "jquery": ">=1.7"
+    },
+    "moduleType": [
+        "globals",
+        "amd",
+        "node"
+    ],
+    "ignore": [
+        "composer.json",
+        "datatables.json",
+        "package.json"
+    ],
+    "author": {
+        "name": "SpryMedia Ltd",
+        "url": "http://datatables.net"
+    },
     "homepage": "https://datatables.net",
     "bugs": "https://datatables.net/forums",
     "license": "MIT",
-    "author": {
-        "name": "SpryMedia ltd",
-        "url": "http://datatables.net"
-    },
-    "dependencies": {
-        "jquery": ">=1.7",
-        "datatables.net": "^1.10.15"
-    },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/DataTables/Dist-DataTables-SearchBuilder.git"
+        "url": "https://github.com/DataTables/Dist-DataTables-SearchBuilder.git"
     }
 }

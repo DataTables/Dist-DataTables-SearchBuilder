@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-  <metadata>
-    <id>datatables.net-searchbuilder</id>
-    <version>1.0.0</version>
-    <description>SearchBuilder for DataTables</description>
-    <authors>SpryMedia Ltd</authors>
-    <projectUrl>http://datatables.net</projectUrl>
-    <license type="expression">MIT</license>
-    <tags>searchbuilder DataTables jQuery table </tags>
-    <repository type="git" url="https://github.com/DataTables/Dist-DataTables-SearchBuilder.git"/>
-    <dependencies>
-      <dependency id="jquery" version="1.7.0"/>
-      <dependency id="datatables.net" version="1.10.15"/>
-    </dependencies>
-    <contentFiles>
-      <files include="**/*" buildAction="Content"/>
-    </contentFiles>
-  </metadata>
-  <files>
-    <file src="js/datatables.searchbuilder.js" target="content\Scripts"/>
-    <file src="js/datatables.searchbuilder.min.js" target="content\Scripts"/>
-    <file src="js/datatables.searchbuilder.js" target="contentFiles\any\any\wwwroot\js"/>
-    <file src="js/datatables.searchbuilder.min.js" target="contentFiles\any\any\wwwroot\js"/>
-  </files>
+    <metadata>
+        <version>1.0.1</version>
+        <id>datatables.net-searchbuilder</id>
+        <description>This is SearchBuilder for DataTables</description>
+        <repository type="git" url="https://github.com/DataTables/Dist-DataTables-SearchBuilder.git"/>
+        <authors>SpryMedia Ltd</authors>
+        <projectUrl>http://datatables.net</projectUrl>
+        <license type="expression">MIT</license>
+        <tags>SearchBuilder  Filtering  Search  Datatables jQuery table</tags>
+        <dependencies>
+            <dependency id="datatables.net" version=">=1.10.24"/>
+        </dependencies>
+        <contentFiles>
+            <files include="**/*" buildAction="Content"/>
+        </contentFiles>
+    </metadata>
+    <files>
+        <file src="js/dataTables.searchBuilder.js" target="content\Scripts"/>
+        <file src="js/dataTables.searchBuilder.js" target="contentFiles\any\any\wwwroot\js"/>
+        <file src="js/dataTables.searchBuilder.min.js" target="content\Scripts"/>
+        <file src="js/dataTables.searchBuilder.min.js" target="contentFiles\any\any\wwwroot\js"/>
+        <file src="types/criteria.d.ts" target="content\Scripts"/>
+        <file src="types/criteria.d.ts" target="contentFiles\any\any\wwwroot\js"/>
+        <file src="types/group.d.ts" target="content\Scripts"/>
+        <file src="types/group.d.ts" target="contentFiles\any\any\wwwroot\js"/>
+        <file src="types/index.d.ts" target="content\Scripts"/>
+        <file src="types/index.d.ts" target="contentFiles\any\any\wwwroot\js"/>
+        <file src="types/searchBuilder.d.ts" target="content\Scripts"/>
+        <file src="types/searchBuilder.d.ts" target="contentFiles\any\any\wwwroot\js"/>
+    </files>
 </package>
+
