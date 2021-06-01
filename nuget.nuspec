@@ -29,6 +29,8 @@
         <file src="types/index.d.ts" target="contentFiles\any\any\wwwroot\js"/>
         <file src="types/searchBuilder.d.ts" target="content\Scripts"/>
         <file src="types/searchBuilder.d.ts" target="contentFiles\any\any\wwwroot\js"/>
+        <file src="types/types.d.ts" target="content\Scripts"/>
+        <file src="types/types.d.ts" target="contentFiles\any\any\wwwroot\js"/>
     </files>
 </package>
 
