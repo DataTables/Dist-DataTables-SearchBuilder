@@ -3409,7 +3409,7 @@
             action: function (e, dt, node, config) {
                 e.stopPropagation();
                 this.popover(config._searchBuilder.getNode(), {
-                    align: 'dt-container'
+                    align: 'button-left'
                 });
                 // Need to redraw the contents to calculate the correct positions for the elements
                 if (config._searchBuilder.s.topGroup !== undefined) {

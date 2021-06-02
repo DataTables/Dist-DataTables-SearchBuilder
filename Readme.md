@@ -1,6 +1,6 @@
 # SearchBuilder for DataTables 
 
-This package contains distribution files for the [SearchBuilder extension](https://datatables.net/extensions/SearchBuilder) for [DataTables](https://datatables.net/). Only the core software for this library is contained in this package - to be correctly styled, a styling package for SearchBuilder must also be included. Styling options include DataTable's native styling, [Bootstrap](http://getbootstrap.com) and [Foundation](http://foundation.zurb.com/).
+This package contains distribution files for the [SearchBuilder extension](https://datatables.net/extensions/searchbuilder) for [DataTables](https://datatables.net/). Only the core software for this library is contained in this package - to be correctly styled, a styling package for SearchBuilder must also be included. Styling options include DataTable's native styling, [Bootstrap](http://getbootstrap.com) and [Foundation](http://foundation.zurb.com/).
 
 SearchBuilder adds user defined complex search to the DataTable with the capability to search the DataTable by creating groups and conditions.
 
