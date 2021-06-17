@@ -1,5 +1,5 @@
-/*! SearchBuilder 1.0.1
- * ©2020 SpryMedia Ltd - datatables.net/license/mit
+/*! SearchBuilder 1.1.0
+ * ©SpryMedia Ltd - datatables.net/license/mit
  */
 (function () {
     'use strict';
@@ -2264,7 +2264,7 @@
                     .attr('type', 'button'),
                 container: $$1('<div/>')
                     .addClass(this.classes.group),
-                logic: $$1('<button/>')
+                logic: $$1('<button><div/></button>')
                     .addClass(this.classes.logic)
                     .addClass(this.classes.button)
                     .attr('type', 'button'),
@@ -2332,7 +2332,7 @@
                 return;
             }
             this.s.logic = loadedDetails.logic;
-            $$1(this.dom.logic).text(this.s.logic === 'OR'
+            $$1(this.dom.logic).children().first().text(this.s.logic === 'OR'
                 ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
                 : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
             // Add all of the criteria, be it a sub group or a criteria
@@ -2830,7 +2830,7 @@
         Group.prototype._setup = function () {
             this.setListeners();
             $$1(this.dom.add).text(this.s.dt.i18n('searchBuilder.add', this.c.i18n.add));
-            $$1(this.dom.logic).text(this.c.logic === 'OR'
+            $$1(this.dom.logic).children().first().text(this.c.logic === 'OR'
                 ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
                 : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
             this.s.logic = this.c.logic === 'OR' ? 'OR' : 'AND';
@@ -2867,11 +2867,11 @@
         Group.prototype._toggleLogic = function () {
             if (this.s.logic === 'OR') {
                 this.s.logic = 'AND';
-                $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
+                $$1(this.dom.logic).children().first().text(this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
             }
             else if (this.s.logic === 'AND') {
                 this.s.logic = 'OR';
-                $$1(this.dom.logic).text(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
+                $$1(this.dom.logic).children().first().text(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
             }
         };
         Group.version = '1.1.0';
@@ -3359,8 +3359,8 @@
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.0.1
-     * ©2020 SpryMedia Ltd - datatables.net/license/mit
+    /*! SearchBuilder 1.1.0
+     * ©SpryMedia Ltd - datatables.net/license/mit
      */
     // DataTables extensions common UMD. Note that this allows for AMD, CommonJS
     // (with window and jQuery being allowed as parameters to the returned
