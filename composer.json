@@ -1,5 +1,5 @@
 {
-    "version": "1.0.1",
+    "version": "1.1.0",
     "name": "datatables.net/datatables.net-searchbuilder",
     "description": "SearchBuilder adds user defined complex search to the DataTable with the capability to search the DataTable by creating groups and conditions. This is SearchBuilder for DataTables",
     "support": {
@@ -27,6 +27,6 @@
         "table"
     ],
     "require": {
-        "datatables.net/datatables.net": ">=1.10.24"
+        "datatables.net/datatables.net": ">=1.10.26-dev"
     }
 }

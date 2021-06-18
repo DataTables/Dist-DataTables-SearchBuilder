@@ -9,8 +9,8 @@
     ],
     "keywords": [
         "SearchBuilder",
-        "Filtering",
-        "Search",
+ "Filtering",
+ "Search",
         "Datatables",
         "jQuery",
         "table",
@@ -18,8 +18,8 @@
         "sort"
     ],
     "dependencies": {
-        "jquery": ">=1.7",
-        "datatables.net": "^1.10.15"
+        "datatables.net": ">=1.10.26-dev",
+        "jquery": ">=1.7"
     },
     "moduleType": [
         "globals",
