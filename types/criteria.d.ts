@@ -233,12 +233,4 @@ export default class Criteria {
      * @param loadedCriteria optional, used to reload criteria from predefined filters
      */
     private _populateValue;
-    /**
-     * Provides throttling capabilities to SearchBuilder without having to use dt's _fnThrottle function
-     * This is because that function is not quite suitable for our needs as it runs initially rather than waiting
-     *
-     * @param args arguments supplied to the throttle function
-     * @returns Function that is to be run that implements the throttling
-     */
-    private _throttle;
 }
