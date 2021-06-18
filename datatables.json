@@ -12,6 +12,5 @@
         "types/types.d.ts"
     ],
     "src-repo": "http://github.com/DataTables/SearchBuilder",
-    "last-tag": "1.1.0",
-    "last-sync": "be00d83a15bdb2ff69442a3d3e2db6341fa02172"
+    "last-tag": "1.1.0"
 }
