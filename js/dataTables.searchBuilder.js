@@ -339,8 +339,8 @@
         Criteria.prototype.setListeners = function () {
             var _this = this;
             $$2(this.dom.data)
-                .unbind('change')
-                .on('change', function () {
+                .unbind('input change')
+                .on('input change', function () {
                 $$2(_this.dom.dataTitle).attr('selected', false);
                 $$2(_this.dom.data).removeClass(_this.classes.italic);
                 _this.s.dataIdx = $$2(_this.dom.data).children('option:selected').val();
@@ -360,8 +360,8 @@
                 _this.s.dt.state.save();
             });
             $$2(this.dom.condition)
-                .unbind('change')
-                .on('change', function () {
+                .unbind('input change')
+                .on('input change', function () {
                 $$2(_this.dom.conditionTitle).attr('selected', false);
                 $$2(_this.dom.condition).removeClass(_this.classes.italic);
                 var condDisp = $$2(_this.dom.condition).children('option:selected').val();
@@ -387,9 +387,7 @@
                         _this.setListeners();
                     }
                 }
-                if (_this.dom.value.length === 0 || (_this.dom.value.length === 1 && _this.dom.value[0] === undefined)) {
-                    _this.s.dt.draw();
-                }
+                _this.s.dt.draw();
             });
         };
         /**
@@ -765,37 +763,6 @@
                 this.setListeners();
             }
         };
-        /**
-         * Provides throttling capabilities to SearchBuilder without having to use dt's _fnThrottle function
-         * This is because that function is not quite suitable for our needs as it runs initially rather than waiting
-         *
-         * @param args arguments supplied to the throttle function
-         * @returns Function that is to be run that implements the throttling
-         */
-        Criteria.prototype._throttle = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
-            var last = null;
-            var timer = null;
-            var that = this;
-            var fn = args[0];
-            var frequency = args[1] !== null ? args[1] : 200;
-            return function () {
-                var now = +new Date();
-                if (last !== null && now < last + frequency) {
-                    clearTimeout(timer);
-                }
-                else {
-                    last = now;
-                }
-                timer = setTimeout(function () {
-                    last = null;
-                    fn.apply(that, args);
-                }, frequency);
-            };
-        };
         Criteria.version = '1.1.0';
         Criteria.classes = {
             button: 'dtsb-button',
@@ -833,7 +800,7 @@
                 .addClass(Criteria.classes.italic)
                 .addClass(Criteria.classes.select)
                 .append(that.dom.valueTitle)
-                .on('change', function () {
+                .on('input change', function () {
                 $$2(this).removeClass(Criteria.classes.italic);
                 fn(that, this);
             });
@@ -955,24 +922,27 @@
          * Default initialisation function for input conditions
          */
         Criteria.initInput = function (that, fn, preDefined) {
+            var _this = this;
             if (preDefined === void 0) { preDefined = null; }
             // Declare the input element
             var searchDelay = that.s.dt.settings()[0].searchDelay;
             var el = $$2('<input/>')
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.input)
-                .on('input keypress', that.c.enterSearch ?
-                function (e) {
-                    that._throttle(function () {
+                .on('input keypress', !that.c.enterSearch || searchDelay !== null ?
+                that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                    return fn(that, this);
+                }, searchDelay) :
+                that.c.enterSearch ?
+                    function (e) {
                         var code = e.keyCode || e.which;
                         if (code === 13) {
-                            return fn(that, this);
+                            fn(that, _this);
                         }
-                    }, searchDelay === null ? 100 : searchDelay);
-                } :
-                that._throttle(function () {
-                    return fn(that, this);
-                }, searchDelay === null ? 100 : searchDelay));
+                    } :
+                    function () {
+                        fn(that, _this);
+                    });
             if (that.c.greyscale) {
                 $$2(el).addClass(Criteria.classes.greyscale);
             }
@@ -990,6 +960,7 @@
          * Default initialisation function for conditions requiring 2 inputs
          */
         Criteria.init2Input = function (that, fn, preDefined) {
+            var _this = this;
             if (preDefined === void 0) { preDefined = null; }
             // Declare all of the necessary jQuery elements
             var searchDelay = that.s.dt.settings()[0].searchDelay;
@@ -997,36 +968,40 @@
                 $$2('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
-                    .on('input keypress', that.c.enterSearch ?
-                    function (e) {
-                        that._throttle(function () {
+                    .on('input keypress', searchDelay !== null ?
+                    that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                        return fn(that, this);
+                    }, searchDelay) :
+                    that.c.enterSearch ?
+                        function (e) {
                             var code = e.keyCode || e.which;
                             if (code === 13) {
-                                return fn(that, this);
+                                fn(that, _this);
                             }
-                        }, searchDelay === null ? 100 : searchDelay);
-                    } :
-                    that._throttle(function () {
-                        return fn(that, this);
-                    }, searchDelay === null ? 100 : searchDelay)),
+                        } :
+                        function () {
+                            fn(that, _this);
+                        }),
                 $$2('<span>')
                     .addClass(that.classes.joiner)
                     .text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
                 $$2('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
-                    .on('input keypress', that.c.enterSearch ?
-                    function (e) {
-                        that._throttle(function () {
+                    .on('input keypress', searchDelay !== null ?
+                    that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                        return fn(that, this);
+                    }, searchDelay) :
+                    that.c.enterSearch ?
+                        function (e) {
                             var code = e.keyCode || e.which;
                             if (code === 13) {
-                                return fn(that, this);
+                                fn(that, _this);
                             }
-                        }, searchDelay === null ? 100 : searchDelay);
-                    } :
-                    that._throttle(function () {
-                        return fn(that, this);
-                    }, searchDelay === null ? 100 : searchDelay))
+                        } :
+                        function () {
+                            fn(that, _this);
+                        })
             ];
             if (that.c.greyscale) {
                 $$2(els[0]).addClass(Criteria.classes.greyscale);
@@ -1047,6 +1022,7 @@
          * Default initialisation function for date conditions
          */
         Criteria.initDate = function (that, fn, preDefined) {
+            var _this = this;
             if (preDefined === void 0) { preDefined = null; }
             var searchDelay = that.s.dt.settings()[0].searchDelay;
             // Declare date element using DataTables dateTime plugin
@@ -1057,21 +1033,27 @@
                 attachTo: 'input',
                 format: that.s.dateFormat ? that.s.dateFormat : undefined
             })
-                .on('change', that._throttle(function () {
-                return fn(that, this);
-            }, searchDelay === null ? 100 : searchDelay))
-                .on('input keypress', that.c.enterSearch ?
-                function (e) {
-                    that._throttle(function () {
+                .on('change', searchDelay !== null ?
+                that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                    return fn(that, this);
+                }, searchDelay) :
+                function () {
+                    fn(that, _this);
+                })
+                .on('input keypress', !that.c.enterSearch && searchDelay !== null ?
+                that.s.dt.settings()[0].oApi._fnThrottle(function () {
+                    return fn(that, this);
+                }, searchDelay) :
+                that.c.enterSearch ?
+                    function (e) {
                         var code = e.keyCode || e.which;
                         if (code === 13) {
-                            return fn(that, this);
+                            fn(that, _this);
                         }
-                    }, searchDelay === null ? 100 : searchDelay);
-                } :
-                that._throttle(function () {
-                    return fn(that, this);
-                }, searchDelay === null ? 100 : searchDelay));
+                    } :
+                    function () {
+                        fn(that, _this);
+                    });
             if (that.c.greyscale) {
                 $$2(el).addClass(Criteria.classes.greyscale);
             }
