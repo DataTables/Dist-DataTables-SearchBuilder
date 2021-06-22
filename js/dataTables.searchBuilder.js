@@ -911,13 +911,23 @@
             options.sort(function (a, b) {
                 if (that.s.type === 'array' ||
                     that.s.type === 'string' ||
-                    that.s.type === 'num' ||
-                    that.s.type === 'html' ||
-                    that.s.type === 'html-num') {
+                    that.s.type === 'html') {
                     if ($$2(a).val() < $$2(b).val()) {
                         return -1;
                     }
                     else if ($$2(a).val() > $$2(b).val()) {
+                        return 1;
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+                else if (that.s.type === 'num' ||
+                    that.s.type === 'html-num') {
+                    if (+$$2(a).val().replace(/(<([^>]+)>)/ig, '') < +$$2(b).val().replace(/(<([^>]+)>)/ig, '')) {
+                        return -1;
+                    }
+                    else if (+$$2(a).val().replace(/(<([^>]+)>)/ig, '') > +$$2(b).val().replace(/(<([^>]+)>)/ig, '')) {
                         return 1;
                     }
                     else {
@@ -1245,6 +1255,9 @@
             var condition = that.s.conditions[that.s.condition];
             that.s.filled = condition.isInputValid(that.dom.value, that);
             that.s.value = condition.inputValue(that.dom.value, that);
+            if (!that.s.filled) {
+                return;
+            }
             if (!Array.isArray(that.s.value)) {
                 that.s.value = [that.s.value];
             }
