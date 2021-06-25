@@ -772,17 +772,19 @@
          * @param args arguments supplied to the throttle function
          * @returns Function that is to be run that implements the throttling
          */
-        Criteria.prototype._throttle = function () {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
-            }
+        Criteria.prototype._throttle = function (fn, frequency) {
+            if (frequency === void 0) { frequency = 200; }
             var last = null;
             var timer = null;
             var that = this;
-            var fn = args[0];
-            var frequency = args[1] !== null ? args[1] : 200;
+            if (frequency === null) {
+                frequency = 200;
+            }
             return function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
                 var now = +new Date();
                 if (last !== null && now < last + frequency) {
                     clearTimeout(timer);
@@ -971,18 +973,12 @@
             var el = $$2('<input/>')
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.input)
-                .on('input keypress', that.c.enterSearch ?
-                function (e) {
-                    that._throttle(function () {
-                        var code = e.keyCode || e.which;
-                        if (code === 13) {
-                            return fn(that, this);
-                        }
-                    }, searchDelay === null ? 100 : searchDelay);
-                } :
-                that._throttle(function () {
+                .on('input keypress', that._throttle(function (e) {
+                var code = e.keyCode || e.which;
+                if (!that.c.enterSearch || code === 13) {
                     return fn(that, this);
-                }, searchDelay === null ? 100 : searchDelay));
+                }
+            }, searchDelay === null ? 100 : searchDelay));
             if (that.c.greyscale) {
                 $$2(el).addClass(Criteria.classes.greyscale);
             }
@@ -1007,36 +1003,24 @@
                 $$2('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
-                    .on('input keypress', that.c.enterSearch ?
-                    function (e) {
-                        that._throttle(function () {
-                            var code = e.keyCode || e.which;
-                            if (code === 13) {
-                                return fn(that, this);
-                            }
-                        }, searchDelay === null ? 100 : searchDelay);
-                    } :
-                    that._throttle(function () {
+                    .on('input keypress', that._throttle(function (e) {
+                    var code = e.keyCode || e.which;
+                    if (!that.c.enterSearch || code === 13) {
                         return fn(that, this);
-                    }, searchDelay === null ? 100 : searchDelay)),
+                    }
+                }, searchDelay === null ? 100 : searchDelay)),
                 $$2('<span>')
                     .addClass(that.classes.joiner)
                     .text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
                 $$2('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
-                    .on('input keypress', that.c.enterSearch ?
-                    function (e) {
-                        that._throttle(function () {
-                            var code = e.keyCode || e.which;
-                            if (code === 13) {
-                                return fn(that, this);
-                            }
-                        }, searchDelay === null ? 100 : searchDelay);
-                    } :
-                    that._throttle(function () {
+                    .on('input keypress', that._throttle(function (e) {
+                    var code = e.keyCode || e.which;
+                    if (!that.c.enterSearch || code === 13) {
                         return fn(that, this);
-                    }, searchDelay === null ? 100 : searchDelay))
+                    }
+                }, searchDelay === null ? 100 : searchDelay))
             ];
             if (that.c.greyscale) {
                 $$2(els[0]).addClass(Criteria.classes.greyscale);
@@ -1256,6 +1240,7 @@
             that.s.filled = condition.isInputValid(that.dom.value, that);
             that.s.value = condition.inputValue(that.dom.value, that);
             if (!that.s.filled) {
+                that.s.dt.draw();
                 return;
             }
             if (!Array.isArray(that.s.value)) {
