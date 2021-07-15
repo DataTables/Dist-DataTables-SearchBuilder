@@ -237,7 +237,8 @@
         Criteria.prototype.getDetails = function () {
             var value = this.s.value;
             // This check is in place for if a custom decimal character is in place
-            if (this.s.type.indexOf('num') !== -1 &&
+            if (this.s.type !== null &&
+                this.s.type.indexOf('num') !== -1 &&
                 (this.s.dt.settings()[0].oLanguage.sDecimal !== '' || this.s.dt.settings()[0].oLanguage.sThousands !== '')) {
                 for (var i = 0; i < this.s.value.length; i++) {
                     var splitRD = [this.s.value[i].toString()];
@@ -3243,6 +3244,7 @@
                 _this._updateTitle(count);
                 _this._filterChanged(count);
             });
+            $(this.s.topGroup.dom.container).unbind('dtsb-add');
             $(this.s.topGroup.dom.container).on('dtsb-add', function () {
                 var count = _this.s.topGroup.count();
                 _this._updateTitle(count);
