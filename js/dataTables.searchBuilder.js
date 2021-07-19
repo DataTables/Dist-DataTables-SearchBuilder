@@ -127,8 +127,8 @@
             if (hasSiblings === void 0) { hasSiblings = false; }
             if (redraw === void 0) { redraw = true; }
             // Empty the container and append all of the elements in the correct order
+            this.dom.container.children().detach();
             $$2(this.dom.container)
-                .empty()
                 .append(this.dom.data)
                 .append(this.dom.condition)
                 .append(this.dom.value[0]);
@@ -2378,8 +2378,8 @@
          */
         Group.prototype.redrawContents = function () {
             // Clear the container out and add the basic elements
+            $$1(this.dom.container).children().detach();
             $$1(this.dom.container)
-                .empty()
                 .append(this.dom.logicContainer)
                 .append(this.dom.add);
             // Sort the criteria by index so that they appear in the correct order
