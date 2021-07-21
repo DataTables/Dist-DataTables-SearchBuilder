@@ -6,7 +6,9 @@
 
     var $$2;
     var dataTable$2;
+    // eslint-disable-next-line no-extra-parens
     var moment = window.moment;
+    // eslint-disable-next-line no-extra-parens
     var luxon = window.luxon;
     /**
      * Sets the value of jQuery for use in the file
@@ -99,12 +101,12 @@
             };
             // If the greyscale option is selected then add the class to add the grey colour to SearchBuilder
             if (this.c.greyscale) {
-                $$2(this.dom.data).addClass(this.classes.greyscale);
-                $$2(this.dom.condition).addClass(this.classes.greyscale);
-                $$2(this.dom.defaultValue).addClass(this.classes.greyscale);
+                this.dom.data.addClass(this.classes.greyscale);
+                this.dom.condition.addClass(this.classes.greyscale);
+                this.dom.defaultValue.addClass(this.classes.greyscale);
                 for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
                     var val = _a[_i];
-                    $$2(val).addClass(this.classes.greyscale);
+                    val.addClass(this.classes.greyscale);
                 }
             }
             // For responsive design, adjust the criterias properties on the following events
@@ -128,30 +130,32 @@
             if (redraw === void 0) { redraw = true; }
             // Empty the container and append all of the elements in the correct order
             this.dom.container.children().detach();
-            $$2(this.dom.container)
+            this.dom.container
                 .append(this.dom.data)
                 .append(this.dom.condition)
                 .append(this.dom.value[0]);
             this.setListeners();
             // Trigger the inserted events for the value elements as they are inserted
-            $$2(this.dom.value[0]).trigger('dtsb-inserted');
+            if (this.dom.value[0] !== undefined) {
+                this.dom.value[0].trigger('dtsb-inserted');
+            }
             for (var i = 1; i < this.dom.value.length; i++) {
-                $$2(this.dom.container).append(this.dom.value[i]);
-                $$2(this.dom.value[i]).trigger('dtsb-inserted');
+                this.dom.container.append(this.dom.value[i]);
+                this.dom.value[i].trigger('dtsb-inserted');
             }
             // If this is a top level criteria then don't let it move left
             if (this.s.depth > 1) {
-                $$2(this.dom.buttons).append(this.dom.left);
+                this.dom.buttons.append(this.dom.left);
             }
             // If the depthLimit of the query has been hit then don't add the right button
             if ((this.c.depthLimit === false || this.s.depth < this.c.depthLimit) && hasSiblings) {
-                $$2(this.dom.buttons).append(this.dom.right);
+                this.dom.buttons.append(this.dom.right);
             }
             else {
-                $$2(this.dom.right).remove();
+                this.dom.right.remove();
             }
-            $$2(this.dom.buttons).append(this.dom["delete"]);
-            $$2(this.dom.container).append(this.dom.buttons);
+            this.dom.buttons.append(this.dom["delete"]);
+            this.dom.container.append(this.dom.buttons);
             if (redraw) {
                 // A different combination of arrows and selectors may lead to a need for responsive to be triggered
                 this._adjustCriteria();
@@ -162,15 +166,15 @@
          */
         Criteria.prototype.destroy = function () {
             // Turn off listeners
-            $$2(this.dom.data).off('.dtsb');
-            $$2(this.dom.condition).off('.dtsb');
-            $$2(this.dom["delete"]).off('.dtsb');
+            this.dom.data.off('.dtsb');
+            this.dom.condition.off('.dtsb');
+            this.dom["delete"].off('.dtsb');
             for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
                 var val = _a[_i];
-                $$2(val).off('.dtsb');
+                val.off('.dtsb');
             }
             // Remove container from the dom
-            $$2(this.dom.container).remove();
+            this.dom.container.remove();
         };
         /**
          * Passes in the data for the row and compares it against this single criteria
@@ -183,7 +187,7 @@
             if (this.s.condition !== undefined && condition !== undefined) {
                 var filter = rowData[this.s.dataIdx];
                 // This check is in place for if a custom decimal character is in place
-                if (this.s.type.indexOf('num') !== -1 &&
+                if (this.s.type.includes('num') &&
                     (this.s.dt.settings()[0].oLanguage.sDecimal !== '' ||
                         this.s.dt.settings()[0].oLanguage.sThousands !== '')) {
                     var splitRD = [rowData[this.s.dataIdx]];
@@ -220,7 +224,7 @@
                 else if (filter !== null) {
                     filter = filter.replace(/[\r\n\u2028]/g, ' ');
                 }
-                if (this.s.type.indexOf('html') !== -1) {
+                if (this.s.type.includes('html')) {
                     filter = filter.replace(/(<([^>]+)>)/ig, '');
                 }
                 // Not ideal, but jqueries .val() returns an empty string even
@@ -238,7 +242,7 @@
             var value = this.s.value;
             // This check is in place for if a custom decimal character is in place
             if (this.s.type !== null &&
-                this.s.type.indexOf('num') !== -1 &&
+                this.s.type.includes('num') &&
                 (this.s.dt.settings()[0].oLanguage.sDecimal !== '' || this.s.dt.settings()[0].oLanguage.sThousands !== '')) {
                 for (var i = 0; i < this.s.value.length; i++) {
                     var splitRD = [this.s.value[i].toString()];
@@ -295,10 +299,10 @@
             if (loadedCriteria.data !== undefined) {
                 var italic_1 = this.classes.italic;
                 var data_1 = this.dom.data;
-                $$2(this.dom.data).children('option').each(function () {
+                this.dom.data.children('option').each(function () {
                     if ($$2(this).text() === loadedCriteria.data) {
                         $$2(this).attr('selected', true);
-                        $$2(data_1).removeClass(italic_1);
+                        data_1.removeClass(italic_1);
                         foundData = true;
                         dataIdx = $$2(this).val();
                     }
@@ -309,15 +313,15 @@
                 this.s.data = loadedCriteria.data;
                 this.s.dataIdx = dataIdx;
                 this.c.orthogonal = this._getOptions().orthogonal;
-                $$2(this.dom.dataTitle).remove();
+                this.dom.dataTitle.remove();
                 this._populateCondition();
-                $$2(this.dom.conditionTitle).remove();
+                this.dom.conditionTitle.remove();
                 var condition_1;
                 // Check to see if the previously selected condition exists, if so select it
-                $$2(this.dom.condition).children('option').each(function () {
-                    if ((loadedCriteria.condition !== undefined &&
+                this.dom.condition.children('option').each(function () {
+                    if (loadedCriteria.condition !== undefined &&
                         $$2(this).val() === loadedCriteria.condition &&
-                        typeof loadedCriteria.condition === 'string')) {
+                        typeof loadedCriteria.condition === 'string') {
                         $$2(this).attr('selected', true);
                         condition_1 = $$2(this).val();
                     }
@@ -325,12 +329,12 @@
                 this.s.condition = condition_1;
                 // If the condition has been found and selected then the value can be populated and searched
                 if (this.s.condition !== undefined) {
-                    $$2(this.dom.conditionTitle).remove();
-                    $$2(this.dom.condition).removeClass(this.classes.italic);
+                    this.dom.conditionTitle.remove();
+                    this.dom.condition.removeClass(this.classes.italic);
                     this._populateValue(loadedCriteria);
                 }
                 else {
-                    $$2(this.dom.conditionTitle).prependTo(this.dom.condition).attr('selected', true);
+                    this.dom.conditionTitle.prependTo(this.dom.condition).attr('selected', 'true');
                 }
             }
         };
@@ -339,20 +343,20 @@
          */
         Criteria.prototype.setListeners = function () {
             var _this = this;
-            $$2(this.dom.data)
+            this.dom.data
                 .unbind('change')
                 .on('change', function () {
-                $$2(_this.dom.dataTitle).attr('selected', false);
-                $$2(_this.dom.data).removeClass(_this.classes.italic);
-                _this.s.dataIdx = $$2(_this.dom.data).children('option:selected').val();
-                _this.s.data = $$2(_this.dom.data).children('option:selected').text();
+                _this.dom.dataTitle.attr('selected', 'false');
+                _this.dom.data.removeClass(_this.classes.italic);
+                _this.s.dataIdx = +_this.dom.data.children('option:selected').val();
+                _this.s.data = _this.dom.data.children('option:selected').text();
                 _this.c.orthogonal = _this._getOptions().orthogonal;
                 // When the data is changed, the values in condition and value may also change so need to renew them
                 _this._clearCondition();
                 _this._clearValue();
                 _this._populateCondition();
                 // If this criteria was previously active in the search then
-                //  remove it from the search and trigger a new search
+                // remove it from the search and trigger a new search
                 if (_this.s.filled) {
                     _this.s.filled = false;
                     _this.s.dt.draw();
@@ -360,12 +364,12 @@
                 }
                 _this.s.dt.state.save();
             });
-            $$2(this.dom.condition)
+            this.dom.condition
                 .unbind('change')
                 .on('change', function () {
-                $$2(_this.dom.conditionTitle).attr('selected', false);
-                $$2(_this.dom.condition).removeClass(_this.classes.italic);
-                var condDisp = $$2(_this.dom.condition).children('option:selected').val();
+                _this.dom.conditionTitle.attr('selected', 'false');
+                _this.dom.condition.removeClass(_this.classes.italic);
+                var condDisp = _this.dom.condition.children('option:selected').val();
                 // Find the condition that has been selected and store it internally
                 for (var _i = 0, _a = Object.keys(_this.s.conditions); _i < _a.length; _i++) {
                     var cond = _a[_i];
@@ -375,20 +379,20 @@
                     }
                 }
                 // When the condition is changed, the value selector may switch between
-                //  a select element and an input element
+                // a select element and an input element
                 _this._clearValue();
                 _this._populateValue();
                 for (var _b = 0, _c = _this.dom.value; _b < _c.length; _b++) {
                     var val = _c[_b];
                     // If this criteria was previously active in the search then remove
-                    //  it from the search and trigger a new search
-                    if (_this.s.filled && $$2(_this.dom.container).has(val).length !== 0) {
+                    // it from the search and trigger a new search
+                    if (_this.s.filled && _this.dom.container.has(val[0]).length !== 0) {
                         _this.s.filled = false;
                         _this.s.dt.draw();
                         _this.setListeners();
                     }
                 }
-                if (_this.dom.value.length === 0 || (_this.dom.value.length === 1 && _this.dom.value[0] === undefined)) {
+                if (_this.dom.value.length === 0 || _this.dom.value.length === 1 && _this.dom.value[0] === undefined) {
                     _this.s.dt.draw();
                 }
             });
@@ -405,18 +409,18 @@
             var valWidth;
             var outmostval = this.dom.value[this.dom.value.length - 1];
             // Calculate the width and right value of the outmost value element
-            if ($$2(this.dom.container).has(outmostval).length !== 0) {
-                valWidth = $$2(outmostval).outerWidth(true);
-                valRight = $$2(outmostval).offset().left + valWidth;
+            if (outmostval !== undefined && this.dom.container.has(outmostval[0]).length !== 0) {
+                valWidth = outmostval.outerWidth(true);
+                valRight = outmostval.offset().left + valWidth;
             }
             else {
                 return;
             }
-            var leftOffset = $$2(this.dom.left).offset();
-            var rightOffset = $$2(this.dom.right).offset();
-            var clearOffset = $$2(this.dom["delete"]).offset();
-            var hasLeft = $$2(this.dom.container).has(this.dom.left).length !== 0;
-            var hasRight = $$2(this.dom.container).has(this.dom.right).length !== 0;
+            var leftOffset = this.dom.left.offset();
+            var rightOffset = this.dom.right.offset();
+            var clearOffset = this.dom["delete"].offset();
+            var hasLeft = this.dom.container.has(this.dom.left[0]).length !== 0;
+            var hasRight = this.dom.container.has(this.dom.right[0]).length !== 0;
             var buttonsLeft = hasLeft ?
                 leftOffset.left :
                 hasRight ?
@@ -424,20 +428,20 @@
                     clearOffset.left;
             // Perform the responsive calculations and redraw where necessary
             if ((buttonsLeft - valRight < 15 ||
-                (hasLeft && leftOffset.top !== clearOffset.top) ||
-                (hasRight && rightOffset.top !== clearOffset.top)) &&
-                !$$2(this.dom.container).parent().hasClass(this.classes.vertical)) {
-                $$2(this.dom.container).parent().addClass(this.classes.vertical);
-                $$2(this.s.topGroup).trigger('dtsb-redrawContents');
+                hasLeft && leftOffset.top !== clearOffset.top ||
+                hasRight && rightOffset.top !== clearOffset.top) &&
+                !this.dom.container.parent().hasClass(this.classes.vertical)) {
+                this.dom.container.parent().addClass(this.classes.vertical);
+                this.s.topGroup.trigger('dtsb-redrawContents');
             }
             else if (buttonsLeft -
-                ($$2(this.dom.data).offset().left +
-                    $$2(this.dom.data).outerWidth(true) +
-                    $$2(this.dom.condition).outerWidth(true) +
+                (this.dom.data.offset().left +
+                    this.dom.data.outerWidth(true) +
+                    this.dom.condition.outerWidth(true) +
                     valWidth) > 15
-                && $$2(this.dom.container).parent().hasClass(this.classes.vertical)) {
-                $$2(this.dom.container).parent().removeClass(this.classes.vertical);
-                $$2(this.s.topGroup).trigger('dtsb-redrawContents');
+                && this.dom.container.parent().hasClass(this.classes.vertical)) {
+                this.dom.container.parent().removeClass(this.classes.vertical);
+                this.s.topGroup.trigger('dtsb-redrawContents');
             }
         };
         /**
@@ -445,19 +449,19 @@
          */
         Criteria.prototype._buildCriteria = function () {
             // Append Titles for select elements
-            $$2(this.dom.data).append(this.dom.dataTitle);
-            $$2(this.dom.condition).append(this.dom.conditionTitle);
+            this.dom.data.append(this.dom.dataTitle);
+            this.dom.condition.append(this.dom.conditionTitle);
             // Add elements to container
-            $$2(this.dom.container)
+            this.dom.container
                 .append(this.dom.data)
                 .append(this.dom.condition);
             for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
                 var val = _a[_i];
-                $$2(val).append(this.dom.valueTitle);
-                $$2(this.dom.container).append(val);
+                val.append(this.dom.valueTitle);
+                this.dom.container.append(val);
             }
             // Add buttons to container
-            $$2(this.dom.container)
+            this.dom.container
                 .append(this.dom["delete"])
                 .append(this.dom.right);
             this.setListeners();
@@ -466,9 +470,9 @@
          * Clears the condition select element
          */
         Criteria.prototype._clearCondition = function () {
-            $$2(this.dom.condition).empty();
-            $$2(this.dom.conditionTitle).attr('selected', true).attr('disabled', true);
-            $$2(this.dom.condition).prepend(this.dom.conditionTitle).prop('selectedIndex', 0);
+            this.dom.condition.empty();
+            this.dom.conditionTitle.attr('selected', 'true').attr('disabled', 'true');
+            this.dom.condition.prepend(this.dom.conditionTitle).prop('selectedIndex', 0);
             this.s.conditions = {};
             this.s.condition = undefined;
         };
@@ -480,7 +484,7 @@
                 var _loop_1 = function (val) {
                     // Timeout is annoying but because of IOS
                     setTimeout(function () {
-                        $$2(val).remove();
+                        val.remove();
                     }, 50);
                 };
                 // Remove all of the value elements
@@ -490,17 +494,17 @@
                 }
                 // Call the init function to get the value elements for this condition
                 this.dom.value = [].concat(this.s.conditions[this.s.condition].init(this, Criteria.updateListener));
-                $$2(this.dom.value[0]).insertAfter(this.dom.condition).trigger('dtsb-inserted');
+                this.dom.value[0].insertAfter(this.dom.condition).trigger('dtsb-inserted');
                 // Insert all of the value elements
                 for (var i = 1; i < this.dom.value.length; i++) {
-                    $$2(this.dom.value[i]).insertAfter(this.dom.value[i - 1]).trigger('dtsb-inserted');
+                    this.dom.value[i].insertAfter(this.dom.value[i - 1]).trigger('dtsb-inserted');
                 }
             }
             else {
                 var _loop_2 = function (val) {
                     // Timeout is annoying but because of IOS
                     setTimeout(function () {
-                        $$2(val).remove();
+                        val.remove();
                     }, 50);
                 };
                 // Remove all of the value elements
@@ -509,9 +513,9 @@
                     _loop_2(val);
                 }
                 // Append the default valueTitle to the default select element
-                $$2(this.dom.valueTitle)
-                    .attr('selected', true);
-                $$2(this.dom.defaultValue)
+                this.dom.valueTitle
+                    .attr('selected', 'true');
+                this.dom.defaultValue
                     .append(this.dom.valueTitle)
                     .insertAfter(this.dom.condition);
             }
@@ -522,7 +526,7 @@
                     .addClass(this.classes.dropDown)
                     .addClass(this.classes.italic)
                     .addClass(this.classes.select)
-                    .append($$2(this.dom.valueTitle).clone())
+                    .append(this.dom.valueTitle.clone())
             ];
         };
         /**
@@ -542,45 +546,45 @@
             var conditionsLength = Object.keys(this.s.conditions).length;
             // If there are no conditions stored then we need to get them from the appropriate type
             if (conditionsLength === 0) {
-                var column = $$2(this.dom.data).children('option:selected').val();
+                var column = +this.dom.data.children('option:selected').val();
                 this.s.type = this.s.dt.columns().type().toArray()[column];
                 // If the column type is unknown, call a draw to try reading it again
                 if (this.s.type === null) {
-                    this.s.dt.draw();
+                    this.s.dt.draw(false);
                     this.setListeners();
                     this.s.type = this.s.dt.columns().type().toArray()[column];
                 }
                 // Enable the condition element
-                $$2(this.dom.condition)
-                    .attr('disabled', false)
+                this.dom.condition
+                    .removeAttr('disabled')
                     .empty()
                     .append(this.dom.conditionTitle)
                     .addClass(this.classes.italic);
-                $$2(this.dom.conditionTitle)
-                    .attr('selected', true);
+                this.dom.conditionTitle
+                    .attr('selected', 'true');
                 var decimal = this.s.dt.settings()[0].oLanguage.sDecimal;
                 // This check is in place for if a custom decimal character is in place
                 if (decimal !== '' && this.s.type.indexOf(decimal) === this.s.type.length - decimal.length) {
-                    if (this.s.type.indexOf('num-fmt') !== -1) {
+                    if (this.s.type.includes('num-fmt')) {
                         this.s.type = this.s.type.replace(decimal, '');
                     }
-                    else if (this.s.type.indexOf('num') !== -1) {
+                    else if (this.s.type.includes('num')) {
                         this.s.type = this.s.type.replace(decimal, '');
                     }
                 }
                 // Select which conditions are going to be used based on the column type
                 var conditionObj = this.c.conditions[this.s.type] !== undefined ?
                     this.c.conditions[this.s.type] :
-                    this.s.type.indexOf('moment') !== -1 ?
+                    this.s.type.includes('moment') ?
                         this.c.conditions.moment :
-                        this.s.type.indexOf('luxon') !== -1 ?
+                        this.s.type.includes('luxon') ?
                             this.c.conditions.luxon :
                             this.c.conditions.string;
                 // If it is a moment format then extract the date format
-                if (this.s.type.indexOf('moment') !== -1) {
+                if (this.s.type.includes('moment')) {
                     this.s.dateFormat = this.s.type.replace(/moment-/g, '');
                 }
-                else if (this.s.type.indexOf('luxon') !== -1) {
+                else if (this.s.type.includes('luxon')) {
                     this.s.dateFormat = this.s.type.replace(/luxon-/g, '');
                 }
                 // Add all of the conditions to the select element
@@ -603,7 +607,7 @@
             }
             // Otherwise we can just load them in
             else if (conditionsLength > 0) {
-                $$2(this.dom.condition).empty().attr('disabled', false).addClass(this.classes.italic);
+                this.dom.condition.empty().removeAttr('disabled').addClass(this.classes.italic);
                 for (var _b = 0, _c = Object.keys(this.s.conditions); _b < _c.length; _b++) {
                     var condition = _c[_b];
                     var condName = this.s.conditions[condition].conditionName;
@@ -617,36 +621,36 @@
                         .addClass(this.classes.option)
                         .addClass(this.classes.notItalic);
                     if (this.s.condition !== undefined && this.s.condition === condName) {
-                        $$2(newOpt).attr('selected', true);
-                        $$2(this.dom.condition).removeClass(this.classes.italic);
+                        newOpt.attr('selected', true);
+                        this.dom.condition.removeClass(this.classes.italic);
                     }
                     conditionOpts.push(newOpt);
                 }
             }
             else {
-                $$2(this.dom.condition)
-                    .attr('disabled', true)
+                this.dom.condition
+                    .attr('disabled', 'true')
                     .addClass(this.classes.italic);
                 return;
             }
             for (var _d = 0, conditionOpts_1 = conditionOpts; _d < conditionOpts_1.length; _d++) {
                 var opt = conditionOpts_1[_d];
-                $$2(this.dom.condition).append(opt);
+                this.dom.condition.append(opt);
             }
-            $$2(this.dom.condition).prop('selectedIndex', 0);
+            this.dom.condition.prop('selectedIndex', 0);
         };
         /**
          * Populates the data select element
          */
         Criteria.prototype._populateData = function () {
             var _this = this;
-            $$2(this.dom.data).empty().append(this.dom.dataTitle);
+            this.dom.data.empty().append(this.dom.dataTitle);
             // If there are no datas stored then we need to get them from the table
             if (this.s.dataPoints.length === 0) {
                 this.s.dt.columns().every(function (index) {
                     // Need to check that the column can be filtered on before adding it
                     if (_this.c.columns === true ||
-                        (_this.s.dt.columns(_this.c.columns).indexes().toArray().indexOf(index) !== -1)) {
+                        _this.s.dt.columns(_this.c.columns).indexes().toArray().includes(index)) {
                         var found = false;
                         for (var _i = 0, _a = _this.s.dataPoints; _i < _a.length; _i++) {
                             var val = _a[_i];
@@ -664,7 +668,7 @@
                                     col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, '')
                             };
                             _this.s.dataPoints.push(opt);
-                            $$2(_this.dom.data).append($$2('<option>', {
+                            _this.dom.data.append($$2('<option>', {
                                 text: opt.text,
                                 value: opt.index
                             })
@@ -693,10 +697,10 @@
                         .addClass(this_1.classes.notItalic);
                     if (this_1.s.data === data.text) {
                         this_1.s.dataIdx = data.index;
-                        $$2(newOpt).attr('selected', true);
-                        $$2(this_1.dom.data).removeClass(this_1.classes.italic);
+                        newOpt.attr('selected', true);
+                        this_1.dom.data.removeClass(this_1.classes.italic);
                     }
-                    $$2(this_1.dom.data).append(newOpt);
+                    this_1.dom.data.append(newOpt);
                 };
                 var this_1 = this;
                 for (var _i = 0, _a = this.s.dataPoints; _i < _a.length; _i++) {
@@ -717,19 +721,21 @@
             // Remove any previous value elements
             // Timeout is annoying but because of IOS
             setTimeout(function () {
-                $$2(_this.dom.defaultValue).remove();
+                _this.dom.defaultValue.remove();
             }, 50);
             var _loop_4 = function (val) {
                 // Timeout is annoying but because of IOS
                 setTimeout(function () {
-                    $$2(val).remove();
+                    if (val !== undefined) {
+                        val.remove();
+                    }
                 }, 50);
             };
             for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
                 var val = _a[_i];
                 _loop_4(val);
             }
-            var children = $$2(this.dom.container).children();
+            var children = this.dom.container.children();
             if (children.length > 3) {
                 for (var i = 2; i < children.length - 1; i++) {
                     $$2(children[i]).remove();
@@ -749,11 +755,13 @@
                 this.s.value = loadedCriteria.value;
             }
             // Insert value elements and trigger the inserted event
-            $$2(this.dom.value[0])
-                .insertAfter(this.dom.condition)
-                .trigger('dtsb-inserted');
+            if (this.dom.value[0] !== undefined) {
+                this.dom.value[0]
+                    .insertAfter(this.dom.condition)
+                    .trigger('dtsb-inserted');
+            }
             for (var i = 1; i < this.dom.value.length; i++) {
-                $$2(this.dom.value[i])
+                this.dom.value[i]
                     .insertAfter(this.dom.value[i - 1])
                     .trigger('dtsb-inserted');
             }
@@ -826,7 +834,7 @@
         Criteria.initSelect = function (that, fn, preDefined, array) {
             if (preDefined === void 0) { preDefined = null; }
             if (array === void 0) { array = false; }
-            var column = $$2(that.dom.data).children('option:selected').val();
+            var column = that.dom.data.children('option:selected').val();
             var indexArray = that.s.dt.rows().indexes().toArray();
             var settings = that.s.dt.settings()[0];
             // Declare select element to be used with all of the default classes and listeners.
@@ -841,7 +849,7 @@
                 fn(that, this);
             });
             if (that.c.greyscale) {
-                $$2(el).addClass(Criteria.classes.greyscale);
+                el.addClass(Criteria.classes.greyscale);
             }
             var added = [];
             var options = [];
@@ -875,7 +883,7 @@
                     // Add text and value, stripping out any html if that is the column type
                     var opt = $$2('<option>', {
                         type: Array.isArray(filt) ? 'Array' : 'String',
-                        value: that.s.type.indexOf('html') !== -1 && filt !== null && typeof filt === 'string' ?
+                        value: that.s.type.includes('html') && filt !== null && typeof filt === 'string' ?
                             filt.replace(/(<([^>]+)>)/ig, '') :
                             filt
                     })
@@ -885,7 +893,7 @@
                         .html(typeof text === 'string' ?
                         text.replace(/(<([^>]+)>)/ig, '') :
                         text);
-                    var val = $$2(opt).val();
+                    var val = opt.val();
                     // Check that this value has not already been added
                     if (added.indexOf(val) === -1) {
                         added.push(val);
@@ -896,7 +904,7 @@
                         // If this value was previously selected as indicated by preDefined, then select it again
                         if (preDefined !== null && opt.val() === preDefined[0]) {
                             opt.attr('selected', true);
-                            $$2(el).removeClass(Criteria.classes.italic);
+                            el.removeClass(Criteria.classes.italic);
                         }
                     }
                 };
@@ -915,10 +923,10 @@
                 if (that.s.type === 'array' ||
                     that.s.type === 'string' ||
                     that.s.type === 'html') {
-                    if ($$2(a).val() < $$2(b).val()) {
+                    if (a.val() < b.val()) {
                         return -1;
                     }
-                    else if ($$2(a).val() > $$2(b).val()) {
+                    else if (a.val() > b.val()) {
                         return 1;
                     }
                     else {
@@ -927,10 +935,10 @@
                 }
                 else if (that.s.type === 'num' ||
                     that.s.type === 'html-num') {
-                    if (+$$2(a).val().replace(/(<([^>]+)>)/ig, '') < +$$2(b).val().replace(/(<([^>]+)>)/ig, '')) {
+                    if (+a.val().replace(/(<([^>]+)>)/ig, '') < +b.val().replace(/(<([^>]+)>)/ig, '')) {
                         return -1;
                     }
-                    else if (+$$2(a).val().replace(/(<([^>]+)>)/ig, '') > +$$2(b).val().replace(/(<([^>]+)>)/ig, '')) {
+                    else if (+a.val().replace(/(<([^>]+)>)/ig, '') > +b.val().replace(/(<([^>]+)>)/ig, '')) {
                         return 1;
                     }
                     else {
@@ -938,10 +946,10 @@
                     }
                 }
                 else if (that.s.type === 'num-fmt' || that.s.type === 'html-num-fmt') {
-                    if (+$$2(a).val().replace(/[^0-9.]/g, '') < +$$2(b).val().replace(/[^0-9.]/g, '')) {
+                    if (+a.val().replace(/[^0-9.]/g, '') < +b.val().replace(/[^0-9.]/g, '')) {
                         return -1;
                     }
-                    else if (+$$2(a).val().replace(/[^0-9.]/g, '') > +$$2(b).val().replace(/[^0-9.]/g, '')) {
+                    else if (+a.val().replace(/[^0-9.]/g, '') > +b.val().replace(/[^0-9.]/g, '')) {
                         return 1;
                     }
                     else {
@@ -951,7 +959,7 @@
             });
             for (var _a = 0, options_1 = options; _a < options_1.length; _a++) {
                 var opt = options_1[_a];
-                $$2(el).append(opt);
+                el.append(opt);
             }
             return el;
         };
@@ -981,15 +989,15 @@
                 }
             }, searchDelay === null ? 100 : searchDelay));
             if (that.c.greyscale) {
-                $$2(el).addClass(Criteria.classes.greyscale);
+                el.addClass(Criteria.classes.greyscale);
             }
             // If there is a preDefined value then add it
             if (preDefined !== null) {
-                $$2(el).val(preDefined[0]);
+                el.val(preDefined[0]);
             }
             // This is add responsive functionality to the logic button without redrawing everything else
             that.s.dt.one('draw', function () {
-                $$2(that.s.topGroup).trigger('dtsb-redrawLogic');
+                that.s.topGroup.trigger('dtsb-redrawLogic');
             });
             return el;
         };
@@ -1024,17 +1032,17 @@
                 }, searchDelay === null ? 100 : searchDelay))
             ];
             if (that.c.greyscale) {
-                $$2(els[0]).addClass(Criteria.classes.greyscale);
-                $$2(els[2]).addClass(Criteria.classes.greyscale);
+                els[0].addClass(Criteria.classes.greyscale);
+                els[2].addClass(Criteria.classes.greyscale);
             }
             // If there is a preDefined value then add it
             if (preDefined !== null) {
-                $$2(els[0]).val(preDefined[0]);
-                $$2(els[2]).val(preDefined[1]);
+                els[0].val(preDefined[0]);
+                els[2].val(preDefined[1]);
             }
             // This is add responsive functionality to the logic button without redrawing everything else
             that.s.dt.one('draw', function () {
-                $$2(that.s.topGroup).trigger('dtsb-redrawLogic');
+                that.s.topGroup.trigger('dtsb-redrawLogic');
             });
             return els;
         };
@@ -1068,22 +1076,22 @@
                     return fn(that, this);
                 }, searchDelay === null ? 100 : searchDelay));
             if (that.c.greyscale) {
-                $$2(el).addClass(Criteria.classes.greyscale);
+                el.addClass(Criteria.classes.greyscale);
             }
             // If there is a preDefined value then add it
             if (preDefined !== null) {
-                $$2(el).val(preDefined[0]);
+                el.val(preDefined[0]);
             }
             // This is add responsive functionality to the logic button without redrawing everything else
             that.s.dt.one('draw', function () {
-                $$2(that.s.topGroup).trigger('dtsb-redrawLogic');
+                that.s.topGroup.trigger('dtsb-redrawLogic');
             });
             return el;
         };
         Criteria.initNoValue = function (that) {
             // This is add responsive functionality to the logic button without redrawing everything else
             that.s.dt.one('draw', function () {
-                $$2(that.s.topGroup).trigger('dtsb-redrawLogic');
+                that.s.topGroup.trigger('dtsb-redrawLogic');
             });
         };
         Criteria.init2Date = function (that, fn, preDefined) {
@@ -1153,17 +1161,17 @@
                         })
             ];
             if (that.c.greyscale) {
-                $$2(els[0]).addClass(Criteria.classes.greyscale);
-                $$2(els[2]).addClass(Criteria.classes.greyscale);
+                els[0].addClass(Criteria.classes.greyscale);
+                els[2].addClass(Criteria.classes.greyscale);
             }
             // If there are and preDefined values then add them
             if (preDefined !== null && preDefined.length > 0) {
-                $$2(els[0]).val(preDefined[0]);
-                $$2(els[2]).val(preDefined[1]);
+                els[0].val(preDefined[0]);
+                els[2].val(preDefined[1]);
             }
             // This is add responsive functionality to the logic button without redrawing everything else
             that.s.dt.one('draw', function () {
-                $$2(that.s.topGroup).trigger('dtsb-redrawLogic');
+                that.s.topGroup.trigger('dtsb-redrawLogic');
             });
             return els;
         };
@@ -1175,11 +1183,11 @@
             // Check each element to make sure that the selections are valid
             for (var _i = 0, el_1 = el; _i < el_1.length; _i++) {
                 var element = el_1[_i];
-                if (($$2(element).children('option:selected').length ===
-                    $$2(element).children('option').length -
-                        $$2(element).children('option.' + Criteria.classes.notItalic).length) &&
-                    $$2(element).children('option:selected').length === 1 &&
-                    $$2(element).children('option:selected')[0] === $$2(element).children('option:hidden')[0]) {
+                if (element.children('option:selected').length ===
+                    element.children('option').length -
+                        element.children('option.' + Criteria.classes.notItalic).length &&
+                    element.children('option:selected').length === 1 &&
+                    element.children('option:selected')[0] === element.children('option:hidden')[0]) {
                     allFilled = false;
                 }
             }
@@ -1193,7 +1201,7 @@
             // Check each element to make sure that the inputs are valid
             for (var _i = 0, el_2 = el; _i < el_2.length; _i++) {
                 var element = el_2[_i];
-                if ($$2(element).is('input') && $$2(element).val().length === 0) {
+                if (element.is('input') && element.val().length === 0) {
                     allFilled = false;
                 }
             }
@@ -1207,10 +1215,10 @@
             // Go through the select elements and push each selected option to the return array
             for (var _i = 0, el_3 = el; _i < el_3.length; _i++) {
                 var element = el_3[_i];
-                if ($$2(element).is('select')) {
-                    var val = $$2(element).children('option:selected').val();
+                if (element.is('select')) {
+                    var val = element.children('option:selected').val();
                     // If the type of the option is an array we need to split it up and sort it
-                    values.push($$2(element).children('option:selected').attr('type') === 'Array' ?
+                    values.push(element.children('option:selected').attr('type') === 'Array' ?
                         val.split(',').sort() :
                         val);
                 }
@@ -1225,8 +1233,8 @@
             // Go through the input elements and push each value to the return array
             for (var _i = 0, el_4 = el; _i < el_4.length; _i++) {
                 var element = el_4[_i];
-                if ($$2(element).is('input')) {
-                    values.push($$2(element).val());
+                if (element.is('input')) {
+                    values.push(element.val());
                 }
             }
             return values;
@@ -1253,7 +1261,7 @@
                     that.s.value[i].sort();
                 }
                 // Otherwise replace the decimal place character for i18n
-                else if (that.s.type.indexOf('num') !== -1 &&
+                else if (that.s.type.includes('num') &&
                     (that.s.dt.settings()[0].oLanguage.sDecimal !== '' ||
                         that.s.dt.settings()[0].oLanguage.sThousands !== '')) {
                     var splitRD = [that.s.value[i].toString()];
@@ -1283,10 +1291,10 @@
             that.s.dt.draw();
             // Refocus the element and set the correct cursor position
             if (idx !== null) {
-                $$2(that.dom.value[idx]).removeClass(that.classes.italic);
-                $$2(that.dom.value[idx]).focus();
+                that.dom.value[idx].removeClass(that.classes.italic);
+                that.dom.value[idx].focus();
                 if (cursorPos !== null) {
-                    $$2(that.dom.value[idx])[0].setSelectionRange(cursorPos, cursorPos);
+                    that.dom.value[idx][0].setSelectionRange(cursorPos, cursorPos);
                 }
             }
         };
@@ -1391,7 +1399,7 @@
                     return true;
                 },
                 search: function (value) {
-                    return (value === null || value === undefined || value.length === 0);
+                    return value === null || value === undefined || value.length === 0;
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1514,7 +1522,7 @@
                     return true;
                 },
                 search: function (value) {
-                    return (value === null || value === undefined || value.length === 0);
+                    return value === null || value === undefined || value.length === 0;
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1639,7 +1647,7 @@
                     return true;
                 },
                 search: function (value) {
-                    return (value === null || value === undefined || value.length === 0);
+                    return value === null || value === undefined || value.length === 0;
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1777,7 +1785,7 @@
                     return true;
                 },
                 search: function (value) {
-                    return (value === null || value === undefined || value.length === 0);
+                    return value === null || value === undefined || value.length === 0;
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1969,7 +1977,7 @@
                     return true;
                 },
                 search: function (value) {
-                    return (value === null || value === undefined || value.length === 0);
+                    return value === null || value === undefined || value.length === 0;
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -2037,7 +2045,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    return value.toLowerCase().indexOf(comparison[0].toLowerCase()) !== -1;
+                    return value.toLowerCase().includes(comparison[0].toLowerCase());
                 }
             },
             'ends': {
@@ -2063,7 +2071,7 @@
                     return true;
                 },
                 search: function (value) {
-                    return (value === null || value === undefined || value.length === 0);
+                    return value === null || value === undefined || value.length === 0;
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -2095,7 +2103,7 @@
                 inputValue: Criteria.inputValueSelect,
                 isInputValid: Criteria.isInputValidSelect,
                 search: function (value, comparison) {
-                    return value.indexOf(comparison[0]) !== -1;
+                    return value.includes(comparison[0]);
                 }
             },
             'without': {
@@ -2161,7 +2169,7 @@
                     return true;
                 },
                 search: function (value) {
-                    return (value === null || value === undefined || value.length === 0);
+                    return value === null || value === undefined || value.length === 0;
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -2177,7 +2185,7 @@
                     return true;
                 },
                 search: function (value) {
-                    return (value !== null && value !== undefined && value.length !== 0);
+                    return value !== null && value !== undefined && value.length !== 0;
                 }
             }
         };
@@ -2300,10 +2308,10 @@
          */
         Group.prototype.destroy = function () {
             // Turn off listeners
-            $$1(this.dom.add).off('.dtsb');
-            $$1(this.dom.logic).off('.dtsb');
+            this.dom.add.off('.dtsb');
+            this.dom.logic.off('.dtsb');
             // Trigger event for groups at a higher level to pick up on
-            $$1(this.dom.container)
+            this.dom.container
                 .trigger('dtsb-destroy')
                 .remove();
             this.s.criteria = [];
@@ -2345,11 +2353,11 @@
             // If no criteria are stored then just return
             if (loadedDetails.criteria === undefined ||
                 loadedDetails.criteria === null ||
-                (Array.isArray(loadedDetails.criteria) && loadedDetails.criteria.length === 0)) {
+                Array.isArray(loadedDetails.criteria) && loadedDetails.criteria.length === 0) {
                 return;
             }
             this.s.logic = loadedDetails.logic;
-            $$1(this.dom.logic).children().first().text(this.s.logic === 'OR'
+            this.dom.logic.children().first().text(this.s.logic === 'OR'
                 ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
                 : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
             // Add all of the criteria, be it a sub group or a criteria
@@ -2378,8 +2386,8 @@
          */
         Group.prototype.redrawContents = function () {
             // Clear the container out and add the basic elements
-            $$1(this.dom.container).children().detach();
-            $$1(this.dom.container)
+            this.dom.container.children().detach();
+            this.dom.container
                 .append(this.dom.logicContainer)
                 .append(this.dom.add);
             // Sort the criteria by index so that they appear in the correct order
@@ -2400,7 +2408,7 @@
                     this.s.criteria[i].index = i;
                     this.s.criteria[i].criteria.s.index = i;
                     // Add to the group
-                    $$1(this.s.criteria[i].criteria.dom.container).insertBefore(this.dom.add);
+                    this.s.criteria[i].criteria.dom.container.insertBefore(this.dom.add);
                     // Set listeners for various points
                     this._setCriteriaListeners(crit);
                     this.s.criteria[i].criteria.rebuild(this.s.criteria[i].criteria.getDetails());
@@ -2410,7 +2418,7 @@
                     this.s.criteria[i].index = i;
                     this.s.criteria[i].criteria.s.index = i;
                     // Add the sub group to the group
-                    $$1(this.s.criteria[i].criteria.dom.container).insertBefore(this.dom.add);
+                    this.s.criteria[i].criteria.dom.container.insertBefore(this.dom.add);
                     // Redraw the contents of the group
                     crit.redrawContents();
                     this._setGroupListeners(crit);
@@ -2455,41 +2463,41 @@
          */
         Group.prototype.setupLogic = function () {
             // Remove logic button
-            $$1(this.dom.logicContainer).remove();
-            $$1(this.dom.clear).remove();
+            this.dom.logicContainer.remove();
+            this.dom.clear.remove();
             // If there are no criteria in the group then keep the logic removed and return
             if (this.s.criteria.length < 1) {
                 if (!this.s.isChild) {
-                    $$1(this.dom.container).trigger('dtsb-destroy');
+                    this.dom.container.trigger('dtsb-destroy');
                     // Set criteria left margin
-                    $$1(this.dom.container).css('margin-left', 0);
+                    this.dom.container.css('margin-left', 0);
                 }
                 return;
             }
             // Set width, take 2 for the border
-            var height = $$1(this.dom.container).height() - 1;
-            $$1(this.dom.clear).height('0px');
-            $$1(this.dom.logicContainer).append(this.dom.clear).width(height);
+            var height = this.dom.container.height() - 1;
+            this.dom.clear.height('0px');
+            this.dom.logicContainer.append(this.dom.clear).width(height);
             // Prepend logic button
-            $$1(this.dom.container).prepend(this.dom.logicContainer);
+            this.dom.container.prepend(this.dom.logicContainer);
             this._setLogicListener();
             // Set criteria left margin
-            $$1(this.dom.container).css('margin-left', $$1(this.dom.logicContainer).outerHeight(true));
-            var logicOffset = $$1(this.dom.logicContainer).offset();
+            this.dom.container.css('margin-left', this.dom.logicContainer.outerHeight(true));
+            var logicOffset = this.dom.logicContainer.offset();
             // Set horizontal alignment
             var currentLeft = logicOffset.left;
-            var groupLeft = $$1(this.dom.container).offset().left;
+            var groupLeft = this.dom.container.offset().left;
             var shuffleLeft = currentLeft - groupLeft;
-            var newPos = currentLeft - shuffleLeft - $$1(this.dom.logicContainer).outerHeight(true);
-            $$1(this.dom.logicContainer).offset({ left: newPos });
+            var newPos = currentLeft - shuffleLeft - this.dom.logicContainer.outerHeight(true);
+            this.dom.logicContainer.offset({ left: newPos });
             // Set vertical alignment
-            var firstCrit = $$1(this.dom.logicContainer).next();
+            var firstCrit = this.dom.logicContainer.next();
             var currentTop = logicOffset.top;
             var firstTop = $$1(firstCrit).offset().top;
             var shuffleTop = currentTop - firstTop;
             var newTop = currentTop - shuffleTop;
-            $$1(this.dom.logicContainer).offset({ top: newTop });
-            $$1(this.dom.clear).outerHeight($$1(this.dom.logicContainer).height());
+            this.dom.logicContainer.offset({ top: newTop });
+            this.dom.clear.outerHeight(this.dom.logicContainer.height());
             this._setClearListener();
         };
         /**
@@ -2497,14 +2505,14 @@
          */
         Group.prototype.setListeners = function () {
             var _this = this;
-            $$1(this.dom.add).unbind('click');
-            $$1(this.dom.add).on('click', function () {
+            this.dom.add.unbind('click');
+            this.dom.add.on('click', function () {
                 // If this is the parent group then the logic button has not been added yet
                 if (!_this.s.isChild) {
-                    $$1(_this.dom.container).prepend(_this.dom.logicContainer);
+                    _this.dom.container.prepend(_this.dom.logicContainer);
                 }
                 _this.addCriteria();
-                $$1(_this.dom.container).trigger('dtsb-add');
+                _this.dom.container.trigger('dtsb-add');
                 _this.s.dt.state.save();
                 return false;
             });
@@ -2537,19 +2545,19 @@
             for (var i = 0; i < this.s.criteria.length; i++) {
                 if (i === 0 && this.s.criteria[i].criteria.s.index > criteria.s.index) {
                     // Add the node for the criteria at the start of the group
-                    $$1(criteria.getNode()).insertBefore(this.s.criteria[i].criteria.dom.container);
+                    criteria.getNode().insertBefore(this.s.criteria[i].criteria.dom.container);
                     inserted = true;
                 }
                 else if (i < this.s.criteria.length - 1 &&
                     this.s.criteria[i].criteria.s.index < criteria.s.index &&
                     this.s.criteria[i + 1].criteria.s.index > criteria.s.index) {
                     // Add the node for the criteria in the correct location
-                    $$1(criteria.getNode()).insertAfter(this.s.criteria[i].criteria.dom.container);
+                    criteria.getNode().insertAfter(this.s.criteria[i].criteria.dom.container);
                     inserted = true;
                 }
             }
             if (!inserted) {
-                $$1(criteria.getNode()).insertBefore(this.dom.add);
+                criteria.getNode().insertBefore(this.dom.add);
             }
             // Add the details for this criteria to the array
             this.s.criteria.push({
@@ -2573,8 +2581,8 @@
         Group.prototype.checkFilled = function () {
             for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
                 var crit = _a[_i];
-                if ((crit.criteria instanceof Criteria && crit.criteria.s.filled) ||
-                    (crit.criteria instanceof Group && crit.criteria.checkFilled())) {
+                if (crit.criteria instanceof Criteria && crit.criteria.s.filled ||
+                    crit.criteria instanceof Group && crit.criteria.checkFilled()) {
                     return true;
                 }
             }
@@ -2613,7 +2621,7 @@
             // Rebuild it with the previous conditions for that group
             group.rebuild(loadedGroup);
             this.s.criteria[idx].criteria = group;
-            $$1(this.s.topGroup).trigger('dtsb-redrawContents');
+            this.s.topGroup.trigger('dtsb-redrawContents');
             this._setGroupListeners(group);
         };
         /**
@@ -2633,7 +2641,7 @@
             // Rebuild it with the previous conditions for that criteria
             criteria.rebuild(loadedCriteria);
             this.s.criteria[idx].criteria = criteria;
-            $$1(this.s.topGroup).trigger('dtsb-redrawContents');
+            this.s.topGroup.trigger('dtsb-redrawContents');
         };
         /**
          * Checks And the criteria using AND logic
@@ -2731,11 +2739,11 @@
          */
         Group.prototype._setCriteriaListeners = function (criteria) {
             var _this = this;
-            $$1(criteria.dom["delete"])
+            criteria.dom["delete"]
                 .unbind('click')
                 .on('click', function () {
                 _this._removeCriteria(criteria);
-                $$1(criteria.dom.container).remove();
+                criteria.dom.container.remove();
                 for (var _i = 0, _a = _this.s.criteria; _i < _a.length; _i++) {
                     var crit = _a[_i];
                     if (crit.criteria instanceof Criteria) {
@@ -2744,11 +2752,11 @@
                 }
                 criteria.destroy();
                 _this.s.dt.draw();
-                $$1(_this.s.topGroup).trigger('dtsb-redrawContents');
-                $$1(_this.s.topGroup).trigger('dtsb-updateTitle');
+                _this.s.topGroup.trigger('dtsb-redrawContents');
+                _this.s.topGroup.trigger('dtsb-updateTitle');
                 return false;
             });
-            $$1(criteria.dom.right)
+            criteria.dom.right
                 .unbind('click')
                 .on('click', function () {
                 var idx = criteria.s.index;
@@ -2758,11 +2766,11 @@
                 // Update the details in the current groups criteria array
                 _this.s.criteria[idx].criteria = group;
                 _this.s.criteria[idx].logic = 'AND';
-                $$1(_this.s.topGroup).trigger('dtsb-redrawContents');
+                _this.s.topGroup.trigger('dtsb-redrawContents');
                 _this._setGroupListeners(group);
                 return false;
             });
-            $$1(criteria.dom.left)
+            criteria.dom.left
                 .unbind('click')
                 .on('click', function () {
                 _this.s.toDrop = new Criteria(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index);
@@ -2772,12 +2780,12 @@
                 _this.s.toDrop.populate();
                 // The dropCriteria event mutates the reference to the index so need to store it
                 var index = _this.s.toDrop.s.index;
-                $$1(_this.dom.container).trigger('dtsb-dropCriteria');
+                _this.dom.container.trigger('dtsb-dropCriteria');
                 criteria.s.index = index;
                 _this._removeCriteria(criteria);
                 // By tracking the top level group we can directly trigger a redraw on it,
                 //  bubbling is also possible, but that is slow with deep levelled groups
-                $$1(_this.s.topGroup).trigger('dtsb-redrawContents');
+                _this.s.topGroup.trigger('dtsb-redrawContents');
                 _this.s.dt.draw();
                 return false;
             });
@@ -2787,16 +2795,16 @@
          */
         Group.prototype._setClearListener = function () {
             var _this = this;
-            $$1(this.dom.clear)
+            this.dom.clear
                 .unbind('click')
                 .on('click', function () {
                 if (!_this.s.isChild) {
-                    $$1(_this.dom.container).trigger('dtsb-clearContents');
+                    _this.dom.container.trigger('dtsb-clearContents');
                     return false;
                 }
                 _this.destroy();
-                $$1(_this.s.topGroup).trigger('dtsb-updateTitle');
-                $$1(_this.s.topGroup).trigger('dtsb-redrawContents');
+                _this.s.topGroup.trigger('dtsb-updateTitle');
+                _this.s.topGroup.trigger('dtsb-redrawContents');
                 return false;
             });
         };
@@ -2808,29 +2816,29 @@
         Group.prototype._setGroupListeners = function (group) {
             var _this = this;
             // Set listeners for the new group
-            $$1(group.dom.add)
+            group.dom.add
                 .unbind('click')
                 .on('click', function () {
                 _this.setupLogic();
-                $$1(_this.dom.container).trigger('dtsb-add');
+                _this.dom.container.trigger('dtsb-add');
                 return false;
             });
-            $$1(group.dom.container)
+            group.dom.container
                 .unbind('dtsb-add')
                 .on('dtsb-add', function () {
                 _this.setupLogic();
-                $$1(_this.dom.container).trigger('dtsb-add');
+                _this.dom.container.trigger('dtsb-add');
                 return false;
             });
-            $$1(group.dom.container)
+            group.dom.container
                 .unbind('dtsb-destroy')
                 .on('dtsb-destroy', function () {
                 _this._removeCriteria(group, true);
-                $$1(group.dom.container).remove();
+                group.dom.container.remove();
                 _this.setupLogic();
                 return false;
             });
-            $$1(group.dom.container)
+            group.dom.container
                 .unbind('dtsb-dropCriteria')
                 .on('dtsb-dropCriteria', function () {
                 var toDrop = group.s.toDrop;
@@ -2846,28 +2854,28 @@
          */
         Group.prototype._setup = function () {
             this.setListeners();
-            $$1(this.dom.add).text(this.s.dt.i18n('searchBuilder.add', this.c.i18n.add));
-            $$1(this.dom.logic).children().first().text(this.c.logic === 'OR'
+            this.dom.add.text(this.s.dt.i18n('searchBuilder.add', this.c.i18n.add));
+            this.dom.logic.children().first().text(this.c.logic === 'OR'
                 ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
                 : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
             this.s.logic = this.c.logic === 'OR' ? 'OR' : 'AND';
             if (this.c.greyscale) {
-                $$1(this.dom.logic).addClass(this.classes.greyscale);
+                this.dom.logic.addClass(this.classes.greyscale);
             }
-            $$1(this.dom.logicContainer).append(this.dom.logic).append(this.dom.clear);
+            this.dom.logicContainer.append(this.dom.logic).append(this.dom.clear);
             // Only append the logic button immediately if this is a sub group,
             //  otherwise it will be prepended later when adding a criteria
             if (this.s.isChild) {
-                $$1(this.dom.container).append(this.dom.logicContainer);
+                this.dom.container.append(this.dom.logicContainer);
             }
-            $$1(this.dom.container).append(this.dom.add);
+            this.dom.container.append(this.dom.add);
         };
         /**
          * Sets the listener for the logic button
          */
         Group.prototype._setLogicListener = function () {
             var _this = this;
-            $$1(this.dom.logic)
+            this.dom.logic
                 .unbind('click')
                 .on('click', function () {
                 _this._toggleLogic();
@@ -2884,11 +2892,11 @@
         Group.prototype._toggleLogic = function () {
             if (this.s.logic === 'OR') {
                 this.s.logic = 'AND';
-                $$1(this.dom.logic).children().first().text(this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
+                this.dom.logic.children().first().text(this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
             }
             else if (this.s.logic === 'AND') {
                 this.s.logic = 'OR';
-                $$1(this.dom.logic).children().first().text(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
+                this.dom.logic.children().first().text(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
             }
         };
         Group.version = '1.1.0';
@@ -3033,13 +3041,13 @@
          * @param details The details required to perform a rebuild
          */
         SearchBuilder.prototype.rebuild = function (details) {
-            $(this.dom.clearAll).click();
+            this.dom.clearAll.click();
             // If there are no details to rebuild then return
             if (details === undefined || details === null) {
                 return this;
             }
             this.s.topGroup.rebuild(details);
-            this.s.dt.draw();
+            this.s.dt.draw(false);
             this.s.topGroup.setListeners();
             return this;
         };
@@ -3086,12 +3094,13 @@
                 }, 1);
             });
             // Check that DateTime is included, If not need to check if it could be used
+            // eslint-disable-next-line no-extra-parens
             if (!dataTable.DateTime) {
                 var types = this.s.dt.columns().type().toArray();
                 var columnIdxs = this.s.dt.columns().toArray();
                 // If the types are not yet set then draw to see if they can be retrieved then
                 if (types === undefined) {
-                    this.s.dt.draw();
+                    this.s.dt.draw(false);
                     types = this.s.dt.columns().type().toArray();
                 }
                 for (var i = 0; i < columnIdxs[0].length; i++) {
@@ -3100,12 +3109,12 @@
                     if (
                     // Check if this column can be filtered
                     (this.c.columns === true ||
-                        (Array.isArray(this.c.columns) &&
-                            this.c.columns.indexOf(i) !== -1)) &&
+                        Array.isArray(this.c.columns) &&
+                            this.c.columns.includes(i)) &&
                         // Check if the type is one of the restricted types
-                        (type.indexOf('date') !== -1 ||
-                            type.indexOf('moment') !== -1 ||
-                            type.indexOf('luxon') !== -1)) {
+                        (type.includes('date') ||
+                            type.includes('moment') ||
+                            type.includes('luxon'))) {
                         alert('SearchBuilder Requires DateTime when used with dates.');
                         throw new Error('SearchBuilder requires DateTime');
                     }
@@ -3123,7 +3132,7 @@
                 // If the loaded State is not null rebuild based on it for statesave
                 if (loadedState !== null && loadedState.searchBuilder !== undefined) {
                     this.s.topGroup.rebuild(loadedState.searchBuilder);
-                    $(this.s.topGroup.dom.container).trigger('dtsb-redrawContents');
+                    this.s.topGroup.dom.container.trigger('dtsb-redrawContents');
                     this.s.dt.page(loadedState.page).draw('page');
                     this.s.topGroup.setListeners();
                 }
@@ -3142,7 +3151,7 @@
          * @param count the number of filters in the SearchBuilder
          */
         SearchBuilder.prototype._updateTitle = function (count) {
-            $(this.dom.title).html(this.s.dt.i18n('searchBuilder.title', this.c.i18n.title, count));
+            this.dom.title.html(this.s.dt.i18n('searchBuilder.title', this.c.i18n.title, count));
         };
         /**
          * Builds all of the dom elements together
@@ -3150,17 +3159,17 @@
         SearchBuilder.prototype._build = function () {
             var _this = this;
             // Empty and setup the container
-            $(this.dom.clearAll).remove();
-            $(this.dom.container).empty();
+            this.dom.clearAll.remove();
+            this.dom.container.empty();
             var count = this.s.topGroup.count();
             this._updateTitle(count);
-            $(this.dom.titleRow).append(this.dom.title);
-            $(this.dom.container).append(this.dom.titleRow);
+            this.dom.titleRow.append(this.dom.title);
+            this.dom.container.append(this.dom.titleRow);
             this.dom.topGroup = this.s.topGroup.getNode();
-            $(this.dom.container).append(this.dom.topGroup);
+            this.dom.container.append(this.dom.topGroup);
             this._setRedrawListener();
             var tableNode = this.s.dt.table(0).node();
-            if ($.fn.dataTable.ext.search.indexOf(this.s.search) === -1) {
+            if (!$.fn.dataTable.ext.search.includes(this.s.search)) {
                 // Custom search function for SearchBuilder
                 this.s.search = function (settings, searchData, dataIndex, origData) {
                     if (settings.nTable !== tableNode) {
@@ -3172,8 +3181,8 @@
                 $.fn.dataTable.ext.search.push(this.s.search);
             }
             this.s.dt.on('destroy.dt', function () {
-                $(_this.dom.container).remove();
-                $(_this.dom.clearAll).remove();
+                _this.dom.container.remove();
+                _this.dom.clearAll.remove();
                 var searchIdx = $.fn.dataTable.ext.search.indexOf(_this.s.search);
                 while (searchIdx !== -1) {
                     $.fn.dataTable.ext.search.splice(searchIdx, 1);
@@ -3186,11 +3195,11 @@
          */
         SearchBuilder.prototype._checkClear = function () {
             if (this.s.topGroup.s.criteria.length > 0) {
-                $(this.dom.clearAll).insertAfter(this.dom.title);
+                this.dom.clearAll.insertAfter(this.dom.title);
                 this._setClearListener();
             }
             else {
-                $(this.dom.clearAll).remove();
+                this.dom.clearAll.remove();
             }
         };
         /**
@@ -3209,13 +3218,13 @@
          */
         SearchBuilder.prototype._setClearListener = function () {
             var _this = this;
-            $(this.dom.clearAll).unbind('click');
-            $(this.dom.clearAll).on('click', function () {
+            this.dom.clearAll.unbind('click');
+            this.dom.clearAll.on('click', function () {
                 _this.s.topGroup = new Group(_this.s.dt, _this.c, undefined);
                 _this._build();
                 _this.s.dt.draw();
                 _this.s.topGroup.setListeners();
-                $(_this.dom.clearAll).remove();
+                _this.dom.clearAll.remove();
                 _this._setEmptyListener();
                 _this._filterChanged(0);
                 return false;
@@ -3226,8 +3235,8 @@
          */
         SearchBuilder.prototype._setRedrawListener = function () {
             var _this = this;
-            $(this.s.topGroup.dom.container).unbind('dtsb-redrawContents');
-            $(this.s.topGroup.dom.container).on('dtsb-redrawContents', function () {
+            this.s.topGroup.dom.container.unbind('dtsb-redrawContents');
+            this.s.topGroup.dom.container.on('dtsb-redrawContents', function () {
                 _this._checkClear();
                 _this.s.topGroup.redrawContents();
                 _this.s.topGroup.setupLogic();
@@ -3237,29 +3246,29 @@
                 _this._filterChanged(count);
                 _this.s.dt.state.save();
             });
-            $(this.s.topGroup.dom.container).unbind('dtsb-redrawLogic');
-            $(this.s.topGroup.dom.container).on('dtsb-redrawLogic', function () {
+            this.s.topGroup.dom.container.unbind('dtsb-redrawLogic');
+            this.s.topGroup.dom.container.on('dtsb-redrawLogic', function () {
                 _this.s.topGroup.redrawLogic();
                 var count = _this.s.topGroup.count();
                 _this._updateTitle(count);
                 _this._filterChanged(count);
             });
-            $(this.s.topGroup.dom.container).unbind('dtsb-add');
-            $(this.s.topGroup.dom.container).on('dtsb-add', function () {
+            this.s.topGroup.dom.container.unbind('dtsb-add');
+            this.s.topGroup.dom.container.on('dtsb-add', function () {
                 var count = _this.s.topGroup.count();
                 _this._updateTitle(count);
                 _this._filterChanged(count);
             });
-            $(this.s.dt).on('postEdit postCreate postRemove', function () {
+            this.s.dt.on('postEdit postCreate postRemove', function () {
                 _this.s.topGroup.redrawContents();
             });
-            $(this.s.topGroup.dom.container).unbind('dtsb-clearContents');
-            $(this.s.topGroup.dom.container).on('dtsb-clearContents', function () {
+            this.s.topGroup.dom.container.unbind('dtsb-clearContents');
+            this.s.topGroup.dom.container.on('dtsb-clearContents', function () {
                 _this._setUp(false);
                 _this._filterChanged(0);
                 _this.s.dt.draw();
             });
-            $(this.s.topGroup.dom.container).on('dtsb-updateTitle', function () {
+            this.s.topGroup.dom.container.on('dtsb-updateTitle', function () {
                 var count = _this.s.topGroup.count();
                 _this._updateTitle(count);
                 _this._filterChanged(count);
@@ -3270,11 +3279,11 @@
          */
         SearchBuilder.prototype._setEmptyListener = function () {
             var _this = this;
-            $(this.s.topGroup.dom.add).on('click', function () {
+            this.s.topGroup.dom.add.on('click', function () {
                 _this._checkClear();
             });
-            $(this.s.topGroup.dom.container).on('dtsb-destroy', function () {
-                $(_this.dom.clearAll).remove();
+            this.s.topGroup.dom.container.on('dtsb-destroy', function () {
+                _this.dom.clearAll.remove();
             });
         };
         SearchBuilder.version = '1.1.0';
@@ -3405,6 +3414,7 @@
         }
         else {
             // Browser - assume jQuery has already been loaded
+            // eslint-disable-next-line no-extra-parens
             factory(window.jQuery, window, document);
         }
     }(function ($, window, document) {
@@ -3412,12 +3422,19 @@
         setJQuery$1($);
         setJQuery$2($);
         var dataTable = $.fn.dataTable;
+        // eslint-disable-next-line no-extra-parens
         $.fn.dataTable.SearchBuilder = SearchBuilder;
+        // eslint-disable-next-line no-extra-parens
         $.fn.DataTable.SearchBuilder = SearchBuilder;
+        // eslint-disable-next-line no-extra-parens
         $.fn.dataTable.Group = Group;
+        // eslint-disable-next-line no-extra-parens
         $.fn.DataTable.Group = Group;
+        // eslint-disable-next-line no-extra-parens
         $.fn.dataTable.Criteria = Criteria;
+        // eslint-disable-next-line no-extra-parens
         $.fn.DataTable.Criteria = Criteria;
+        // eslint-disable-next-line no-extra-parens
         var apiRegister = $.fn.dataTable.Api.register;
         // Set up object for plugins
         $.fn.dataTable.ext.searchBuilder = {
