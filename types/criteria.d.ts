@@ -59,6 +59,7 @@ export interface IS {
     dt: any;
     filled: boolean;
     index: number;
+    origData: string;
     topGroup: JQuery<HTMLElement>;
     type: string;
     value: string[];
@@ -73,6 +74,7 @@ export interface IDetails {
     data?: string;
     index?: number;
     logic?: string;
+    origData?: string;
     value?: string[];
 }
 /**
