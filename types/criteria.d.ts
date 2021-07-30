@@ -66,6 +66,7 @@ export interface IS {
 }
 export interface IDataOpt {
     index: number;
+    origData: string;
     text: string;
 }
 export interface IDetails {
