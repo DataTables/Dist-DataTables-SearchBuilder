@@ -46,6 +46,7 @@
                 dt: table,
                 filled: false,
                 index: index,
+                origData: undefined,
                 topGroup: topGroup,
                 type: '',
                 value: []
@@ -260,6 +261,7 @@
             return {
                 condition: this.s.condition,
                 data: this.s.data,
+                origData: this.s.origData,
                 value: value
             };
         };
@@ -311,6 +313,7 @@
             // If the data has been found and selected then the condition can be populated and searched
             if (foundData) {
                 this.s.data = loadedCriteria.data;
+                this.s.origData = loadedCriteria.origData;
                 this.s.dataIdx = dataIdx;
                 this.c.orthogonal = this._getOptions().orthogonal;
                 this.dom.dataTitle.remove();
@@ -350,6 +353,7 @@
                 _this.dom.data.removeClass(_this.classes.italic);
                 _this.s.dataIdx = +_this.dom.data.children('option:selected').val();
                 _this.s.data = _this.dom.data.children('option:selected').text();
+                _this.s.origData = _this.dom.data.children('option:selected').attr('origData');
                 _this.c.orthogonal = _this._getOptions().orthogonal;
                 // When the data is changed, the values in condition and value may also change so need to renew them
                 _this._clearCondition();
@@ -386,7 +390,7 @@
                     var val = _c[_b];
                     // If this criteria was previously active in the search then remove
                     // it from the search and trigger a new search
-                    if (_this.s.filled && _this.dom.container.has(val[0]).length !== 0) {
+                    if (_this.s.filled && val !== undefined && _this.dom.container.has(val[0]).length !== 0) {
                         _this.s.filled = false;
                         _this.s.dt.draw();
                         _this.setListeners();
@@ -481,31 +485,39 @@
          */
         Criteria.prototype._clearValue = function () {
             if (this.s.condition !== undefined) {
-                var _loop_1 = function (val) {
-                    // Timeout is annoying but because of IOS
-                    setTimeout(function () {
-                        val.remove();
-                    }, 50);
-                };
-                // Remove all of the value elements
-                for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
-                    var val = _a[_i];
-                    _loop_1(val);
+                if (this.dom.value.length > 0 && this.dom.value[0] !== undefined) {
+                    var _loop_1 = function (val) {
+                        if (val !== undefined) {
+                            // Timeout is annoying but because of IOS
+                            setTimeout(function () {
+                                val.remove();
+                            }, 50);
+                        }
+                    };
+                    // Remove all of the value elements
+                    for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
+                        var val = _a[_i];
+                        _loop_1(val);
+                    }
                 }
                 // Call the init function to get the value elements for this condition
                 this.dom.value = [].concat(this.s.conditions[this.s.condition].init(this, Criteria.updateListener));
-                this.dom.value[0].insertAfter(this.dom.condition).trigger('dtsb-inserted');
-                // Insert all of the value elements
-                for (var i = 1; i < this.dom.value.length; i++) {
-                    this.dom.value[i].insertAfter(this.dom.value[i - 1]).trigger('dtsb-inserted');
+                if (this.dom.value.length > 0 && this.dom.value[0] !== undefined) {
+                    this.dom.value[0].insertAfter(this.dom.condition).trigger('dtsb-inserted');
+                    // Insert all of the value elements
+                    for (var i = 1; i < this.dom.value.length; i++) {
+                        this.dom.value[i].insertAfter(this.dom.value[i - 1]).trigger('dtsb-inserted');
+                    }
                 }
             }
             else {
                 var _loop_2 = function (val) {
-                    // Timeout is annoying but because of IOS
-                    setTimeout(function () {
-                        val.remove();
-                    }, 50);
+                    if (val !== undefined) {
+                        // Timeout is annoying but because of IOS
+                        setTimeout(function () {
+                            val.remove();
+                        }, 50);
+                    }
                 };
                 // Remove all of the value elements
                 for (var _b = 0, _c = this.dom.value; _b < _c.length; _b++) {
@@ -591,6 +603,13 @@
                 for (var _i = 0, _a = Object.keys(conditionObj); _i < _a.length; _i++) {
                     var condition = _a[_i];
                     if (conditionObj[condition] !== null) {
+                        // Serverside processing does not supply the options for the select elements
+                        // Instead input elements need to be used for these instead
+                        if (this.s.dt.page.info().serverSide && conditionObj[condition].init === Criteria.initSelect) {
+                            conditionObj[condition].init = Criteria.initInput;
+                            conditionObj[condition].inputValue = Criteria.inputValueInput;
+                            conditionObj[condition].isInputValid = Criteria.isInputValidInput;
+                        }
                         this.s.conditions[condition] = conditionObj[condition];
                         var condName = conditionObj[condition].conditionName;
                         if (typeof condName === 'function') {
@@ -663,6 +682,7 @@
                             var col = _this.s.dt.settings()[0].aoColumns[index];
                             var opt = {
                                 index: index,
+                                origData: col.data,
                                 text: (col.searchBuilderTitle === undefined ?
                                     col.sTitle :
                                     col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, '')
@@ -673,7 +693,8 @@
                                 value: opt.index
                             })
                                 .addClass(_this.classes.option)
-                                .addClass(_this.classes.notItalic));
+                                .addClass(_this.classes.notItalic)
+                                .attr('origData', col.data));
                         }
                     }
                 });
@@ -687,6 +708,7 @@
                             col.sTitle :
                             col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, '') === data.text) {
                             data.index = index;
+                            data.origData = col.data;
                         }
                     });
                     var newOpt = $$2('<option>', {
@@ -694,7 +716,8 @@
                         value: data.index
                     })
                         .addClass(this_1.classes.option)
-                        .addClass(this_1.classes.notItalic);
+                        .addClass(this_1.classes.notItalic)
+                        .attr('origData', data.origData);
                     if (this_1.s.data === data.text) {
                         this_1.s.dataIdx = data.index;
                         newOpt.attr('selected', true);
@@ -3008,6 +3031,9 @@
                 return;
             }
             table.settings()[0]._searchBuilder = this;
+            this.s.dt.one('preXhr', function (e, settings, data) {
+                data.searchBuilder = _this.c.preDefined !== false ? _this.c.preDefined : null;
+            });
             // Run the remaining setup when the table is initialised
             if (this.s.dt.settings()[0]._bInitComplete) {
                 this._setUp();
@@ -3144,6 +3170,9 @@
             }
             this._setEmptyListener();
             this.s.dt.state.save();
+            this.s.dt.on('preXhr', function (e, settings, data) {
+                data.searchBuilder = _this.getDetails();
+            });
         };
         /**
          * Updates the title of the SearchBuilder
