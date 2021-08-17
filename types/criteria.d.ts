@@ -76,6 +76,7 @@ export interface IDetails {
     index?: number;
     logic?: string;
     origData?: string;
+    type?: string;
     value?: string[];
 }
 /**
