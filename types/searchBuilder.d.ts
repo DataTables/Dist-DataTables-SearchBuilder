@@ -91,7 +91,7 @@ export default class SearchBuilder {
     /**
      * Gets the details required to rebuild the SearchBuilder as it currently is
      */
-    getDetails(): IDetails | {};
+    getDetails(deFormatDates?: boolean): IDetails | {};
     /**
      * Getter for the node of the container for the searchBuilder
      *
@@ -114,6 +114,7 @@ export default class SearchBuilder {
      * Set's up the SearchBuilder
      */
     private _setUp;
+    private _collapseArray;
     /**
      * Updates the title of the SearchBuilder
      *

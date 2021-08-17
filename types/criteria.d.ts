@@ -179,7 +179,7 @@ export default class Criteria {
     /**
      * Gets the details required to rebuild the criteria
      */
-    getDetails(): IDetails;
+    getDetails(deFormatDates?: boolean): IDetails;
     /**
      * Getter for the node for the container of the criteria
      *

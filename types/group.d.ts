@@ -75,7 +75,7 @@ export default class Group {
     /**
      * Gets the details required to rebuild the group
      */
-    getDetails(): IDetails | {};
+    getDetails(deFormatDates?: boolean): IDetails | {};
     /**
      * Getter for the node for the container of the group
      *
