@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.1.0
+/*! SearchBuilder 1.2.0
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 export {};
