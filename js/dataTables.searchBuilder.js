@@ -239,8 +239,9 @@
         /**
          * Gets the details required to rebuild the criteria
          */
-        Criteria.prototype.getDetails = function () {
-            var value = this.s.value;
+        Criteria.prototype.getDetails = function (deFormatDates) {
+            if (deFormatDates === void 0) { deFormatDates = false; }
+            this.s.value;
             // This check is in place for if a custom decimal character is in place
             if (this.s.type !== null &&
                 this.s.type.includes('num') &&
@@ -258,11 +259,37 @@
                     this.s.value[i] = splitRD.join('.');
                 }
             }
+            else if (this.s.type !== null && deFormatDates) {
+                if (this.s.type.includes('date') ||
+                    this.s.type.includes('time')) {
+                    for (var i = 0; i < this.s.value.length; i++) {
+                        if (this.s.value[i].match(/^\d{4}-([0]\d|1[0-2])-([0-2]\d|3[01])$/g) === null) {
+                            this.s.value[i] = '';
+                        }
+                    }
+                }
+                else if (this.s.type.includes('moment')) {
+                    for (var i = 0; i < this.s.value.length; i++) {
+                        this.s.value[i] = moment(this.s.value[i], this.s.dateFormat).toISOString();
+                    }
+                }
+                else if (this.s.type.includes('luxon')) {
+                    for (var i = 0; i < this.s.value.length; i++) {
+                        this.s.value[i] = luxon.DateTime.fromFormat(this.s.value[i], this.s.dateFormat).toISO();
+                    }
+                }
+            }
+            if (this.s.type.includes('num') && this.s.dt.page.info().serverSide) {
+                for (var i = 0; i < this.s.value.length; i++) {
+                    this.s.value[i] = this.s.value[i].replace(/[^0-9.]/g, '');
+                }
+            }
             return {
                 condition: this.s.condition,
                 data: this.s.data,
                 origData: this.s.origData,
-                value: value
+                type: this.s.type,
+                value: this.s.value.map(function (a) { return a.toString(); })
             };
         };
         /**
@@ -560,10 +587,13 @@
             if (conditionsLength === 0) {
                 var column = +this.dom.data.children('option:selected').val();
                 this.s.type = this.s.dt.columns().type().toArray()[column];
+                if (this.s.type === undefined || this.s.type === null) {
+                    var colInit = this.s.dt.init().aoColumns[column];
+                    this.s.type = colInit.searchBuilderType !== undefined ? colInit.searchBuilderType : colInit.sType;
+                }
                 // If the column type is unknown, call a draw to try reading it again
-                if (this.s.type === null) {
-                    this.s.dt.draw(false);
-                    this.setListeners();
+                if (this.s.type === null || this.s.type === undefined) {
+                    $$2.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
                     this.s.type = this.s.dt.columns().type().toArray()[column];
                 }
                 // Enable the condition element
@@ -1007,7 +1037,10 @@
                 .addClass(Criteria.classes.input)
                 .on('input keypress', that._throttle(function (e) {
                 var code = e.keyCode || e.which;
-                if (!that.c.enterSearch || code === 13) {
+                if (!that.c.enterSearch &&
+                    !(that.s.dt.settings()[0].oInit.search !== undefined &&
+                        that.s.dt.settings()[0].oInit.search["return"]) ||
+                    code === 13) {
                     return fn(that, this);
                 }
             }, searchDelay === null ? 100 : searchDelay));
@@ -1037,7 +1070,10 @@
                     .addClass(Criteria.classes.input)
                     .on('input keypress', that._throttle(function (e) {
                     var code = e.keyCode || e.which;
-                    if (!that.c.enterSearch || code === 13) {
+                    if (!that.c.enterSearch &&
+                        !(that.s.dt.settings()[0].oInit.search !== undefined &&
+                            that.s.dt.settings()[0].oInit.search["return"]) ||
+                        code === 13) {
                         return fn(that, this);
                     }
                 }, searchDelay === null ? 100 : searchDelay)),
@@ -1049,7 +1085,10 @@
                     .addClass(Criteria.classes.input)
                     .on('input keypress', that._throttle(function (e) {
                     var code = e.keyCode || e.which;
-                    if (!that.c.enterSearch || code === 13) {
+                    if (!that.c.enterSearch &&
+                        !(that.s.dt.settings()[0].oInit.search !== undefined &&
+                            that.s.dt.settings()[0].oInit.search["return"]) ||
+                        code === 13) {
                         return fn(that, this);
                     }
                 }, searchDelay === null ? 100 : searchDelay))
@@ -1086,7 +1125,9 @@
                 .on('change', that._throttle(function () {
                 return fn(that, this);
             }, searchDelay === null ? 100 : searchDelay))
-                .on('input keypress', that.c.enterSearch ?
+                .on('input keypress', that.c.enterSearch ||
+                that.s.dt.settings()[0].oInit.search !== undefined &&
+                    that.s.dt.settings()[0].oInit.search["return"] ?
                 function (e) {
                     that._throttle(function () {
                         var code = e.keyCode || e.which;
@@ -1137,11 +1178,16 @@
                     function () {
                         fn(that, _this);
                     })
-                    .on('input keypress', !that.c.enterSearch && searchDelay !== null ?
+                    .on('input keypress', !that.c.enterSearch &&
+                    !(that.s.dt.settings()[0].oInit.search !== undefined &&
+                        that.s.dt.settings()[0].oInit.search["return"]) &&
+                    searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
                         return fn(that, this);
                     }, searchDelay) :
-                    that.c.enterSearch ?
+                    that.c.enterSearch ||
+                        that.s.dt.settings()[0].oInit.search !== undefined &&
+                            that.s.dt.settings()[0].oInit.search["return"] ?
                         function (e) {
                             var code = e.keyCode || e.which;
                             if (code === 13) {
@@ -1168,11 +1214,16 @@
                     function () {
                         fn(that, _this);
                     })
-                    .on('input keypress', !that.c.enterSearch && searchDelay !== null ?
+                    .on('input keypress', !that.c.enterSearch &&
+                    !(that.s.dt.settings()[0].oInit.search !== undefined &&
+                        that.s.dt.settings()[0].oInit.search["return"]) &&
+                    searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
                         return fn(that, this);
                     }, searchDelay) :
-                    that.c.enterSearch ?
+                    that.c.enterSearch ||
+                        that.s.dt.settings()[0].oInit.search !== undefined &&
+                            that.s.dt.settings()[0].oInit.search["return"] ?
                         function (e) {
                             var code = e.keyCode || e.which;
                             if (code === 13) {
@@ -2344,7 +2395,8 @@
          */
         // Eslint upset at empty object but needs to be done
         // eslint-disable-next-line @typescript-eslint/ban-types
-        Group.prototype.getDetails = function () {
+        Group.prototype.getDetails = function (deFormatDates) {
+            if (deFormatDates === void 0) { deFormatDates = false; }
             if (this.s.criteria.length === 0) {
                 return {};
             }
@@ -2355,7 +2407,7 @@
             // NOTE here crit could be either a subgroup or a criteria
             for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
                 var crit = _a[_i];
-                details.criteria.push(crit.criteria.getDetails());
+                details.criteria.push(crit.criteria.getDetails(deFormatDates));
             }
             return details;
         };
@@ -3031,9 +3083,6 @@
                 return;
             }
             table.settings()[0]._searchBuilder = this;
-            this.s.dt.one('preXhr', function (e, settings, data) {
-                data.searchBuilder = _this.c.preDefined !== false ? _this.c.preDefined : null;
-            });
             // Run the remaining setup when the table is initialised
             if (this.s.dt.settings()[0]._bInitComplete) {
                 this._setUp();
@@ -3050,8 +3099,9 @@
          */
         // eslint upset at empty object but that is what it is
         // eslint-disable-next-line @typescript-eslint/ban-types
-        SearchBuilder.prototype.getDetails = function () {
-            return this.s.topGroup.getDetails();
+        SearchBuilder.prototype.getDetails = function (deFormatDates) {
+            if (deFormatDates === void 0) { deFormatDates = false; }
+            return this.s.topGroup.getDetails(deFormatDates);
         };
         /**
          * Getter for the node of the container for the searchBuilder
@@ -3123,10 +3173,17 @@
             // eslint-disable-next-line no-extra-parens
             if (!dataTable.DateTime) {
                 var types = this.s.dt.columns().type().toArray();
+                if (types === undefined || types.includes(undefined) || types.includes(null)) {
+                    types = [];
+                    for (var _i = 0, _a = this.s.dt.settings()[0].aoColumns; _i < _a.length; _i++) {
+                        var colInit = _a[_i];
+                        types.push(colInit.searchBuilderType !== undefined ? colInit.searchBuilderType : colInit.sType);
+                    }
+                }
                 var columnIdxs = this.s.dt.columns().toArray();
                 // If the types are not yet set then draw to see if they can be retrieved then
-                if (types === undefined) {
-                    this.s.dt.draw(false);
+                if (types === undefined || types.includes(undefined) || types.includes(null)) {
+                    $.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
                     types = this.s.dt.columns().type().toArray();
                 }
                 for (var i = 0; i < columnIdxs[0].length; i++) {
@@ -3153,6 +3210,11 @@
                 data.page = _this.s.dt.page();
             });
             this._build();
+            this.s.dt.on('preXhr', function (e, settings, data) {
+                if (_this.s.dt.page.info().serverSide) {
+                    data.searchBuilder = _this._collapseArray(_this.getDetails(true));
+                }
+            });
             if (loadState) {
                 var loadedState = this.s.dt.state.loaded();
                 // If the loaded State is not null rebuild based on it for statesave
@@ -3170,9 +3232,35 @@
             }
             this._setEmptyListener();
             this.s.dt.state.save();
-            this.s.dt.on('preXhr', function (e, settings, data) {
-                data.searchBuilder = _this.getDetails();
-            });
+        };
+        SearchBuilder.prototype._collapseArray = function (criteria) {
+            if (criteria.logic === undefined) {
+                if (criteria.value !== undefined) {
+                    criteria.value.sort(function (a, b) {
+                        if (!isNaN(+a)) {
+                            a = +a;
+                            b = +b;
+                        }
+                        if (a < b) {
+                            return -1;
+                        }
+                        else if (b < a) {
+                            return 1;
+                        }
+                        else {
+                            return 0;
+                        }
+                    });
+                    criteria.value1 = criteria.value[0];
+                    criteria.value2 = criteria.value[1];
+                }
+            }
+            else {
+                for (var i = 0; i < criteria.criteria.length; i++) {
+                    criteria.criteria[i] = this._collapseArray(criteria.criteria[i]);
+                }
+            }
+            return criteria;
         };
         /**
          * Updates the title of the SearchBuilder
@@ -3492,11 +3580,12 @@
             },
             text: null
         };
-        apiRegister('searchBuilder.getDetails()', function () {
+        apiRegister('searchBuilder.getDetails()', function (deFormatDates) {
+            if (deFormatDates === void 0) { deFormatDates = false; }
             var ctx = this.context[0];
             // If SearchBuilder has not been initialised on this instance then return
             return ctx._searchBuilder ?
-                ctx._searchBuilder.getDetails() :
+                ctx._searchBuilder.getDetails(deFormatDates) :
                 null;
         });
         apiRegister('searchBuilder.rebuild()', function (details) {
