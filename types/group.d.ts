@@ -27,6 +27,7 @@ export interface IS {
     isChild: boolean;
     logic: string;
     opts: builderType.IDefaults;
+    preventRedraw: boolean;
     toDrop: Criteria;
     topGroup: JQuery<HTMLElement>;
 }
