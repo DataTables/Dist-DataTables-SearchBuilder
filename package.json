@@ -3,15 +3,15 @@
     "description": "SearchBuilder for DataTables",
     "main": "js/dataTables.searchBuilder.js",
     "types": "./types/types.d.ts",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "files": [
         "js/**/*.js",
-     "types/**/*.d.ts"
+        "types/**/*.d.ts"
     ],
     "keywords": [
         "SearchBuilder",
- "Filtering",
- "Search",
+        "Filtering",
+        "Search",
         "Datatables",
         "jQuery",
         "table",
