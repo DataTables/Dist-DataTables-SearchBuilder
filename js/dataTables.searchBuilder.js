@@ -2164,6 +2164,18 @@
                 }
             },
             // eslint-disable-next-line sort-keys
+            '!starts': {
+                conditionName: function (dt, i18n) {
+                    return dt.i18n('searchBuilder.conditions.string.notStartsWith', i18n.conditions.string.notStartsWith);
+                },
+                init: Criteria.initInput,
+                inputValue: Criteria.inputValueInput,
+                isInputValid: Criteria.isInputValidInput,
+                search: function (value, comparison) {
+                    return value.toLowerCase().indexOf(comparison[0].toLowerCase()) !== 0;
+                }
+            },
+            // eslint-disable-next-line sort-keys
             'contains': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.string.contains', i18n.conditions.string.contains);
@@ -2175,6 +2187,18 @@
                     return value.toLowerCase().includes(comparison[0].toLowerCase());
                 }
             },
+            // eslint-disable-next-line sort-keys
+            '!contains': {
+                conditionName: function (dt, i18n) {
+                    return dt.i18n('searchBuilder.conditions.string.notContains', i18n.conditions.string.notContains);
+                },
+                init: Criteria.initInput,
+                inputValue: Criteria.inputValueInput,
+                isInputValid: Criteria.isInputValidInput,
+                search: function (value, comparison) {
+                    return !value.toLowerCase().includes(comparison[0].toLowerCase());
+                }
+            },
             'ends': {
                 conditionName: function (dt, i18n) {
                     return dt.i18n('searchBuilder.conditions.string.endsWith', i18n.conditions.string.endsWith);
@@ -2184,6 +2208,18 @@
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
                     return value.toLowerCase().endsWith(comparison[0].toLowerCase());
+                }
+            },
+            // eslint-disable-next-line sort-keys
+            '!ends': {
+                conditionName: function (dt, i18n) {
+                    return dt.i18n('searchBuilder.conditions.string.notEndsWith', i18n.conditions.string.notEndsWith);
+                },
+                init: Criteria.initInput,
+                inputValue: Criteria.inputValueInput,
+                isInputValid: Criteria.isInputValidInput,
+                search: function (value, comparison) {
+                    return !value.toLowerCase().endsWith(comparison[0].toLowerCase());
                 }
             },
             'null': {
@@ -3542,7 +3578,10 @@
                         endsWith: 'Ends With',
                         equals: 'Equals',
                         not: 'Not',
+                        notContains: 'Does Not Contain',
                         notEmpty: 'Not Empty',
+                        notEndsWith: 'Does Not End With',
+                        notStartsWith: 'Does Not Start With',
                         startsWith: 'Starts With'
                     }
                 },
