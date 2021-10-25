@@ -57,10 +57,13 @@ export interface II18n {
         };
     };
     data: string;
+    delete: string;
     deleteTitle: string;
+    left: string;
     leftTitle: string;
     logicAnd: string;
     logicOr: string;
+    right: string;
     rightTitle: string;
     title: {
         0: string;
