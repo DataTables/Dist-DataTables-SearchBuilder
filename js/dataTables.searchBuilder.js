@@ -220,15 +220,15 @@
                     filter.sort();
                     for (var _i = 0, filter_1 = filter; _i < filter_1.length; _i++) {
                         var filt = filter_1[_i];
-                        if (filt) {
+                        if (filt && typeof filt === 'string') {
                             filt = filt.replace(/[\r\n\u2028]/g, ' ');
                         }
                     }
                 }
-                else if (filter !== null) {
+                else if (filter !== null && typeof filter === 'string') {
                     filter = filter.replace(/[\r\n\u2028]/g, ' ');
                 }
-                if (this.s.type.includes('html')) {
+                if (this.s.type.includes('html') && typeof filter === 'string') {
                     filter = filter.replace(/(<([^>]+)>)/ig, '');
                 }
                 // Not ideal, but jqueries .val() returns an empty string even
