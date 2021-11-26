@@ -331,7 +331,9 @@
                 var italic_1 = this.classes.italic;
                 var data_1 = this.dom.data;
                 this.dom.data.children('option').each(function () {
-                    if ($$2(this).text() === loadedCriteria.data) {
+                    if (!foundData &&
+                        ($$2(this).text() === loadedCriteria.data ||
+                            loadedCriteria.origData && $$2(this).prop('origData') === loadedCriteria.origData)) {
                         $$2(this).prop('selected', true);
                         data_1.removeClass(italic_1);
                         foundData = true;
