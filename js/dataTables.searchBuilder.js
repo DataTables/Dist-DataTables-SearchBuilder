@@ -1027,7 +1027,7 @@
                 }
                 // Otherwise the value that is in the cell is to be added
                 else {
-                    addOption(value.filter, value.text);
+                    addOption(value.filter, Array.isArray(value.text) ? value.text.join(', ') : value.text);
                 }
             }
             options.sort(function (a, b) {
