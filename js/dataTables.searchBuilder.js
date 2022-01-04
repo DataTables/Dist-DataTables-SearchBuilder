@@ -2929,7 +2929,6 @@
                 criteria.destroy();
                 _this.s.dt.draw();
                 _this.s.topGroup.trigger('dtsb-redrawContents');
-                _this.s.topGroup.trigger('dtsb-updateTitle');
                 return false;
             });
             criteria.dom.right
@@ -2979,7 +2978,6 @@
                     return false;
                 }
                 _this.destroy();
-                _this.s.topGroup.trigger('dtsb-updateTitle');
                 _this.s.topGroup.trigger('dtsb-redrawContents');
                 return false;
             });
@@ -3497,11 +3495,6 @@
                 _this._setUp(false);
                 _this._filterChanged(0);
                 _this.s.dt.draw();
-            });
-            this.s.topGroup.dom.container.on('dtsb-updateTitle.dtsb', function () {
-                var count = _this.s.topGroup.count();
-                _this._updateTitle(count);
-                _this._filterChanged(count);
             });
         };
         /**
