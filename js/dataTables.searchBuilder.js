@@ -100,7 +100,7 @@
                         .addClass(this.classes.italic)
                         .addClass(this.classes.select)
                 ],
-                valueTitle: $$2('<option value="--valueTitle--" selected/>')
+                valueTitle: $$2('<option value="--valueTitle--" disabled selected hidden/>')
                     .text(this.s.dt.i18n('searchBuilder.value', i18n.value))
             };
             // If the greyscale option is selected then add the class to add the grey colour to SearchBuilder
