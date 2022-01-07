@@ -72,7 +72,8 @@
                 defaultValue: $$2('<select disabled/>')
                     .addClass(this.classes.value)
                     .addClass(this.classes.dropDown)
-                    .addClass(this.classes.select),
+                    .addClass(this.classes.select)
+                    .addClass(this.classes.italic),
                 "delete": $$2('<button/>')
                     .html(this.s.dt.i18n('searchBuilder.delete', i18n["delete"]))
                     .addClass(this.classes["delete"])
@@ -948,6 +949,7 @@
             var column = that.dom.data.children('option:selected').val();
             var indexArray = that.s.dt.rows().indexes().toArray();
             var settings = that.s.dt.settings()[0];
+            that.dom.valueTitle.prop('selected', true);
             // Declare select element to be used with all of the default classes and listeners.
             var el = $$2('<select/>')
                 .addClass(Criteria.classes.value)
@@ -982,22 +984,20 @@
                 };
                 // If we are dealing with an array type, either make sure we are working with arrays, or sort them
                 if (that.s.type === 'array') {
-                    value.filter = !Array.isArray(value.filter) ?
-                        [value.filter] :
-                        value.filter = value.filter.sort();
-                    value.text = !Array.isArray(value.text) ?
-                        [value.text] :
-                        value.text = value.text.sort();
+                    value.filter = !Array.isArray(value.filter) ? [value.filter] : value.filter;
+                    value.text = !Array.isArray(value.text) ? [value.text] : value.text;
                 }
                 // Function to add an option to the select element
                 var addOption = function (filt, text) {
+                    if (that.s.type.includes('html') && filt !== null && typeof filt === 'string') {
+                        filt.replace(/(<([^>]+)>)/ig, '');
+                    }
                     // Add text and value, stripping out any html if that is the column type
                     var opt = $$2('<option>', {
                         type: Array.isArray(filt) ? 'Array' : 'String',
-                        value: that.s.type.includes('html') && filt !== null && typeof filt === 'string' ?
-                            filt.replace(/(<([^>]+)>)/ig, '') :
-                            filt
+                        value: filt
                     })
+                        .data('sbv', filt)
                         .addClass(that.classes.option)
                         .addClass(that.classes.notItalic)
                         // Have to add the text this way so that special html characters are not escaped - &amp; etc.
@@ -1016,6 +1016,7 @@
                         if (preDefined !== null && opt.val() === preDefined[0]) {
                             opt.prop('selected', true);
                             el.removeClass(Criteria.classes.italic);
+                            that.dom.valueTitle.removeProp('selected');
                         }
                     }
                 };
@@ -1348,11 +1349,7 @@
             for (var _i = 0, el_3 = el; _i < el_3.length; _i++) {
                 var element = el_3[_i];
                 if (element.is('select')) {
-                    var val = element.children('option:selected').val();
-                    // If the type of the option is an array we need to split it up and sort it
-                    values.push(element.children('option:selected').attr('type') === 'Array' ?
-                        val.split(',').sort() :
-                        val);
+                    values.push(element.children('option:selected').data('sbv'));
                 }
             }
             return values;
