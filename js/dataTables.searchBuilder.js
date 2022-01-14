@@ -882,7 +882,11 @@
             this.setListeners();
             // If it can and this is different to before then trigger a draw
             if (prevFilled !== this.s.filled) {
-                this.s.dt.draw();
+                // If using SSP we want to restrict the amount of server calls that take place
+                //  and this will already have taken place
+                if (!this.s.dt.page.info().serverSide) {
+                    this.s.dt.draw();
+                }
                 this.setListeners();
             }
         };
@@ -3182,6 +3186,13 @@
                 return;
             }
             table.settings()[0]._searchBuilder = this;
+            // If using SSP we want to include the previous state in the very first server call
+            if (this.s.dt.page.info().serverSide) {
+                this.s.dt.on('preXhr.dtsb', function (e, settings, data) {
+                    var loadedState = _this.s.dt.state.loaded();
+                    data.searchBuilder = _this._collapseArray(loadedState.searchBuilder);
+                });
+            }
             // Run the remaining setup when the table is initialised
             if (this.s.dt.settings()[0]._bInitComplete) {
                 this._setUp();
@@ -3326,7 +3337,11 @@
                 if (loadedState !== null && loadedState.searchBuilder !== undefined) {
                     this.s.topGroup.rebuild(loadedState.searchBuilder);
                     this.s.topGroup.dom.container.trigger('dtsb-redrawContents');
-                    this.s.dt.page(loadedState.page).draw('page');
+                    // If using SSP we want to restrict the amount of server calls that take place
+                    //  and this information will already have been processed
+                    if (!this.s.dt.page.info().serverSide) {
+                        this.s.dt.page(loadedState.page).draw('page');
+                    }
                     this.s.topGroup.setListeners();
                 }
                 // Otherwise load any predefined options
@@ -3468,7 +3483,11 @@
                 var count = _this.s.topGroup.count();
                 _this._updateTitle(count);
                 _this._filterChanged(count);
-                _this.s.dt.draw();
+                // If using SSP we want to restrict the amount of server calls that take place
+                //  and this information will already have been processed
+                if (!_this.s.dt.page.info().serverSide) {
+                    _this.s.dt.draw();
+                }
                 _this.s.dt.state.save();
             });
             this.s.topGroup.dom.container.unbind('dtsb-redrawLogic');
