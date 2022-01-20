@@ -128,6 +128,20 @@
             return this;
         }
         /**
+         * Escape html characters within a string
+         *
+         * @param txt the string to be escaped
+         * @returns the escaped string
+         */
+        Criteria._escapeHTML = function (txt) {
+            return txt
+                .toString()
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"');
+        };
+        /**
          * Adds the left button to the criteria
          */
         Criteria.prototype.updateArrows = function (hasSiblings, redraw) {
@@ -1353,7 +1367,7 @@
             for (var _i = 0, el_3 = el; _i < el_3.length; _i++) {
                 var element = el_3[_i];
                 if (element.is('select')) {
-                    values.push(element.children('option:selected').data('sbv'));
+                    values.push(Criteria._escapeHTML(element.children('option:selected').data('sbv')));
                 }
             }
             return values;
@@ -1367,7 +1381,7 @@
             for (var _i = 0, el_4 = el; _i < el_4.length; _i++) {
                 var element = el_4[_i];
                 if (element.is('input')) {
-                    values.push(element.val());
+                    values.push(Criteria._escapeHTML(element.val()));
                 }
             }
             return values;

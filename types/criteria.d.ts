@@ -97,6 +97,13 @@ export default class Criteria {
     s: IS;
     constructor(table: any, opts: builderType.IDefaults, topGroup: JQuery<HTMLElement>, index?: number, depth?: number);
     /**
+     * Escape html characters within a string
+     *
+     * @param txt the string to be escaped
+     * @returns the escaped string
+     */
+    private static _escapeHTML;
+    /**
      * Default initialisation function for select conditions
      */
     private static initSelect;
