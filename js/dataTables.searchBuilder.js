@@ -3333,6 +3333,9 @@
                     data.searchBuilder = _this._collapseArray(_this.getDetails(true));
                 }
             });
+            this.s.dt.on('column-reorder', function () {
+                _this.rebuild(_this.getDetails());
+            });
             if (loadState) {
                 var loadedState = this.s.dt.state.loaded();
                 // If the loaded State is not null rebuild based on it for statesave
