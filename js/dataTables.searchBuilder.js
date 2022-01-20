@@ -3190,7 +3190,9 @@
             if (this.s.dt.page.info().serverSide) {
                 this.s.dt.on('preXhr.dtsb', function (e, settings, data) {
                     var loadedState = _this.s.dt.state.loaded();
-                    data.searchBuilder = _this._collapseArray(loadedState.searchBuilder);
+                    if (loadedState && loadedState.searchBuilder) {
+                        data.searchBuilder = _this._collapseArray(loadedState.searchBuilder);
+                    }
                 });
             }
             // Run the remaining setup when the table is initialised
