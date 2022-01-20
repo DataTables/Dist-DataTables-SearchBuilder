@@ -60,7 +60,7 @@
                     .addClass(this.classes.italic)
                     .attr('autocomplete', 'hacking'),
                 conditionTitle: $$2('<option value="" disabled selected hidden/>')
-                    .text(this.s.dt.i18n('searchBuilder.condition', i18n.condition)),
+                    .html(this.s.dt.i18n('searchBuilder.condition', i18n.condition)),
                 container: $$2('<div/>')
                     .addClass(this.classes.container),
                 data: $$2('<select/>')
@@ -68,7 +68,7 @@
                     .addClass(this.classes.dropDown)
                     .addClass(this.classes.italic),
                 dataTitle: $$2('<option value="" disabled selected hidden/>')
-                    .text(this.s.dt.i18n('searchBuilder.data', i18n.data)),
+                    .html(this.s.dt.i18n('searchBuilder.data', i18n.data)),
                 defaultValue: $$2('<select disabled/>')
                     .addClass(this.classes.value)
                     .addClass(this.classes.dropDown)
@@ -82,14 +82,14 @@
                     .attr('type', 'button'),
                 // eslint-disable-next-line no-useless-escape
                 left: $$2('<button/>')
-                    .text(this.s.dt.i18n('searchBuilder.left', i18n.left))
+                    .html(this.s.dt.i18n('searchBuilder.left', i18n.left))
                     .addClass(this.classes.left)
                     .addClass(this.classes.button)
                     .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', i18n.leftTitle))
                     .attr('type', 'button'),
                 // eslint-disable-next-line no-useless-escape
                 right: $$2('<button/>')
-                    .text(this.s.dt.i18n('searchBuilder.right', i18n.right))
+                    .html(this.s.dt.i18n('searchBuilder.right', i18n.right))
                     .addClass(this.classes.right)
                     .addClass(this.classes.button)
                     .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', i18n.rightTitle))
@@ -102,7 +102,7 @@
                         .addClass(this.classes.select)
                 ],
                 valueTitle: $$2('<option value="--valueTitle--" disabled selected hidden/>')
-                    .text(this.s.dt.i18n('searchBuilder.value', i18n.value))
+                    .html(this.s.dt.i18n('searchBuilder.value', i18n.value))
             };
             // If the greyscale option is selected then add the class to add the grey colour to SearchBuilder
             if (this.c.greyscale) {
@@ -1142,7 +1142,7 @@
                 }, searchDelay === null ? 100 : searchDelay)),
                 $$2('<span>')
                     .addClass(that.classes.joiner)
-                    .text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
+                    .html(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
                 $$2('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
@@ -1262,7 +1262,7 @@
                         }),
                 $$2('<span>')
                     .addClass(that.classes.joiner)
-                    .text(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
+                    .html(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
                 $$2('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
@@ -2531,7 +2531,7 @@
                 return;
             }
             this.s.logic = loadedDetails.logic;
-            this.dom.logic.children().first().text(this.s.logic === 'OR'
+            this.dom.logic.children().first().html(this.s.logic === 'OR'
                 ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
                 : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
             // Add all of the criteria, be it a sub group or a criteria
@@ -3029,8 +3029,8 @@
          */
         Group.prototype._setup = function () {
             this.setListeners();
-            this.dom.add.text(this.s.dt.i18n('searchBuilder.add', this.c.i18n.add));
-            this.dom.logic.children().first().text(this.c.logic === 'OR'
+            this.dom.add.html(this.s.dt.i18n('searchBuilder.add', this.c.i18n.add));
+            this.dom.logic.children().first().html(this.c.logic === 'OR'
                 ? this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr)
                 : this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
             this.s.logic = this.c.logic === 'OR' ? 'OR' : 'AND';
@@ -3067,11 +3067,11 @@
         Group.prototype._toggleLogic = function () {
             if (this.s.logic === 'OR') {
                 this.s.logic = 'AND';
-                this.dom.logic.children().first().text(this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
+                this.dom.logic.children().first().html(this.s.dt.i18n('searchBuilder.logicAnd', this.c.i18n.logicAnd));
             }
             else if (this.s.logic === 'AND') {
                 this.s.logic = 'OR';
-                this.dom.logic.children().first().text(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
+                this.dom.logic.children().first().html(this.s.dt.i18n('searchBuilder.logicOr', this.c.i18n.logicOr));
             }
         };
         Group.version = '1.1.0';
