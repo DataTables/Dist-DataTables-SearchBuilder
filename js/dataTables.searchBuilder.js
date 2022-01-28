@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.3.0
+/*! SearchBuilder 1.3.1
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 (function () {
@@ -3544,7 +3544,7 @@
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.3.0';
+        SearchBuilder.version = '1.3.1';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3650,7 +3650,7 @@
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.3.0
+    /*! SearchBuilder 1.3.1
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     // DataTables extensions common UMD. Note that this allows for AMD, CommonJS
