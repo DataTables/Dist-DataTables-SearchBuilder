@@ -1119,12 +1119,7 @@
                 .addClass(Criteria.classes.input)
                 .on('input.dtsb keypress.dtsb', that._throttle(function (e) {
                 var code = e.keyCode || e.which;
-                if (!that.c.enterSearch &&
-                    !(that.s.dt.settings()[0].oInit.search !== undefined &&
-                        that.s.dt.settings()[0].oInit.search["return"]) ||
-                    code === 13) {
-                    return fn(that, this);
-                }
+                return fn(that, this, code);
             }, searchDelay === null ? 100 : searchDelay));
             if (that.c.greyscale) {
                 el.addClass(Criteria.classes.greyscale);
@@ -1152,12 +1147,7 @@
                     .addClass(Criteria.classes.input)
                     .on('input.dtsb keypress.dtsb', that._throttle(function (e) {
                     var code = e.keyCode || e.which;
-                    if (!that.c.enterSearch &&
-                        !(that.s.dt.settings()[0].oInit.search !== undefined &&
-                            that.s.dt.settings()[0].oInit.search["return"]) ||
-                        code === 13) {
-                        return fn(that, this);
-                    }
+                    return fn(that, this, code);
                 }, searchDelay === null ? 100 : searchDelay)),
                 $$2('<span>')
                     .addClass(that.classes.joiner)
@@ -1167,12 +1157,7 @@
                     .addClass(Criteria.classes.input)
                     .on('input.dtsb keypress.dtsb', that._throttle(function (e) {
                     var code = e.keyCode || e.which;
-                    if (!that.c.enterSearch &&
-                        !(that.s.dt.settings()[0].oInit.search !== undefined &&
-                            that.s.dt.settings()[0].oInit.search["return"]) ||
-                        code === 13) {
-                        return fn(that, this);
-                    }
+                    return fn(that, this, code);
                 }, searchDelay === null ? 100 : searchDelay))
             ];
             if (that.c.greyscale) {
@@ -1207,20 +1192,12 @@
                 .on('change.dtsb', that._throttle(function () {
                 return fn(that, this);
             }, searchDelay === null ? 100 : searchDelay))
-                .on('input.dtsb keypress.dtsb', that.c.enterSearch ||
-                that.s.dt.settings()[0].oInit.search !== undefined &&
-                    that.s.dt.settings()[0].oInit.search["return"] ?
-                function (e) {
-                    that._throttle(function () {
-                        var code = e.keyCode || e.which;
-                        if (code === 13) {
-                            return fn(that, this);
-                        }
-                    }, searchDelay === null ? 100 : searchDelay);
-                } :
+                .on('input.dtsb keypress.dtsb', function (e) {
                 that._throttle(function () {
-                    return fn(that, this);
-                }, searchDelay === null ? 100 : searchDelay));
+                    var code = e.keyCode || e.which;
+                    return fn(that, this, code);
+                }, searchDelay === null ? 100 : searchDelay);
+            });
             if (that.c.greyscale) {
                 el.addClass(Criteria.classes.greyscale);
             }
@@ -1260,25 +1237,12 @@
                     function () {
                         fn(that, _this);
                     })
-                    .on('input.dtsb keypress.dtsb', !that.c.enterSearch &&
-                    !(that.s.dt.settings()[0].oInit.search !== undefined &&
-                        that.s.dt.settings()[0].oInit.search["return"]) &&
-                    searchDelay !== null ?
+                    .on('input.dtsb keypress.dtsb', function (e) {
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
-                        return fn(that, this);
-                    }, searchDelay) :
-                    that.c.enterSearch ||
-                        that.s.dt.settings()[0].oInit.search !== undefined &&
-                            that.s.dt.settings()[0].oInit.search["return"] ?
-                        function (e) {
-                            var code = e.keyCode || e.which;
-                            if (code === 13) {
-                                fn(that, _this);
-                            }
-                        } :
-                        function () {
-                            fn(that, _this);
-                        }),
+                        var code = e.keyCode || e.which;
+                        return fn(that, this, code);
+                    }, searchDelay === null ? 0 : searchDelay);
+                }),
                 $$2('<span>')
                     .addClass(that.classes.joiner)
                     .html(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
@@ -1303,18 +1267,10 @@
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
                         return fn(that, this);
                     }, searchDelay) :
-                    that.c.enterSearch ||
-                        that.s.dt.settings()[0].oInit.search !== undefined &&
-                            that.s.dt.settings()[0].oInit.search["return"] ?
-                        function (e) {
-                            var code = e.keyCode || e.which;
-                            if (code === 13) {
-                                fn(that, _this);
-                            }
-                        } :
-                        function () {
-                            fn(that, _this);
-                        })
+                    function (e) {
+                        var code = e.keyCode || e.which;
+                        fn(that, _this, code);
+                    })
             ];
             if (that.c.greyscale) {
                 els[0].addClass(Criteria.classes.greyscale);
@@ -1394,14 +1350,19 @@
         /**
          * Function that is run on each element as a call back when a search should be triggered
          */
-        Criteria.updateListener = function (that, el) {
+        Criteria.updateListener = function (that, el, code) {
             // When the value is changed the criteria is now complete so can be included in searches
             // Get the condition from the map based on the key that has been selected for the condition
             var condition = that.s.conditions[that.s.condition];
             that.s.filled = condition.isInputValid(that.dom.value, that);
             that.s.value = condition.inputValue(that.dom.value, that);
             if (!that.s.filled) {
-                that.s.dt.draw();
+                if (!that.c.enterSearch &&
+                    !(that.s.dt.settings()[0].oInit.search !== undefined &&
+                        that.s.dt.settings()[0].oInit.search["return"]) ||
+                    code === 13) {
+                    that.s.dt.draw();
+                }
                 return;
             }
             if (!Array.isArray(that.s.value)) {
@@ -1439,8 +1400,13 @@
                     }
                 }
             }
-            // Trigger a search
-            that.s.dt.draw();
+            if (!that.c.enterSearch &&
+                !(that.s.dt.settings()[0].oInit.search !== undefined &&
+                    that.s.dt.settings()[0].oInit.search["return"]) ||
+                code === 13) {
+                // Trigger a search
+                that.s.dt.draw();
+            }
             // Refocus the element and set the correct cursor position
             if (idx !== null) {
                 that.dom.value[idx].removeClass(that.classes.italic);
