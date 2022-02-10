@@ -60,6 +60,7 @@ export interface IS {
     filled: boolean;
     index: number;
     origData: string;
+    preventRedraw: boolean;
     topGroup: JQuery<HTMLElement>;
     type: string;
     value: string[];

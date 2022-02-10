@@ -47,6 +47,7 @@
                 filled: false,
                 index: index,
                 origData: undefined,
+                preventRedraw: false,
                 topGroup: topGroup,
                 type: '',
                 value: []
@@ -525,7 +526,7 @@
                 hasRight && rightOffset.top !== clearOffset.top) &&
                 !this.dom.container.parent().hasClass(this.classes.vertical)) {
                 this.dom.container.parent().addClass(this.classes.vertical);
-                this.s.topGroup.trigger('dtsb-redrawContents');
+                this.s.topGroup.trigger('dtsb-redrawContents-noDraw');
             }
             else if (buttonsLeft -
                 (this.dom.data.offset().left +
@@ -534,7 +535,7 @@
                     valWidth) > 15
                 && this.dom.container.parent().hasClass(this.classes.vertical)) {
                 this.dom.container.parent().removeClass(this.classes.vertical);
-                this.s.topGroup.trigger('dtsb-redrawContents');
+                this.s.topGroup.trigger('dtsb-redrawContents-noDraw');
             }
         };
         /**
@@ -895,7 +896,7 @@
             this.s.filled = this.s.conditions[this.s.condition].isInputValid(this.dom.value, this);
             this.setListeners();
             // If it can and this is different to before then trigger a draw
-            if (prevFilled !== this.s.filled) {
+            if (!this.s.preventRedraw && prevFilled !== this.s.filled) {
                 // If using SSP we want to restrict the amount of server calls that take place
                 //  and this will already have taken place
                 if (!this.s.dt.page.info().serverSide) {
@@ -2602,7 +2603,9 @@
                     this.s.criteria[i].criteria.dom.container.insertBefore(this.dom.add);
                     // Set listeners for various points
                     this._setCriteriaListeners(crit);
+                    this.s.criteria[i].criteria.s.preventRedraw = this.s.preventRedraw;
                     this.s.criteria[i].criteria.rebuild(this.s.criteria[i].criteria.getDetails());
+                    this.s.criteria[i].criteria.s.preventRedraw = false;
                 }
                 else if (crit instanceof Group && crit.s.criteria.length > 0) {
                     // Reset the index to the new value
@@ -2611,7 +2614,9 @@
                     // Add the sub group to the group
                     this.s.criteria[i].criteria.dom.container.insertBefore(this.dom.add);
                     // Redraw the contents of the group
+                    crit.s.preventRedraw = this.s.preventRedraw;
                     crit.redrawContents();
+                    crit.s.preventRedraw = false;
                     this._setGroupListeners(crit);
                 }
                 else {
@@ -2830,9 +2835,13 @@
                 index: idx
             });
             // Rebuild it with the previous conditions for that criteria
+            criteria.s.preventRedraw = this.s.preventRedraw;
             criteria.rebuild(loadedCriteria);
+            criteria.s.preventRedraw = false;
             this.s.criteria[idx].criteria = criteria;
-            this.s.topGroup.trigger('dtsb-redrawContents');
+            if (!this.s.preventRedraw) {
+                this.s.topGroup.trigger('dtsb-redrawContents');
+            }
         };
         /**
          * Checks And the criteria using AND logic
@@ -3251,6 +3260,8 @@
             this.s.topGroup.s.preventRedraw = true;
             this.s.topGroup.rebuild(details);
             this.s.topGroup.s.preventRedraw = false;
+            this._checkClear();
+            this._updateTitle(this.s.topGroup.count());
             this.s.topGroup.redrawContents();
             this.s.dt.draw(false);
             this.s.topGroup.setListeners();
@@ -3508,6 +3519,18 @@
                     _this.s.dt.draw();
                 }
                 _this.s.dt.state.save();
+            });
+            this.s.topGroup.dom.container.unbind('dtsb-redrawContents-noDraw');
+            this.s.topGroup.dom.container.on('dtsb-redrawContents-noDraw.dtsb', function () {
+                _this._checkClear();
+                _this.s.topGroup.s.preventRedraw = true;
+                _this.s.topGroup.redrawContents();
+                _this.s.topGroup.s.preventRedraw = false;
+                _this.s.topGroup.setupLogic();
+                _this._setEmptyListener();
+                var count = _this.s.topGroup.count();
+                _this._updateTitle(count);
+                _this._filterChanged(count);
             });
             this.s.topGroup.dom.container.unbind('dtsb-redrawLogic');
             this.s.topGroup.dom.container.on('dtsb-redrawLogic.dtsb', function () {
