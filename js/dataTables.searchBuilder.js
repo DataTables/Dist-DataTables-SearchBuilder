@@ -311,7 +311,7 @@
                 data: this.s.data,
                 origData: this.s.origData,
                 type: this.s.type,
-                value: this.s.value.map(function (a) { return a.toString(); })
+                value: this.s.value.map(function (a) { return a !== null && a !== undefined ? a.toString() : a; })
             };
         };
         /**
