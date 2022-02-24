@@ -3317,7 +3317,12 @@
             this._setClearListener();
             this.s.dt.on('stateSaveParams.dtsb', function (e, settings, data) {
                 data.searchBuilder = _this.getDetails();
-                data.page = _this.s.dt.page();
+                if (!data.scroller) {
+                    data.page = _this.s.dt.page();
+                }
+                else {
+                    data.start = _this.s.dt.state().start;
+                }
             });
             this.s.dt.on('stateLoadParams.dtsb', function (e, settings, data) {
                 _this.rebuild(data.searchBuilder);
@@ -3340,7 +3345,12 @@
                     // If using SSP we want to restrict the amount of server calls that take place
                     //  and this information will already have been processed
                     if (!this.s.dt.page.info().serverSide) {
-                        this.s.dt.page(loadedState.page).draw('page');
+                        if (loadedState.page) {
+                            this.s.dt.page(loadedState.page).draw('page');
+                        }
+                        else if (this.s.dt.scroller) {
+                            this.s.dt.scroller().scrollToRow(loadedState.scroller.topRow);
+                        }
                     }
                     this.s.topGroup.setListeners();
                 }
