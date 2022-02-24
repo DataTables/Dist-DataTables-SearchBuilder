@@ -288,14 +288,18 @@
                 }
                 else if (this.s.type.includes('moment')) {
                     for (var i = 0; i < this.s.value.length; i++) {
-                        if (this.s.value[i] && this.s.value[i].length > 0) {
+                        if (this.s.value[i] &&
+                            this.s.value[i].length > 0 &&
+                            moment(this.s.value[i], this.s.dateFormat, true).isValid()) {
                             this.s.value[i] = moment(this.s.value[i], this.s.dateFormat).toISOString();
                         }
                     }
                 }
                 else if (this.s.type.includes('luxon')) {
                     for (var i = 0; i < this.s.value.length; i++) {
-                        if (this.s.value[i] && this.s.value[i].length > 0) {
+                        if (this.s.value[i] &&
+                            this.s.value[i].length > 0 &&
+                            luxon.DateTime.fromFormat(this.s.value[i], this.s.dateFormat).invalid === null) {
                             this.s.value[i] = luxon.DateTime.fromFormat(this.s.value[i], this.s.dateFormat).toISO();
                         }
                     }
