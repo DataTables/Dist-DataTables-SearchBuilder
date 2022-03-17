@@ -143,6 +143,15 @@
                 .replace(/&quot;/g, '"');
         };
         /**
+         * Parses formatted numbers down to a form where they can be compared
+         *
+         * @param val the value to convert
+         * @returns the converted value
+         */
+        Criteria.parseNumFmt = function (val) {
+            return +val.replace(/(?!^-)[^0-9.]/g, '');
+        };
+        /**
          * Adds the left button to the criteria
          */
         Criteria.prototype.updateArrows = function (hasSiblings, redraw) {
@@ -1940,13 +1949,7 @@
                 inputValue: Criteria.inputValueSelect,
                 isInputValid: Criteria.isInputValidSelect,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val === +comp;
+                    return Criteria.parseNumFmt(value) === Criteria.parseNumFmt(comparison[0]);
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1958,13 +1961,7 @@
                 inputValue: Criteria.inputValueSelect,
                 isInputValid: Criteria.isInputValidSelect,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val !== +comp;
+                    return Criteria.parseNumFmt(value) !== Criteria.parseNumFmt(comparison[0]);
                 }
             },
             '<': {
@@ -1975,13 +1972,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val < +comp;
+                    return Criteria.parseNumFmt(value) < Criteria.parseNumFmt(comparison[0]);
                 }
             },
             '<=': {
@@ -1992,13 +1983,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val <= +comp;
+                    return Criteria.parseNumFmt(value) <= Criteria.parseNumFmt(comparison[0]);
                 }
             },
             '>=': {
@@ -2009,13 +1994,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val >= +comp;
+                    return Criteria.parseNumFmt(value) >= Criteria.parseNumFmt(comparison[0]);
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -2027,13 +2006,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val > +comp;
+                    return Criteria.parseNumFmt(value) > Criteria.parseNumFmt(comparison[0]);
                 }
             },
             'between': {
@@ -2044,15 +2017,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp0 = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    var comp1 = comparison[1].indexOf('-') === 0 ?
-                        '-' + comparison[1].replace(/[^0-9.]/g, '') :
-                        comparison[1].replace(/[^0-9.]/g, '');
+                    var val = Criteria.parseNumFmt(value);
+                    var comp0 = Criteria.parseNumFmt(comparison[0]);
+                    var comp1 = Criteria.parseNumFmt(comparison[1]);
                     if (+comp0 < +comp1) {
                         return +comp0 <= +val && +val <= +comp1;
                     }
@@ -2070,15 +2037,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp0 = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    var comp1 = comparison[1].indexOf('-') === 0 ?
-                        '-' + comparison[1].replace(/[^0-9.]/g, '') :
-                        comparison[1].replace(/[^0-9.]/g, '');
+                    var val = Criteria.parseNumFmt(value);
+                    var comp0 = Criteria.parseNumFmt(comparison[0]);
+                    var comp1 = Criteria.parseNumFmt(comparison[1]);
                     if (+comp0 < +comp1) {
                         return !(+comp0 <= +val && +val <= +comp1);
                     }

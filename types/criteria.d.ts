@@ -148,6 +148,13 @@ export default class Criteria {
      * Function that is run on each element as a call back when a search should be triggered
      */
     private static updateListener;
+    /**
+     * Parses formatted numbers down to a form where they can be compared
+     *
+     * @param val the value to convert
+     * @returns the converted value
+     */
+    private static parseNumFmt;
     static dateConditions: {
         [keys: string]: ICondition;
     };
