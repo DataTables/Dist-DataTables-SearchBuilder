@@ -11,6 +11,7 @@ export interface IClasses {
     dropDown: string;
     greyscale: string;
     input: string;
+    inputCont: string;
     italic: string;
     joiner: string;
     left: string;
@@ -41,6 +42,7 @@ export interface IDom {
     dataTitle: JQuery<HTMLElement>;
     defaultValue: JQuery<HTMLElement>;
     delete: JQuery<HTMLElement>;
+    inputCont: JQuery<HTMLElement>;
     left: JQuery<HTMLElement>;
     right: JQuery<HTMLElement>;
     value: Array<JQuery<HTMLElement>>;
@@ -180,7 +182,7 @@ export default class Criteria {
     /**
      * Adds the left button to the criteria
      */
-    updateArrows(hasSiblings?: boolean, redraw?: boolean): void;
+    updateArrows(hasSiblings?: boolean): void;
     /**
      * Destroys the criteria, removing listeners and container from the dom
      */
@@ -216,10 +218,7 @@ export default class Criteria {
      * Sets the listeners for the criteria
      */
     setListeners(): void;
-    /**
-     * Adjusts the criteria to make SearchBuilder responsive
-     */
-    private _adjustCriteria;
+    setupButtons(): void;
     /**
      * Builds the elements of the dom together
      */

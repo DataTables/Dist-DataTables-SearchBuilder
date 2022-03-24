@@ -81,6 +81,8 @@
                     .addClass(this.classes.button)
                     .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', i18n.deleteTitle))
                     .attr('type', 'button'),
+                inputCont: $$2('<div/>')
+                    .addClass(this.classes.inputCont),
                 // eslint-disable-next-line no-useless-escape
                 left: $$2('<button/>')
                     .html(this.s.dt.i18n('searchBuilder.left', i18n.left))
@@ -115,15 +117,8 @@
                     val.addClass(this.classes.greyscale);
                 }
             }
-            // For responsive design, adjust the criterias properties on the following events
-            this.s.dt.on('draw.dtsb', function () {
-                _this._adjustCriteria();
-            });
-            this.s.dt.on('buttons-action.dtsb', function () {
-                _this._adjustCriteria();
-            });
             $$2(window).on('resize.dtsb', dataTable$2.util.throttle(function () {
-                _this._adjustCriteria();
+                _this.s.topGroup.trigger('dtsb-redrawLogic');
             }));
             this._buildCriteria();
             return this;
@@ -154,14 +149,16 @@
         /**
          * Adds the left button to the criteria
          */
-        Criteria.prototype.updateArrows = function (hasSiblings, redraw) {
+        Criteria.prototype.updateArrows = function (hasSiblings) {
             if (hasSiblings === void 0) { hasSiblings = false; }
-            if (redraw === void 0) { redraw = true; }
             // Empty the container and append all of the elements in the correct order
             this.dom.container.children().detach();
             this.dom.container
                 .append(this.dom.data)
                 .append(this.dom.condition)
+                .append(this.dom.inputCont);
+            this.dom.inputCont
+                .empty()
                 .append(this.dom.value[0]);
             this.setListeners();
             // Trigger the inserted events for the value elements as they are inserted
@@ -169,7 +166,7 @@
                 this.dom.value[0].trigger('dtsb-inserted');
             }
             for (var i = 1; i < this.dom.value.length; i++) {
-                this.dom.container.append(this.dom.value[i]);
+                this.dom.inputCont.append(this.dom.value[i]);
                 this.dom.value[i].trigger('dtsb-inserted');
             }
             // If this is a top level criteria then don't let it move left
@@ -185,10 +182,6 @@
             }
             this.dom.buttons.append(this.dom["delete"]);
             this.dom.container.append(this.dom.buttons);
-            if (redraw) {
-                // A different combination of arrows and selectors may lead to a need for responsive to be triggered
-                this._adjustCriteria();
-            }
         };
         /**
          * Destroys the criteria, removing listeners and container from the dom
@@ -491,7 +484,7 @@
                             var val = _c[_b];
                             // If this criteria was previously active in the search then remove
                             // it from the search and trigger a new search
-                            if (_this.s.filled && val !== undefined && _this.dom.container.has(val[0]).length !== 0) {
+                            if (_this.s.filled && val !== undefined && _this.dom.inputCont.has(val[0]).length !== 0) {
                                 _this.s.filled = false;
                                 _this.s.dt.draw();
                                 _this.setListeners();
@@ -508,52 +501,13 @@
                 }
             });
         };
-        /**
-         * Adjusts the criteria to make SearchBuilder responsive
-         */
-        Criteria.prototype._adjustCriteria = function () {
-            // If this criteria is not present then don't bother adjusting it
-            if ($$2(document).has(this.dom.container).length === 0) {
+        Criteria.prototype.setupButtons = function () {
+            if (window.innerWidth > 550) {
                 return;
             }
-            var valRight;
-            var valWidth;
-            var outmostval = this.dom.value[this.dom.value.length - 1];
-            // Calculate the width and right value of the outmost value element
-            if (outmostval !== undefined && this.dom.container.has(outmostval[0]).length !== 0) {
-                valWidth = outmostval.outerWidth(true);
-                valRight = outmostval.offset().left + valWidth;
-            }
-            else {
-                return;
-            }
-            var leftOffset = this.dom.left.offset();
-            var rightOffset = this.dom.right.offset();
-            var clearOffset = this.dom["delete"].offset();
-            var hasLeft = this.dom.container.has(this.dom.left[0]).length !== 0;
-            var hasRight = this.dom.container.has(this.dom.right[0]).length !== 0;
-            var buttonsLeft = hasLeft ?
-                leftOffset.left :
-                hasRight ?
-                    rightOffset.left :
-                    clearOffset.left;
-            // Perform the responsive calculations and redraw where necessary
-            if ((buttonsLeft - valRight < 15 ||
-                hasLeft && leftOffset.top !== clearOffset.top ||
-                hasRight && rightOffset.top !== clearOffset.top) &&
-                !this.dom.container.parent().hasClass(this.classes.vertical)) {
-                this.dom.container.parent().addClass(this.classes.vertical);
-                this.s.topGroup.trigger('dtsb-redrawContents-noDraw');
-            }
-            else if (buttonsLeft -
-                (this.dom.data.offset().left +
-                    this.dom.data.outerWidth(true) +
-                    this.dom.condition.outerWidth(true) +
-                    valWidth) > 15
-                && this.dom.container.parent().hasClass(this.classes.vertical)) {
-                this.dom.container.parent().removeClass(this.classes.vertical);
-                this.s.topGroup.trigger('dtsb-redrawContents-noDraw');
-            }
+            this.dom.container.addClass(this.classes.vertical);
+            this.dom.buttons.css('left', this.dom.data.innerWidth());
+            this.dom.buttons.css('top', this.dom.data.position().top);
         };
         /**
          * Builds the elements of the dom together
@@ -566,15 +520,17 @@
             this.dom.container
                 .append(this.dom.data)
                 .append(this.dom.condition);
+            this.dom.inputCont.empty();
             for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
                 var val = _a[_i];
                 val.append(this.dom.valueTitle);
-                this.dom.container.append(val);
+                this.dom.inputCont.append(val);
             }
             // Add buttons to container
-            this.dom.container
+            this.dom.buttons
                 .append(this.dom["delete"])
                 .append(this.dom.right);
+            this.dom.container.append(this.dom.inputCont).append(this.dom.buttons);
             this.setListeners();
         };
         /**
@@ -610,10 +566,15 @@
                 // Call the init function to get the value elements for this condition
                 this.dom.value = [].concat(this.s.conditions[this.s.condition].init(this, Criteria.updateListener));
                 if (this.dom.value.length > 0 && this.dom.value[0] !== undefined) {
-                    this.dom.value[0].insertAfter(this.dom.condition).trigger('dtsb-inserted');
+                    this.dom.inputCont
+                        .empty()
+                        .append(this.dom.value[0])
+                        .insertAfter(this.dom.condition);
+                    this.dom.value[0].trigger('dtsb-inserted');
                     // Insert all of the value elements
                     for (var i = 1; i < this.dom.value.length; i++) {
-                        this.dom.value[i].insertAfter(this.dom.value[i - 1]).trigger('dtsb-inserted');
+                        this.dom.inputCont.append(this.dom.value[i]);
+                        this.dom.value[i].trigger('dtsb-inserted');
                     }
                 }
             }
@@ -879,9 +840,10 @@
                 var val = _a[_i];
                 _loop_4(val);
             }
-            var children = this.dom.container.children();
-            if (children.length > 3) {
-                for (var i = 2; i < children.length - 1; i++) {
+            var children = this.dom.inputCont.children();
+            if (children.length > 1) {
+                // eslint-disable-next-line @typescript-eslint/prefer-for-of
+                for (var i = 0; i < children.length; i++) {
                     $$2(children[i]).remove();
                 }
             }
@@ -898,10 +860,11 @@
             if (loadedCriteria !== undefined && loadedCriteria.value !== undefined) {
                 this.s.value = loadedCriteria.value;
             }
+            this.dom.inputCont.empty();
             // Insert value elements and trigger the inserted event
             if (this.dom.value[0] !== undefined) {
                 this.dom.value[0]
-                    .insertAfter(this.dom.condition)
+                    .appendTo(this.dom.inputCont)
                     .trigger('dtsb-inserted');
             }
             for (var i = 1; i < this.dom.value.length; i++) {
@@ -966,6 +929,7 @@
             dropDown: 'dtsb-dropDown',
             greyscale: 'dtsb-greyscale',
             input: 'dtsb-input',
+            inputCont: 'dtsb-inputCont',
             italic: 'dtsb-italic',
             joiner: 'dtsp-joiner',
             left: 'dtsb-left',
@@ -2500,7 +2464,7 @@
             for (var _b = 0, _c = this.s.criteria; _b < _c.length; _b++) {
                 var crit = _c[_b];
                 if (crit.criteria instanceof Criteria) {
-                    crit.criteria.updateArrows(this.s.criteria.length > 1, false);
+                    crit.criteria.updateArrows(this.s.criteria.length > 1);
                     this._setCriteriaListeners(crit.criteria);
                 }
             }
@@ -2568,8 +2532,8 @@
         Group.prototype.redrawLogic = function () {
             for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
                 var crit = _a[_i];
-                if (crit instanceof Group) {
-                    crit.redrawLogic();
+                if (crit.criteria instanceof Group) {
+                    crit.criteria.redrawLogic();
                 }
             }
             this.setupLogic();
@@ -2605,12 +2569,19 @@
                 }
                 return;
             }
-            // Set width, take 2 for the border
-            var height = this.dom.container.height() - 1;
             this.dom.clear.height('0px');
-            this.dom.logicContainer.append(this.dom.clear).width(height);
+            this.dom.logicContainer.append(this.dom.clear);
             // Prepend logic button
             this.dom.container.prepend(this.dom.logicContainer);
+            for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
+                var crit = _a[_i];
+                if (crit.criteria instanceof Criteria) {
+                    crit.criteria.setupButtons();
+                }
+            }
+            // Set width, take 2 for the border
+            var height = this.dom.container.outerHeight() - 1;
+            this.dom.logicContainer.width(height);
             this._setLogicListener();
             // Set criteria left margin
             this.dom.container.css('margin-left', this.dom.logicContainer.outerHeight(true));
@@ -2659,9 +2630,8 @@
          *
          * @param crit Instance of Criteria to be added to the group
          */
-        Group.prototype.addCriteria = function (crit, redraw) {
+        Group.prototype.addCriteria = function (crit) {
             if (crit === void 0) { crit = null; }
-            if (redraw === void 0) { redraw = true; }
             var index = crit === null ? this.s.criteria.length : crit.s.index;
             var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, index, this.s.depth);
             // If a Criteria has been passed in then set the values to continue that
@@ -2699,7 +2669,7 @@
             for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
                 var opt = _a[_i];
                 if (opt.criteria instanceof Criteria) {
-                    opt.criteria.updateArrows(this.s.criteria.length > 1, redraw);
+                    opt.criteria.updateArrows(this.s.criteria.length > 1);
                 }
             }
             this._setCriteriaListeners(criteria);
@@ -2976,8 +2946,8 @@
                 .on('dtsb-dropCriteria.dtsb', function () {
                 var toDrop = group.s.toDrop;
                 toDrop.s.index = group.s.index;
-                toDrop.updateArrows(_this.s.criteria.length > 1, false);
-                _this.addCriteria(toDrop, false);
+                toDrop.updateArrows(_this.s.criteria.length > 1);
+                _this.addCriteria(toDrop);
                 return false;
             });
             group.setListeners();

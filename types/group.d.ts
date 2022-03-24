@@ -117,7 +117,7 @@ export default class Group {
      *
      * @param crit Instance of Criteria to be added to the group
      */
-    addCriteria(crit?: Criteria, redraw?: boolean): void;
+    addCriteria(crit?: Criteria): void;
     /**
      * Checks the group to see if it has any filled criteria
      */
