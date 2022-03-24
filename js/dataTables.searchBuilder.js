@@ -3651,7 +3651,7 @@
                 var topGroup = config._searchBuilder.s.topGroup;
                 // Need to redraw the contents to calculate the correct positions for the elements
                 if (topGroup !== undefined) {
-                    topGroup.dom.container.trigger('dtsb-redrawContents');
+                    topGroup.dom.container.trigger('dtsb-redrawContents-noDraw');
                 }
                 if (topGroup.s.criteria.length === 0) {
                     $('.' + $.fn.dataTable.Group.classes.add.replace(/ /g, '.')).click();
