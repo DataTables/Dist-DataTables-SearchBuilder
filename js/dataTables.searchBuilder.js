@@ -742,6 +742,7 @@
                 // If it is a number just use it as an index
                 if (typeof defaultCondition === 'number') {
                     this.dom.condition.prop('selectedIndex', defaultCondition);
+                    this.dom.condition.trigger('change');
                 }
                 // If it is a string then things get slightly more tricly
                 else if (typeof defaultCondition === 'string') {
@@ -761,6 +762,7 @@
                                 this.dom.condition
                                     .prop('selectedIndex', this.dom.condition.children().toArray().indexOf(conditionOpts[i][0]))
                                     .removeClass(this.classes.italic);
+                                this.dom.condition.trigger('change');
                                 i = conditionOpts.length;
                                 break;
                             }
