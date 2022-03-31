@@ -10,7 +10,7 @@
         <license type="expression">MIT</license>
         <tags>SearchBuilder  Filtering  Search  Datatables jQuery table</tags>
         <dependencies>
-            <dependency id="datatables.net" version="1.11.3"/>
+            <dependency id="datatables.net" version="1.11.5"/>
         </dependencies>
         <contentFiles>
             <files include="**/*" buildAction="Content"/>
@@ -21,16 +21,6 @@
         <file src="js/dataTables.searchBuilder.js" target="contentFiles\any\any\wwwroot\js"/>
         <file src="js/dataTables.searchBuilder.min.js" target="content\Scripts"/>
         <file src="js/dataTables.searchBuilder.min.js" target="contentFiles\any\any\wwwroot\js"/>
-        <file src="types/criteria.d.ts" target="content\Scripts"/>
-        <file src="types/criteria.d.ts" target="contentFiles\any\any\wwwroot\js"/>
-        <file src="types/group.d.ts" target="content\Scripts"/>
-        <file src="types/group.d.ts" target="contentFiles\any\any\wwwroot\js"/>
-        <file src="types/index.d.ts" target="content\Scripts"/>
-        <file src="types/index.d.ts" target="contentFiles\any\any\wwwroot\js"/>
-        <file src="types/searchBuilder.d.ts" target="content\Scripts"/>
-        <file src="types/searchBuilder.d.ts" target="contentFiles\any\any\wwwroot\js"/>
-        <file src="types/types.d.ts" target="content\Scripts"/>
-        <file src="types/types.d.ts" target="contentFiles\any\any\wwwroot\js"/>
     </files>
 </package>
 
