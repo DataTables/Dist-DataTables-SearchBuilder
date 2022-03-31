@@ -503,6 +503,9 @@
         };
         Criteria.prototype.setupButtons = function () {
             if (window.innerWidth > 550) {
+                this.dom.container.removeClass(this.classes.vertical);
+                this.dom.buttons.css('left', null);
+                this.dom.buttons.css('top', null);
                 return;
             }
             this.dom.container.addClass(this.classes.vertical);
