@@ -627,11 +627,11 @@
         Criteria.prototype._populateCondition = function () {
             var conditionOpts = [];
             var conditionsLength = Object.keys(this.s.conditions).length;
+            var colInits = this.s.dt.settings()[0].aoColumns;
+            var column = +this.dom.data.children('option:selected').val();
             // If there are no conditions stored then we need to get them from the appropriate type
             if (conditionsLength === 0) {
-                var column = +this.dom.data.children('option:selected').val();
                 this.s.type = this.s.dt.columns().type().toArray()[column];
-                var colInits = this.s.dt.settings()[0].aoColumns;
                 if (colInits !== undefined) {
                     var colInit = colInits[column];
                     if (colInit.searchBuilderType !== undefined && colInit.searchBuilderType !== null) {
@@ -736,7 +736,42 @@
                 var opt = conditionOpts_1[_d];
                 this.dom.condition.append(opt);
             }
-            this.dom.condition.prop('selectedIndex', 0);
+            // Selecting a default condition if one is set
+            if (colInits[column].searchBuilder && colInits[column].searchBuilder.defaultCondition) {
+                var defaultCondition = colInits[column].searchBuilder.defaultCondition;
+                // If it is a number just use it as an index
+                if (typeof defaultCondition === 'number') {
+                    this.dom.condition.prop('selectedIndex', defaultCondition);
+                }
+                // If it is a string then things get slightly more tricly
+                else if (typeof defaultCondition === 'string') {
+                    // We need to check each condition option to see if any will match
+                    for (var i = 0; i < conditionOpts.length; i++) {
+                        // Need to check against the stored conditions so we can match the token "cond" to the option
+                        for (var _e = 0, _f = Object.keys(this.s.conditions); _e < _f.length; _e++) {
+                            var cond = _f[_e];
+                            var condName = this.s.conditions[cond].conditionName;
+                            if (
+                            // If the conditionName matches the text of the option
+                            (typeof condName === 'string' ? condName : condName(this.s.dt, this.c.i18n)) ===
+                                conditionOpts[i].text() &&
+                                // and the tokens match
+                                cond === defaultCondition) {
+                                // Select that option
+                                this.dom.condition
+                                    .prop('selectedIndex', this.dom.condition.children().toArray().indexOf(conditionOpts[i][0]))
+                                    .removeClass(this.classes.italic);
+                                i = conditionOpts.length;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            // If not default set then default to 0, the title
+            else {
+                this.dom.condition.prop('selectedIndex', 0);
+            }
         };
         /**
          * Populates the data select element
