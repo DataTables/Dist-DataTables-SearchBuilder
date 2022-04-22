@@ -23,10 +23,11 @@
      * The Criteria class is used within SearchBuilder to represent a search criteria
      */
     var Criteria = /** @class */ (function () {
-        function Criteria(table, opts, topGroup, index, depth) {
+        function Criteria(table, opts, topGroup, index, depth, serverData) {
             var _this = this;
             if (index === void 0) { index = 0; }
             if (depth === void 0) { depth = 1; }
+            if (serverData === void 0) { serverData = undefined; }
             // Check that the required version of DataTables is included
             if (!dataTable$2 || !dataTable$2.versionCheck || !dataTable$2.versionCheck('1.10.0')) {
                 throw new Error('SearchPane requires DataTables 1.10 or newer');
@@ -48,6 +49,7 @@
                 index: index,
                 origData: undefined,
                 preventRedraw: false,
+                serverData: serverData,
                 topGroup: topGroup,
                 type: '',
                 value: []
@@ -686,9 +688,15 @@
                         // Serverside processing does not supply the options for the select elements
                         // Instead input elements need to be used for these instead
                         if (this.s.dt.page.info().serverSide && conditionObj[condition].init === Criteria.initSelect) {
-                            conditionObj[condition].init = Criteria.initInput;
-                            conditionObj[condition].inputValue = Criteria.inputValueInput;
-                            conditionObj[condition].isInputValid = Criteria.isInputValidInput;
+                            var col = colInits[column];
+                            if (this.s.serverData[col.data]) {
+                                conditionObj[condition].init = Criteria.initSelectSSP;
+                            }
+                            else {
+                                conditionObj[condition].init = Criteria.initInput;
+                            }
+                            conditionObj[condition].inputValue = Criteria.inputValueSelect;
+                            conditionObj[condition].isInputValid = Criteria.isInputValidSelect;
                         }
                         this.s.conditions[condition] = conditionObj[condition];
                         var condName = conditionObj[condition].conditionName;
@@ -1111,6 +1119,64 @@
             });
             for (var _a = 0, options_1 = options; _a < options_1.length; _a++) {
                 var opt = options_1[_a];
+                el.append(opt);
+            }
+            return el;
+        };
+        /**
+         * Default initialisation function for select conditions
+         */
+        Criteria.initSelectSSP = function (that, fn, preDefined) {
+            if (preDefined === void 0) { preDefined = null; }
+            that.dom.valueTitle.prop('selected', true);
+            // Declare select element to be used with all of the default classes and listeners.
+            var el = $$2('<select/>')
+                .addClass(Criteria.classes.value)
+                .addClass(Criteria.classes.dropDown)
+                .addClass(Criteria.classes.italic)
+                .addClass(Criteria.classes.select)
+                .append(that.dom.valueTitle)
+                .on('change.dtsb', function () {
+                $$2(this).removeClass(Criteria.classes.italic);
+                fn(that, this);
+            });
+            if (that.c.greyscale) {
+                el.addClass(Criteria.classes.greyscale);
+            }
+            var options = [];
+            for (var _i = 0, _a = that.s.serverData[that.s.origData]; _i < _a.length; _i++) {
+                var option = _a[_i];
+                var value = option.value;
+                var label = option.label;
+                // Function to add an option to the select element
+                var addOption = function (filt, text) {
+                    if (that.s.type.includes('html') && filt !== null && typeof filt === 'string') {
+                        filt.replace(/(<([^>]+)>)/ig, '');
+                    }
+                    // Add text and value, stripping out any html if that is the column type
+                    var opt = $$2('<option>', {
+                        type: Array.isArray(filt) ? 'Array' : 'String',
+                        value: filt
+                    })
+                        .data('sbv', filt)
+                        .addClass(that.classes.option)
+                        .addClass(that.classes.notItalic)
+                        // Have to add the text this way so that special html characters are not escaped - &amp; etc.
+                        .html(typeof text === 'string' ?
+                        text.replace(/(<([^>]+)>)/ig, '') :
+                        text);
+                    options.push(opt);
+                    // If this value was previously selected as indicated by preDefined, then select it again
+                    if (preDefined !== null && opt.val() === preDefined[0]) {
+                        opt.prop('selected', true);
+                        el.removeClass(Criteria.classes.italic);
+                        that.dom.valueTitle.removeProp('selected');
+                    }
+                };
+                addOption(value, label);
+            }
+            for (var _b = 0, options_2 = options; _b < options_2.length; _b++) {
+                var opt = options_2[_b];
                 el.append(opt);
             }
             return el;
@@ -2382,10 +2448,11 @@
      * The Group class is used within SearchBuilder to represent a group of criteria
      */
     var Group = /** @class */ (function () {
-        function Group(table, opts, topGroup, index, isChild, depth) {
+        function Group(table, opts, topGroup, index, isChild, depth, serverData) {
             if (index === void 0) { index = 0; }
             if (isChild === void 0) { isChild = false; }
             if (depth === void 0) { depth = 1; }
+            if (serverData === void 0) { serverData = undefined; }
             // Check that the required version of DataTables is included
             if (!dataTable$1 || !dataTable$1.versionCheck || !dataTable$1.versionCheck('1.10.0')) {
                 throw new Error('SearchBuilder requires DataTables 1.10 or newer');
@@ -2402,6 +2469,7 @@
                 logic: undefined,
                 opts: opts,
                 preventRedraw: false,
+                serverData: serverData,
                 toDrop: undefined,
                 topGroup: topGroup
             };
@@ -2673,7 +2741,7 @@
         Group.prototype.addCriteria = function (crit) {
             if (crit === void 0) { crit = null; }
             var index = crit === null ? this.s.criteria.length : crit.s.index;
-            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, index, this.s.depth);
+            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, index, this.s.depth, this.s.serverData);
             // If a Criteria has been passed in then set the values to continue that
             if (crit !== null) {
                 criteria.c = crit.c;
@@ -2752,7 +2820,7 @@
          */
         Group.prototype._addPrevGroup = function (loadedGroup) {
             var idx = this.s.criteria.length;
-            var group = new Group(this.s.dt, this.c, this.s.topGroup, idx, true, this.s.depth + 1);
+            var group = new Group(this.s.dt, this.c, this.s.topGroup, idx, true, this.s.depth + 1, this.s.serverData);
             // Add the new group to the criteria array
             this.s.criteria.push({
                 criteria: group,
@@ -2772,7 +2840,7 @@
          */
         Group.prototype._addPrevCriteria = function (loadedCriteria) {
             var idx = this.s.criteria.length;
-            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, idx, this.s.depth);
+            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, idx, this.s.depth, this.s.serverData);
             criteria.populate();
             // Add the new criteria to the criteria array
             this.s.criteria.push({
@@ -2904,7 +2972,7 @@
                 .unbind('click')
                 .on('click.dtsb', function () {
                 var idx = criteria.s.index;
-                var group = new Group(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index, true, _this.s.depth + 1);
+                var group = new Group(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index, true, _this.s.depth + 1, _this.s.serverData);
                 // Add the criteria that is to be moved to the new group
                 group.addCriteria(criteria);
                 // Update the details in the current groups criteria array
@@ -2917,7 +2985,7 @@
             criteria.dom.left
                 .unbind('click')
                 .on('click.dtsb', function () {
-                _this.s.toDrop = new Criteria(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index);
+                _this.s.toDrop = new Criteria(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index, undefined, _this.s.serverData);
                 _this.s.toDrop.s = criteria.s;
                 _this.s.toDrop.c = criteria.c;
                 _this.s.toDrop.classes = criteria.classes;
@@ -3147,6 +3215,7 @@
                 dt: table,
                 opts: opts,
                 search: undefined,
+                serverData: undefined,
                 topGroup: undefined
             };
             // If searchbuilder is already defined for this table then return
@@ -3160,6 +3229,11 @@
                     var loadedState = _this.s.dt.state.loaded();
                     if (loadedState && loadedState.searchBuilder) {
                         data.searchBuilder = _this._collapseArray(loadedState.searchBuilder);
+                    }
+                });
+                this.s.dt.on('xhr.dtsb', function (e, settings, json) {
+                    if (json && json.searchBuilder && json.searchBuilder.options) {
+                        _this.s.serverData = json.searchBuilder.options;
                     }
                 });
             }
@@ -3288,7 +3362,7 @@
                     }
                 }
             }
-            this.s.topGroup = new Group(this.s.dt, this.c, undefined);
+            this.s.topGroup = new Group(this.s.dt, this.c, undefined, undefined, undefined, undefined, this.s.serverData);
             this._setClearListener();
             this.s.dt.on('stateSaveParams.dtsb', function (e, settings, data) {
                 data.searchBuilder = _this.getDetails();
@@ -3444,7 +3518,7 @@
             var _this = this;
             this.dom.clearAll.unbind('click');
             this.dom.clearAll.on('click.dtsb', function () {
-                _this.s.topGroup = new Group(_this.s.dt, _this.c, undefined);
+                _this.s.topGroup = new Group(_this.s.dt, _this.c, undefined, undefined, undefined, undefined, _this.s.serverData);
                 _this._build();
                 _this.s.dt.draw();
                 _this.s.topGroup.setListeners();

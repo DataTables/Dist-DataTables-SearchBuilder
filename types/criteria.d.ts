@@ -63,6 +63,9 @@ export interface IS {
     index: number;
     origData: string;
     preventRedraw: boolean;
+    serverData: {
+        [keys: string]: builderType.IServerData[];
+    };
     topGroup: JQuery<HTMLElement>;
     type: string;
     value: string[];
@@ -98,7 +101,7 @@ export default class Criteria {
     dom: IDom;
     c: builderType.IDefaults;
     s: IS;
-    constructor(table: any, opts: builderType.IDefaults, topGroup: JQuery<HTMLElement>, index?: number, depth?: number);
+    constructor(table: any, opts: builderType.IDefaults, topGroup: JQuery<HTMLElement>, index?: number, depth?: number, serverData?: any);
     /**
      * Escape html characters within a string
      *
@@ -110,6 +113,10 @@ export default class Criteria {
      * Default initialisation function for select conditions
      */
     private static initSelect;
+    /**
+     * Default initialisation function for select conditions
+     */
+    private static initSelectSSP;
     /**
      * Default initialisation function for select array conditions
      *
