@@ -6,10 +6,12 @@
 
     var $$2;
     var dataTable$2;
-    // eslint-disable-next-line no-extra-parens
-    var moment = window.moment;
-    // eslint-disable-next-line no-extra-parens
-    var luxon = window.luxon;
+    function moment() {
+        return window.moment;
+    }
+    function luxon() {
+        return window.luxon;
+    }
     /**
      * Sets the value of jQuery for use in the file
      *
@@ -294,8 +296,8 @@
                     for (var i = 0; i < this.s.value.length; i++) {
                         if (this.s.value[i] &&
                             this.s.value[i].length > 0 &&
-                            moment(this.s.value[i], this.s.dateFormat, true).isValid()) {
-                            this.s.value[i] = moment(this.s.value[i], this.s.dateFormat).format('YYYY-MM-DD HH:mm:ss');
+                            moment()(this.s.value[i], this.s.dateFormat, true).isValid()) {
+                            this.s.value[i] = moment()(this.s.value[i], this.s.dateFormat).format('YYYY-MM-DD HH:mm:ss');
                         }
                     }
                 }
@@ -303,8 +305,8 @@
                     for (var i = 0; i < this.s.value.length; i++) {
                         if (this.s.value[i] &&
                             this.s.value[i].length > 0 &&
-                            luxon.DateTime.fromFormat(this.s.value[i], this.s.dateFormat).invalid === null) {
-                            this.s.value[i] = luxon.DateTime.fromFormat(this.s.value[i], this.s.dateFormat).toFormat('yyyy-MM-dd HH:mm:ss');
+                            luxon().DateTime.fromFormat(this.s.value[i], this.s.dateFormat).invalid === null) {
+                            this.s.value[i] = luxon().DateTime.fromFormat(this.s.value[i], this.s.dateFormat).toFormat('yyyy-MM-dd HH:mm:ss');
                         }
                     }
                 }
@@ -1633,8 +1635,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return moment(value, that.s.dateFormat).valueOf() ===
-                        moment(comparison[0], that.s.dateFormat).valueOf();
+                    return moment()(value, that.s.dateFormat).valueOf() ===
+                        moment()(comparison[0], that.s.dateFormat).valueOf();
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1646,8 +1648,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return moment(value, that.s.dateFormat).valueOf() !==
-                        moment(comparison[0], that.s.dateFormat).valueOf();
+                    return moment()(value, that.s.dateFormat).valueOf() !==
+                        moment()(comparison[0], that.s.dateFormat).valueOf();
                 }
             },
             '<': {
@@ -1658,7 +1660,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return moment(value, that.s.dateFormat).valueOf() < moment(comparison[0], that.s.dateFormat).valueOf();
+                    return moment()(value, that.s.dateFormat).valueOf() < moment()(comparison[0], that.s.dateFormat).valueOf();
                 }
             },
             '>': {
@@ -1669,7 +1671,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return moment(value, that.s.dateFormat).valueOf() > moment(comparison[0], that.s.dateFormat).valueOf();
+                    return moment()(value, that.s.dateFormat).valueOf() > moment()(comparison[0], that.s.dateFormat).valueOf();
                 }
             },
             'between': {
@@ -1680,9 +1682,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    var val = moment(value, that.s.dateFormat).valueOf();
-                    var comp0 = moment(comparison[0], that.s.dateFormat).valueOf();
-                    var comp1 = moment(comparison[1], that.s.dateFormat).valueOf();
+                    var val = moment()(value, that.s.dateFormat).valueOf();
+                    var comp0 = moment()(comparison[0], that.s.dateFormat).valueOf();
+                    var comp1 = moment()(comparison[1], that.s.dateFormat).valueOf();
                     if (comp0 < comp1) {
                         return comp0 <= val && val <= comp1;
                     }
@@ -1700,9 +1702,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    var val = moment(value, that.s.dateFormat).valueOf();
-                    var comp0 = moment(comparison[0], that.s.dateFormat).valueOf();
-                    var comp1 = moment(comparison[1], that.s.dateFormat).valueOf();
+                    var val = moment()(value, that.s.dateFormat).valueOf();
+                    var comp0 = moment()(comparison[0], that.s.dateFormat).valueOf();
+                    var comp1 = moment()(comparison[1], that.s.dateFormat).valueOf();
                     if (comp0 < comp1) {
                         return !(+comp0 <= +val && +val <= +comp1);
                     }
@@ -1756,8 +1758,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
-                        === luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    return luxon().DateTime.fromFormat(value, that.s.dateFormat).ts
+                        === luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1769,8 +1771,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
-                        !== luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    return luxon().DateTime.fromFormat(value, that.s.dateFormat).ts
+                        !== luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
                 }
             },
             '<': {
@@ -1781,8 +1783,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
-                        < luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    return luxon().DateTime.fromFormat(value, that.s.dateFormat).ts
+                        < luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
                 }
             },
             '>': {
@@ -1793,8 +1795,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
-                        > luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    return luxon().DateTime.fromFormat(value, that.s.dateFormat).ts
+                        > luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
                 }
             },
             'between': {
@@ -1805,9 +1807,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    var val = luxon.DateTime.fromFormat(value, that.s.dateFormat).ts;
-                    var comp0 = luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
-                    var comp1 = luxon.DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
+                    var val = luxon().DateTime.fromFormat(value, that.s.dateFormat).ts;
+                    var comp0 = luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    var comp1 = luxon().DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
                     if (comp0 < comp1) {
                         return comp0 <= val && val <= comp1;
                     }
@@ -1825,9 +1827,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    var val = luxon.DateTime.fromFormat(value, that.s.dateFormat).ts;
-                    var comp0 = luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
-                    var comp1 = luxon.DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
+                    var val = luxon().DateTime.fromFormat(value, that.s.dateFormat).ts;
+                    var comp0 = luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    var comp1 = luxon().DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
                     if (comp0 < comp1) {
                         return !(+comp0 <= +val && +val <= +comp1);
                     }
