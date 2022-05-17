@@ -691,7 +691,7 @@
                         // Instead input elements need to be used for these instead
                         if (this.s.dt.page.info().serverSide && conditionObj[condition].init === Criteria.initSelect) {
                             var col = colInits[column];
-                            if (this.s.serverData[col.data]) {
+                            if (this.s.serverData && this.s.serverData[col.data]) {
                                 conditionObj[condition].init = Criteria.initSelectSSP;
                             }
                             else {
