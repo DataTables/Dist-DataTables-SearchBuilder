@@ -161,9 +161,6 @@
                 .append(this.dom.data)
                 .append(this.dom.condition)
                 .append(this.dom.inputCont);
-            this.dom.inputCont
-                .empty()
-                .append(this.dom.value[0]);
             this.setListeners();
             // Trigger the inserted events for the value elements as they are inserted
             if (this.dom.value[0] !== undefined) {
