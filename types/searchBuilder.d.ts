@@ -72,10 +72,17 @@ export interface II18n {
     value: string;
     valueJoiner: string;
 }
+export interface IServerData {
+    label: any;
+    value: any;
+}
 export interface IS {
     dt: any;
     opts: IDefaults;
     search: (settings: any, searchData: any, dataIndex: any, origData: any) => boolean;
+    serverData: {
+        [keys: string]: IServerData[];
+    };
     topGroup: Group;
 }
 /**

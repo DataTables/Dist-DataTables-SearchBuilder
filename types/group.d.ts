@@ -28,6 +28,9 @@ export interface IS {
     logic: string;
     opts: builderType.IDefaults;
     preventRedraw: boolean;
+    serverData: {
+        [keys: string]: builderType.IServerData;
+    };
     toDrop: Criteria;
     topGroup: JQuery<HTMLElement>;
 }
@@ -68,7 +71,7 @@ export default class Group {
     dom: IDom;
     c: builderType.IDefaults;
     s: IS;
-    constructor(table: any, opts: builderType.IDefaults, topGroup: JQuery<HTMLElement>, index?: number, isChild?: boolean, depth?: number);
+    constructor(table: any, opts: builderType.IDefaults, topGroup: JQuery<HTMLElement>, index?: number, isChild?: boolean, depth?: number, serverData?: any);
     /**
      * Destroys the groups buttons, clears the internal criteria and removes it from the dom
      */
