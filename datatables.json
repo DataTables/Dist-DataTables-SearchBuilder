@@ -1,7 +1,9 @@
 {
     "js": [
         "js/dataTables.searchBuilder.js",
-        "js/dataTables.searchBuilder.min.js"
+        "js/dataTables.searchBuilder.min.js",
+        "js/dataTables.searchBuilder.min.mjs",
+        "js/dataTables.searchBuilder.mjs"
     ],
     "css": [],
     "types": [
@@ -12,6 +14,5 @@
         "types/types.d.ts"
     ],
     "src-repo": "http://github.com/DataTables/SearchBuilder",
-    "last-tag": "1.3.2",
-    "last-sync": "8d894712cc220af564594b0e4243b6839c3b5242"
+    "last-tag": "1.3.4"
 }
