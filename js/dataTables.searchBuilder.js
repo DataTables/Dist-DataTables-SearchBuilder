@@ -3859,7 +3859,7 @@ var DataTable = $.fn.dataTable;
         DataTable.ext.features.register('searchBuilder', _init);
     }
 
-})();
+}());
 
 
 return DataTable;
