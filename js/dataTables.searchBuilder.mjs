@@ -3824,7 +3824,7 @@ import DataTable from 'datatables.net';
         DataTable.ext.features.register('searchBuilder', _init);
     }
 
-}());
+})();
 
 
 export default DataTable;
