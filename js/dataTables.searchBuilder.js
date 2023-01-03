@@ -349,7 +349,7 @@ var DataTable = $.fn.dataTable;
             }
             if (this.s.type.includes('num') && this.s.dt.page.info().serverSide) {
                 for (var i = 0; i < this.s.value.length; i++) {
-                    this.s.value[i] = this.s.value[i].replace(/[^0-9.]/g, '');
+                    this.s.value[i] = this.s.value[i].replace(/[^0-9.\-]/g, '');
                 }
             }
             return {
