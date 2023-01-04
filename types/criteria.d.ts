@@ -249,7 +249,7 @@ export default class Criteria {
      */
     private _populateCondition;
     /**
-     * Populates the data select element
+     * Populates the data / column select element
      */
     private _populateData;
     /**
