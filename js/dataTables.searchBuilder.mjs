@@ -1,10 +1,9 @@
-/*! SearchBuilder 1.4.0
+/*! SearchBuilder 1.4.1
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 
 import $ from 'jquery';
 import DataTable from 'datatables.net';
-
 
 (function () {
     'use strict';
@@ -3554,7 +3553,7 @@ import DataTable from 'datatables.net';
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.4.0';
+        SearchBuilder.version = '1.4.1';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3660,7 +3659,7 @@ import DataTable from 'datatables.net';
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.4.0
+    /*! SearchBuilder 1.4.1
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     setJQuery($);
