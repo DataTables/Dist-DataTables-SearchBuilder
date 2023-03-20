@@ -1256,6 +1256,7 @@ import DataTable from 'datatables.net';
             that.s.dt.one('draw.dtsb', function () {
                 that.s.topGroup.trigger('dtsb-redrawLogic');
             });
+            return [];
         };
         Criteria.init2Date = function (that, fn, preDefined) {
             var _this = this;
