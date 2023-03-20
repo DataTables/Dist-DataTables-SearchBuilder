@@ -4,7 +4,7 @@
     "main": "js/dataTables.searchBuilder.js",
     "module": "js/dataTables.searchBuilder.mjs",
     "types": "./types/types.d.ts",
-    "version": "1.4.0",
+    "version": "1.4.2",
     "files": [
         "js/**/*.js",
         "js/**/*.mjs",
