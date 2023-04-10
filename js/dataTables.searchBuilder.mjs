@@ -1221,13 +1221,15 @@ import DataTable from 'datatables.net';
         Criteria.initDate = function (that, fn, preDefined) {
             if (preDefined === void 0) { preDefined = null; }
             var searchDelay = that.s.dt.settings()[0].searchDelay;
+            var i18n = that.s.dt.i18n('datetime', {});
             // Declare date element using DataTables dateTime plugin
             var el = $$3('<input/>')
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.input)
                 .dtDateTime({
                 attachTo: 'input',
-                format: that.s.dateFormat ? that.s.dateFormat : undefined
+                format: that.s.dateFormat ? that.s.dateFormat : undefined,
+                i18n: i18n
             })
                 .on('change.dtsb', that._throttle(function () {
                 return fn(that, this);
@@ -1262,6 +1264,7 @@ import DataTable from 'datatables.net';
             var _this = this;
             if (preDefined === void 0) { preDefined = null; }
             var searchDelay = that.s.dt.settings()[0].searchDelay;
+            var i18n = that.s.dt.i18n('datetime', {});
             // Declare all of the date elements that are required using DataTables dateTime plugin
             var els = [
                 $$3('<input/>')
@@ -1269,7 +1272,8 @@ import DataTable from 'datatables.net';
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
                     attachTo: 'input',
-                    format: that.s.dateFormat ? that.s.dateFormat : undefined
+                    format: that.s.dateFormat ? that.s.dateFormat : undefined,
+                    i18n: i18n
                 })
                     .on('change.dtsb', searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
@@ -1292,7 +1296,8 @@ import DataTable from 'datatables.net';
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
                     attachTo: 'input',
-                    format: that.s.dateFormat ? that.s.dateFormat : undefined
+                    format: that.s.dateFormat ? that.s.dateFormat : undefined,
+                    i18n: i18n
                 })
                     .on('change.dtsb', searchDelay !== null ?
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
@@ -3531,6 +3536,7 @@ import DataTable from 'datatables.net';
                 var count = _this.s.topGroup.count();
                 _this._updateTitle(count);
                 _this._filterChanged(count);
+                _this._checkClear();
             });
             this.s.dt.on('postEdit.dtsb postCreate.dtsb postRemove.dtsb', function () {
                 _this.s.topGroup.redrawContents();
