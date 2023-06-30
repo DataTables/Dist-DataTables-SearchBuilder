@@ -10,18 +10,9 @@
         "types/criteria.d.ts",
         "types/group.d.ts",
         "types/index.d.ts",
-        "types/searchBuilder.bootstrap4.d.ts",
-        "types/searchBuilder.bootstrap5.d.ts",
-        "types/searchBuilder.bootstrap.d.ts",
-        "types/searchBuilder.bulma.d.ts",
-        "types/searchBuilder.dataTables.d.ts",
-        "types/searchBuilder.d.ts",
-        "types/searchBuilder.foundation.d.ts",
-        "types/searchBuilder.jqueryui.d.ts",
-        "types/searchBuilder.semanticui.d.ts",
         "types/types.d.ts"
     ],
     "src-repo": "http://github.com/DataTables/SearchBuilder",
     "last-tag": "1.4.2",
-    "last-sync": "3ac3bb91a4e801dfa9c8bf1389fafac5108c3adb"
+    "last-sync": ""
 }
