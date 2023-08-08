@@ -371,7 +371,7 @@ let $ = jQuery;
                         $$3(this).prop('selected', true);
                         data_1.removeClass(italic_1);
                         foundData = true;
-                        dataIdx = $$3(this).val();
+                        dataIdx = parseInt($$3(this).val(), 10);
                     }
                     else {
                         $$3(this).removeProp('selected');
