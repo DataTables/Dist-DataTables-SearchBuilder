@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.6.0-dev
+/*! SearchBuilder 1.6.0
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 
@@ -3596,7 +3596,7 @@ let $ = jQuery;
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.6.0-dev';
+        SearchBuilder.version = '1.6.0';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3704,7 +3704,7 @@ let $ = jQuery;
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.6.0-dev
+    /*! SearchBuilder 1.6.0
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     setJQuery($);
