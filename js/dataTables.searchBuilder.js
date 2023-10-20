@@ -2442,6 +2442,7 @@ var DataTable = $.fn.dataTable;
                 value: 'Value',
                 valueJoiner: 'and'
             },
+            liveSearch: true,
             logic: 'AND',
             orthogonal: {
                 display: 'display',
@@ -2613,8 +2614,10 @@ var DataTable = $.fn.dataTable;
             this.dom.container.children().detach();
             this.dom.container
                 .append(this.dom.logicContainer)
-                .append(this.dom.add)
-                .append(this.dom.search);
+                .append(this.dom.add);
+            if (!this.c.liveSearch) {
+                this.dom.container.append(this.dom.search);
+            }
             // Sort the criteria by index so that they appear in the correct order
             this.s.criteria.sort(function (a, b) {
                 if (a.criteria.s.index < b.criteria.s.index) {
@@ -3113,9 +3116,10 @@ var DataTable = $.fn.dataTable;
             if (this.s.isChild) {
                 this.dom.container.append(this.dom.logicContainer);
             }
-            this.dom.container
-                .append(this.dom.add)
-                .append(this.dom.search);
+            this.dom.container.append(this.dom.add);
+            if (!this.c.liveSearch) {
+                this.dom.container.append(this.dom.search);
+            }
         };
         /**
          * Sets the listener for the logic button
