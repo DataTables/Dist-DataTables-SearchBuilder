@@ -1,5 +1,4 @@
 {
-    "version": "1.3.4",
     "name": "datatables.net/datatables.net-searchbuilder",
     "description": "SearchBuilder adds user defined complex search to the DataTable with the capability to search the DataTable by creating groups and conditions. This is SearchBuilder for DataTables",
     "support": {
@@ -20,8 +19,8 @@
     "minimum-stability": "dev",
     "keywords": [
         "SearchBuilder",
- "Filtering",
- "Search",
+        "Filtering",
+        "Search",
         "Datatables",
         "jQuery",
         "table"
