@@ -145,10 +145,10 @@ let $ = jQuery;
         Criteria._escapeHTML = function (txt) {
             return txt
                 .toString()
-                .replace(/&amp;/g, '&')
                 .replace(/&lt;/g, '<')
                 .replace(/&gt;/g, '>')
-                .replace(/&quot;/g, '"');
+                .replace(/&quot;/g, '"')
+                .replace(/&amp;/g, '&');
         };
         /**
          * Redraw the DataTable with the current search parameters
