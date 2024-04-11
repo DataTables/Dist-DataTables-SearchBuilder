@@ -964,7 +964,7 @@ let $ = jQuery;
             input: 'dtsb-input',
             inputCont: 'dtsb-inputCont',
             italic: 'dtsb-italic',
-            joiner: 'dtsp-joiner',
+            joiner: 'dtsb-joiner',
             left: 'dtsb-left',
             notItalic: 'dtsb-notItalic',
             option: 'dtsb-option',
