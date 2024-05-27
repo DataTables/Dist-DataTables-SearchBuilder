@@ -738,19 +738,20 @@ var DataTable = $.fn.dataTable;
                     }
                 }
                 // Select which conditions are going to be used based on the column type
-                var conditionObj = this.c.conditions[this.s.type] !== undefined ?
-                    this.c.conditions[this.s.type] :
-                    this.s.type.includes('moment') ?
-                        this.c.conditions.moment :
-                        this.s.type.includes('luxon') ?
-                            this.c.conditions.luxon :
-                            this.c.conditions.string;
-                // If it is a moment format then extract the date format
-                if (this.s.type.includes('moment')) {
+                var conditionObj = void 0;
+                if (this.c.conditions[this.s.type] !== undefined) {
+                    conditionObj = this.c.conditions[this.s.type];
+                }
+                else if (this.s.type.includes('moment')) {
+                    conditionObj = this.c.conditions.moment;
                     this.s.dateFormat = this.s.type.replace(/moment-/g, '');
                 }
                 else if (this.s.type.includes('luxon')) {
+                    conditionObj = this.c.conditions.luxon;
                     this.s.dateFormat = this.s.type.replace(/luxon-/g, '');
+                }
+                else {
+                    conditionObj = this.c.conditions.string;
                 }
                 // Add all of the conditions to the select element
                 for (var _i = 0, _a = Object.keys(conditionObj); _i < _a.length; _i++) {
