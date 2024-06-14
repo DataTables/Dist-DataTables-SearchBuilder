@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.8.0
+/*! SearchBuilder 1.7.1
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 
@@ -52,7 +52,7 @@ var DataTable = $.fn.dataTable;
     'use strict';
 
     var $$3;
-    var dataTable$2;
+    var dataTable$3;
     /** Get a moment object. Attempt to get from DataTables for module loading first. */
     function moment() {
         var used = DataTable.use('moment');
@@ -74,7 +74,7 @@ var DataTable = $.fn.dataTable;
      */
     function setJQuery$2(jq) {
         $$3 = jq;
-        dataTable$2 = jq.fn.dataTable;
+        dataTable$3 = jq.fn.dataTable;
     }
     /**
      * The Criteria class is used within SearchBuilder to represent a search criteria
@@ -86,6 +86,10 @@ var DataTable = $.fn.dataTable;
             if (serverData === void 0) { serverData = undefined; }
             if (liveSearch === void 0) { liveSearch = false; }
             var _this = this;
+            // Check that the required version of DataTables is included
+            if (!dataTable$3 || !dataTable$3.versionCheck || !dataTable$3.versionCheck('1.10.0')) {
+                throw new Error('SearchPane requires DataTables 1.10 or newer');
+            }
             this.classes = $$3.extend(true, {}, Criteria.classes);
             // Get options from user and any extra conditions/column types defined by plug-ins
             this.c = $$3.extend(true, {}, Criteria.defaults, $$3.fn.dataTable.ext.searchBuilder, opts);
@@ -174,7 +178,7 @@ var DataTable = $.fn.dataTable;
                     val.addClass(this.classes.greyscale);
                 }
             }
-            $$3(window).on('resize.dtsb', dataTable$2.util.throttle(function () {
+            $$3(window).on('resize.dtsb', dataTable$3.util.throttle(function () {
                 _this.s.topGroup.trigger('dtsb-redrawLogic');
             }));
             this._buildCriteria();
@@ -2433,6 +2437,7 @@ var DataTable = $.fn.dataTable;
     }());
 
     var $$2;
+    var dataTable$2;
     /**
      * Sets the value of jQuery for use in the file
      *
@@ -2440,7 +2445,7 @@ var DataTable = $.fn.dataTable;
      */
     function setJQuery$1(jq) {
         $$2 = jq;
-        jq.fn.dataTable;
+        dataTable$2 = jq.fn.dataTable;
     }
     /**
      * The Group class is used within SearchBuilder to represent a group of criteria
@@ -2451,6 +2456,10 @@ var DataTable = $.fn.dataTable;
             if (isChild === void 0) { isChild = false; }
             if (depth === void 0) { depth = 1; }
             if (serverData === void 0) { serverData = undefined; }
+            // Check that the required version of DataTables is included
+            if (!dataTable$2 || !dataTable$2.versionCheck || !dataTable$2.versionCheck('1.10.0')) {
+                throw new Error('SearchBuilder requires DataTables 1.10 or newer');
+            }
             this.classes = $$2.extend(true, {}, Group.classes);
             // Get options from user
             this.c = $$2.extend(true, {}, Group.defaults, opts);
@@ -3211,8 +3220,8 @@ var DataTable = $.fn.dataTable;
         function SearchBuilder(builderSettings, opts) {
             var _this = this;
             // Check that the required version of DataTables is included
-            if (!dataTable$1 || !dataTable$1.versionCheck || !dataTable$1.versionCheck('2.1')) {
-                throw new Error('SearchBuilder requires DataTables 2.1 or newer');
+            if (!dataTable$1 || !dataTable$1.versionCheck || !dataTable$1.versionCheck('1.10.0')) {
+                throw new Error('SearchBuilder requires DataTables 1.10 or newer');
             }
             var table = new dataTable$1.Api(builderSettings);
             this.classes = $$1.extend(true, {}, SearchBuilder.classes);
@@ -3407,7 +3416,9 @@ var DataTable = $.fn.dataTable;
                     data.searchBuilder = _this._collapseArray(_this.getDetails(true));
                 }
             });
-            this.s.dt.on('columns-reordered', function () {
+            this.s.dt.on(dataTable$1.versionCheck('2')
+                ? 'columns-reordered'
+                : 'column-reorder', function () {
                 _this.rebuild(_this.getDetails());
             });
             if (loadState) {
@@ -3622,7 +3633,7 @@ var DataTable = $.fn.dataTable;
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.8.0';
+        SearchBuilder.version = '1.7.1';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3730,7 +3741,7 @@ var DataTable = $.fn.dataTable;
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.8.0
+    /*! SearchBuilder 1.7.1
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     setJQuery($);
