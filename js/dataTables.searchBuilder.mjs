@@ -656,12 +656,13 @@ let $ = jQuery;
         Criteria.prototype._populateCondition = function () {
             var conditionOpts = [];
             var conditionsLength = Object.keys(this.s.conditions).length;
-            var colInits = this.s.dt.settings()[0].aoColumns;
+            var dt = this.s.dt;
+            var colInits = dt.settings()[0].aoColumns;
             var column = +this.dom.data.children('option:selected').val();
             var condition, condName;
             // If there are no conditions stored then we need to get them from the appropriate type
             if (conditionsLength === 0) {
-                this.s.type = this.s.dt.column(column).type();
+                this.s.type = dt.column(column).type();
                 if (colInits !== undefined) {
                     var colInit = colInits[column];
                     if (colInit.searchBuilderType !== undefined && colInit.searchBuilderType !== null) {
@@ -675,9 +676,9 @@ let $ = jQuery;
                 if (this.s.type === null || this.s.type === undefined) {
                     // This can only happen in DT1 - DT2 will do the invalidation of the type itself
                     if ($$3.fn.dataTable.ext.oApi) {
-                        $$3.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
+                        $$3.fn.dataTable.ext.oApi._fnColumnTypes(dt.settings()[0]);
                     }
-                    this.s.type = this.s.dt.column(column).type();
+                    this.s.type = dt.column(column).type();
                 }
                 // Enable the condition element
                 this.dom.condition
@@ -687,7 +688,7 @@ let $ = jQuery;
                     .addClass(this.classes.italic);
                 this.dom.conditionTitle
                     .prop('selected', true);
-                var decimal = this.s.dt.settings()[0].oLanguage.sDecimal;
+                var decimal = dt.settings()[0].oLanguage.sDecimal;
                 // This check is in place for if a custom decimal character is in place
                 if (decimal !== '' && this.s.type.indexOf(decimal) === this.s.type.length - decimal.length) {
                     if (this.s.type.includes('num-fmt')) {
@@ -701,6 +702,14 @@ let $ = jQuery;
                 var conditionObj = void 0;
                 if (this.c.conditions[this.s.type] !== undefined) {
                     conditionObj = this.c.conditions[this.s.type];
+                }
+                else if (this.s.type.includes('datetime-')) {
+                    // Date / time data types in DataTables are driven by Luxon or
+                    // Moment.js.
+                    conditionObj = DataTable.use('moment')
+                        ? this.c.conditions.moment
+                        : this.c.conditions.luxon;
+                    this.s.dateFormat = this.s.type.replace(/datetime-/g, '');
                 }
                 else if (this.s.type.includes('moment')) {
                     conditionObj = this.c.conditions.moment;
@@ -719,7 +728,7 @@ let $ = jQuery;
                     if (conditionObj[condition] !== null) {
                         // Serverside processing does not supply the options for the select elements
                         // Instead input elements need to be used for these instead
-                        if (this.s.dt.page.info().serverSide && conditionObj[condition].init === Criteria.initSelect) {
+                        if (dt.page.info().serverSide && conditionObj[condition].init === Criteria.initSelect) {
                             var col = colInits[column];
                             if (this.s.serverData && this.s.serverData[col.data]) {
                                 conditionObj[condition].init = Criteria.initSelectSSP;
@@ -735,7 +744,7 @@ let $ = jQuery;
                         this.s.conditions[condition] = conditionObj[condition];
                         condName = conditionObj[condition].conditionName;
                         if (typeof condName === 'function') {
-                            condName = condName(this.s.dt, this.c.i18n);
+                            condName = condName(dt, this.c.i18n);
                         }
                         conditionOpts.push($$3('<option>', {
                             text: condName,
@@ -753,7 +762,7 @@ let $ = jQuery;
                     condition = _c[_b];
                     var name_1 = this.s.conditions[condition].conditionName;
                     if (typeof name_1 === 'function') {
-                        name_1 = name_1(this.s.dt, this.c.i18n);
+                        name_1 = name_1(dt, this.c.i18n);
                     }
                     var newOpt = $$3('<option>', {
                         text: name_1,
@@ -796,7 +805,7 @@ let $ = jQuery;
                             condName = this.s.conditions[cond].conditionName;
                             if (
                             // If the conditionName matches the text of the option
-                            (typeof condName === 'string' ? condName : condName(this.s.dt, this.c.i18n)) ===
+                            (typeof condName === 'string' ? condName : condName(dt, this.c.i18n)) ===
                                 conditionOpts[i].text() &&
                                 // and the tokens match
                                 cond === defaultCondition) {
