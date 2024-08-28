@@ -1434,7 +1434,7 @@ let $ = jQuery;
                     values.push(Criteria._escapeHTML(element.val()));
                 }
             }
-            return values;
+            return values.map(dataTable$2.util.diacritics);
         };
         /**
          * Function that is run on each element as a call back when a search should be triggered
