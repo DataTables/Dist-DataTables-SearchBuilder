@@ -3733,12 +3733,15 @@ let $ = jQuery;
         },
         config: {},
         init: function (dt, node, config) {
-            var sb = new DataTable.SearchBuilder(dt, $.extend({
-                filterChanged: function (count, text) {
-                    dt.button(node).text(text);
-                }
-            }, config.config));
-            dt.button(node).text(config.text || dt.i18n('searchBuilder.button', sb.c.i18n.button, 0));
+            var that = this;
+            var sb = new DataTable.SearchBuilder(dt, config.config);
+            dt.on('draw', function () {
+                var count = sb.s.topGroup
+                    ? sb.s.topGroup.count()
+                    : 0;
+                that.text(dt.i18n('searchBuilder.button', sb.c.i18n.button, count));
+            });
+            that.text(config.text || dt.i18n('searchBuilder.button', sb.c.i18n.button, 0));
             config._searchBuilder = sb;
         },
         text: null
