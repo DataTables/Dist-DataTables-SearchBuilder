@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.8.0
+/*! SearchBuilder 1.8.1
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 
@@ -3235,7 +3235,9 @@ let $ = jQuery;
         // eslint upset at empty object but that is what it is
         SearchBuilder.prototype.getDetails = function (deFormatDates) {
             if (deFormatDates === void 0) { deFormatDates = false; }
-            return this.s.topGroup.getDetails(deFormatDates);
+            return this.s.topGroup
+                ? this.s.topGroup.getDetails(deFormatDates)
+                : {};
         };
         /**
          * Getter for the node of the container for the searchBuilder
@@ -3583,7 +3585,7 @@ let $ = jQuery;
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.8.0';
+        SearchBuilder.version = '1.8.1';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3691,7 +3693,7 @@ let $ = jQuery;
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.8.0
+    /*! SearchBuilder 1.8.1
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     setJQuery($);
