@@ -349,29 +349,31 @@ var DataTable = $.fn.dataTable;
                 }
             }
             else if (this.s.type !== null && deFormatDates) {
-                if (this.s.type.includes('date') ||
-                    this.s.type.includes('time')) {
+                var momentLib = moment();
+                var luxonLib = luxon();
+                if ((this.s.type.includes('date') ||
+                    this.s.type.includes('time')) && !moment && !luxon) {
                     for (i = 0; i < this.s.value.length; i++) {
                         if (this.s.value[i].match(/^\d{4}-([0]\d|1[0-2])-([0-2]\d|3[01])$/g) === null) {
                             this.s.value[i] = '';
                         }
                     }
                 }
-                else if (this.s.type.includes('moment')) {
+                else if (this.s.type.includes('moment') || (this.s.type.includes('datetime') && moment)) {
                     for (i = 0; i < this.s.value.length; i++) {
                         if (this.s.value[i] &&
                             this.s.value[i].length > 0 &&
-                            moment()(this.s.value[i], this.s.dateFormat, true).isValid()) {
-                            this.s.value[i] = moment()(this.s.value[i], this.s.dateFormat).format('YYYY-MM-DD HH:mm:ss');
+                            momentLib(this.s.value[i], this.s.dateFormat, true).isValid()) {
+                            this.s.value[i] = momentLib(this.s.value[i], this.s.dateFormat).format('YYYY-MM-DD HH:mm:ss');
                         }
                     }
                 }
-                else if (this.s.type.includes('luxon')) {
+                else if (this.s.type.includes('luxon') || (this.s.type.includes('datetime') && luxon)) {
                     for (i = 0; i < this.s.value.length; i++) {
                         if (this.s.value[i] &&
                             this.s.value[i].length > 0 &&
-                            luxon().DateTime.fromFormat(this.s.value[i], this.s.dateFormat).invalid === null) {
-                            this.s.value[i] = luxon().DateTime.fromFormat(this.s.value[i], this.s.dateFormat).toFormat('yyyy-MM-dd HH:mm:ss');
+                            luxonLib.DateTime.fromFormat(this.s.value[i], this.s.dateFormat).invalid === null) {
+                            this.s.value[i] = luxonLib.DateTime.fromFormat(this.s.value[i], this.s.dateFormat).toFormat('yyyy-MM-dd HH:mm:ss');
                         }
                     }
                 }
