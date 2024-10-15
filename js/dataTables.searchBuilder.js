@@ -748,6 +748,20 @@ var DataTable = $.fn.dataTable;
                 if (this.c.conditions[this.s.type] !== undefined) {
                     conditionObj = this.c.conditions[this.s.type];
                 }
+                else if (this.s.type && this.s.type === 'datetime') {
+                    // If no format was specified in the DT type, then we need to use
+                    // Moment / Luxon's default locale formatting.
+                    var moment_1 = DataTable.use('moment');
+                    var luxon_1 = DataTable.use('luxon');
+                    if (moment_1) {
+                        conditionObj = this.c.conditions.moment;
+                        this.s.dateFormat = moment_1().creationData().locale._longDateFormat.L;
+                    }
+                    if (luxon_1) {
+                        conditionObj = this.c.conditions.luxon;
+                        this.s.dateFormat = luxon_1.DateTime.DATE_SHORT;
+                    }
+                }
                 else if (this.s.type && this.s.type.includes('datetime-')) {
                     // Date / time data types in DataTables are driven by Luxon or
                     // Moment.js.
@@ -3304,7 +3318,6 @@ var DataTable = $.fn.dataTable;
             this._checkClear();
             this._updateTitle(this.s.topGroup.count());
             this.s.topGroup.redrawContents();
-            this.s.dt.draw(false);
             this.s.topGroup.setListeners();
             return this;
         };
