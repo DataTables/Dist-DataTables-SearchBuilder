@@ -3268,7 +3268,8 @@ let $ = jQuery;
          *
          * @param details The details required to perform a rebuild
          */
-        SearchBuilder.prototype.rebuild = function (details) {
+        SearchBuilder.prototype.rebuild = function (details, redraw) {
+            if (redraw === void 0) { redraw = true; }
             this.dom.clearAll.click();
             // If there are no details to rebuild then return
             if (details === undefined || details === null) {
@@ -3280,6 +3281,9 @@ let $ = jQuery;
             this._checkClear();
             this._updateTitle(this.s.topGroup.count());
             this.s.topGroup.redrawContents();
+            if (redraw) {
+                this.s.dt.draw(false);
+            }
             this.s.topGroup.setListeners();
             return this;
         };
@@ -3771,13 +3775,14 @@ let $ = jQuery;
             ctx._searchBuilder.getDetails(deFormatDates) :
             null;
     });
-    apiRegister('searchBuilder.rebuild()', function (details) {
+    apiRegister('searchBuilder.rebuild()', function (details, redraw) {
+        if (redraw === void 0) { redraw = true; }
         var ctx = this.context[0];
         // If SearchBuilder has not been initialised on this instance then return
         if (ctx._searchBuilder === undefined) {
             return null;
         }
-        ctx._searchBuilder.rebuild(details);
+        ctx._searchBuilder.rebuild(details, redraw);
         return this;
     });
     apiRegister('searchBuilder.container()', function () {
