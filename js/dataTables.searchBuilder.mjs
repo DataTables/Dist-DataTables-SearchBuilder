@@ -2292,9 +2292,9 @@ let $ = jQuery;
                 inputValue: Criteria.inputValueSelect,
                 isInputValid: Criteria.isInputValidSelect,
                 search: function (value, comparison) {
-                    if (value.length === comparison[0].length) {
+                    if (value.length === comparison.length) {
                         for (var i = 0; i < value.length; i++) {
-                            if (value[i] !== comparison[0][i]) {
+                            if (value[i] !== comparison[i]) {
                                 return false;
                             }
                         }
@@ -2311,9 +2311,9 @@ let $ = jQuery;
                 inputValue: Criteria.inputValueSelect,
                 isInputValid: Criteria.isInputValidSelect,
                 search: function (value, comparison) {
-                    if (value.length === comparison[0].length) {
+                    if (value.length === comparison.length) {
                         for (var i = 0; i < value.length; i++) {
-                            if (value[i] !== comparison[0][i]) {
+                            if (value[i] !== comparison[i]) {
                                 return true;
                             }
                         }
