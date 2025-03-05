@@ -1286,7 +1286,6 @@ let $ = jQuery;
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.input)
                 .dtDateTime({
-                attachTo: 'input',
                 format: that.s.dateFormat ? that.s.dateFormat : undefined,
                 i18n: i18n
             })
@@ -1330,7 +1329,6 @@ let $ = jQuery;
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
-                    attachTo: 'input',
                     format: that.s.dateFormat ? that.s.dateFormat : undefined,
                     i18n: i18n
                 })
@@ -1354,7 +1352,6 @@ let $ = jQuery;
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
-                    attachTo: 'input',
                     format: that.s.dateFormat ? that.s.dateFormat : undefined,
                     i18n: i18n
                 })

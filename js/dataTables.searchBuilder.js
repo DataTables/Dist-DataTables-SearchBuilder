@@ -1326,7 +1326,6 @@ var DataTable = $.fn.dataTable;
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.input)
                 .dtDateTime({
-                attachTo: 'input',
                 format: that.s.dateFormat ? that.s.dateFormat : undefined,
                 i18n: i18n
             })
@@ -1370,7 +1369,6 @@ var DataTable = $.fn.dataTable;
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
-                    attachTo: 'input',
                     format: that.s.dateFormat ? that.s.dateFormat : undefined,
                     i18n: i18n
                 })
@@ -1394,7 +1392,6 @@ var DataTable = $.fn.dataTable;
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
-                    attachTo: 'input',
                     format: that.s.dateFormat ? that.s.dateFormat : undefined,
                     i18n: i18n
                 })
