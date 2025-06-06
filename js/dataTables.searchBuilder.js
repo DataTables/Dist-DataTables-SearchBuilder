@@ -3307,7 +3307,7 @@ var DataTable = $.fn.dataTable;
          */
         SearchBuilder.prototype.rebuild = function (details, redraw) {
             if (redraw === void 0) { redraw = true; }
-            this.dom.clearAll.click();
+            this.dom.clearAll.trigger('click', false);
             // If there are no details to rebuild then return
             if (details === undefined || details === null) {
                 return this;
@@ -3561,10 +3561,12 @@ var DataTable = $.fn.dataTable;
         SearchBuilder.prototype._setClearListener = function () {
             var _this = this;
             this.dom.clearAll.unbind('click');
-            this.dom.clearAll.on('click.dtsb', function () {
+            this.dom.clearAll.on('click.dtsb', function (e, draw) {
                 _this.s.topGroup = new Group(_this.s.dt, _this.c, undefined, undefined, undefined, undefined, _this.s.serverData);
                 _this._build();
-                _this.s.dt.draw();
+                if (draw !== false) {
+                    _this.s.dt.draw();
+                }
                 _this.s.topGroup.setListeners();
                 _this.dom.clearAll.remove();
                 _this._setEmptyListener();
