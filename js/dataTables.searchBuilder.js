@@ -1528,10 +1528,11 @@ var DataTable = $.fn.dataTable;
                     }
                 }
             }
-            if (!that.c.enterSearch &&
+            if ((!that.c.enterSearch &&
                 !(that.s.dt.settings()[0].oInit.search !== undefined &&
-                    that.s.dt.settings()[0].oInit.search["return"]) ||
-                code === 13) {
+                    that.s.dt.settings()[0].oInit.search["return"])) ||
+                code === 13 ||
+                el.nodeName.toLowerCase() === 'select') {
                 // Trigger a search
                 that.doSearch();
             }
