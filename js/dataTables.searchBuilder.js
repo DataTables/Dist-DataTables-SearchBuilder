@@ -1320,7 +1320,7 @@ var DataTable = $.fn.dataTable;
         Criteria.initDate = function (that, fn, preDefined) {
             if (preDefined === void 0) { preDefined = null; }
             var searchDelay = that.s.dt.settings()[0].searchDelay;
-            var i18n = that.s.dt.i18n('datetime', {});
+            var i18n = that.s.dt.i18n('datetime', {}, false);
             // Declare date element using DataTables dateTime plugin
             var el = $$3('<input/>')
                 .addClass(Criteria.classes.value)
@@ -1362,7 +1362,7 @@ var DataTable = $.fn.dataTable;
             var _this = this;
             if (preDefined === void 0) { preDefined = null; }
             var searchDelay = that.s.dt.settings()[0].searchDelay;
-            var i18n = that.s.dt.i18n('datetime', {});
+            var i18n = that.s.dt.i18n('datetime', {}, false);
             // Declare all of the date elements that are required using DataTables dateTime plugin
             var els = [
                 $$3('<input/>')
