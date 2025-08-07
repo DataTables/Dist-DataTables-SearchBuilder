@@ -1470,7 +1470,9 @@ var DataTable = $.fn.dataTable;
             for (var _i = 0, el_3 = el; _i < el_3.length; _i++) {
                 var element = el_3[_i];
                 if (element.is('select')) {
-                    values.push(Criteria._escapeHTML(element.children('option:selected').data('sbv')));
+                    var escapedItems = [].concat(element.children('option:selected').data('sbv'))
+                        .map(function (item) { return Criteria._escapeHTML(item); });
+                    values.push.apply(values, escapedItems);
                 }
             }
             return values;
@@ -2331,6 +2333,8 @@ var DataTable = $.fn.dataTable;
                 isInputValid: Criteria.isInputValidSelect,
                 search: function (value, comparison) {
                     if (value.length === comparison.length) {
+                        // Sort the comparison array to match the already-sorted value array
+                        comparison.sort();
                         for (var i = 0; i < value.length; i++) {
                             if (value[i] !== comparison[i]) {
                                 return false;
@@ -2350,6 +2354,8 @@ var DataTable = $.fn.dataTable;
                 isInputValid: Criteria.isInputValidSelect,
                 search: function (value, comparison) {
                     if (value.length === comparison.length) {
+                        // Sort the comparison array to match the already-sorted value array
+                        comparison.sort();
                         for (var i = 0; i < value.length; i++) {
                             if (value[i] !== comparison[i]) {
                                 return true;
