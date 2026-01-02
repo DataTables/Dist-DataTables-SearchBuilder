@@ -1494,7 +1494,8 @@ let $ = jQuery;
                 !(that.s.dt.settings()[0].oInit.search !== undefined &&
                     that.s.dt.settings()[0].oInit.search["return"])) ||
                 code === 13 ||
-                el.nodeName.toLowerCase() === 'select') {
+                code === undefined || // A click triggered it
+                (el.nodeName && el.nodeName.toLowerCase() === 'select')) {
                 // Trigger a search
                 that.doSearch();
             }
