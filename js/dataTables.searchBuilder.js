@@ -280,16 +280,7 @@ var DataTable = $.fn.dataTable;
                     this.s.type.includes('num') &&
                     (settings.oLanguage.sDecimal !== '' ||
                         settings.oLanguage.sThousands !== '')) {
-                    var splitRD = [rowData[this.s.dataIdx]];
-                    if (settings.oLanguage.sDecimal !== '') {
-                        splitRD = rowData[this.s.dataIdx].split(settings.oLanguage.sDecimal);
-                    }
-                    if (settings.oLanguage.sThousands !== '') {
-                        for (var i = 0; i < splitRD.length; i++) {
-                            splitRD[i] = splitRD[i].replace(settings.oLanguage.sThousands, ',');
-                        }
-                    }
-                    filter = splitRD.join('.');
+                    filter = this.numToDecimal(rowData[this.s.dataIdx]);
                 }
                 // If orthogonal data is in place we need to get it's values for searching
                 if (this.c.orthogonal.search !== 'filter') {
@@ -325,6 +316,30 @@ var DataTable = $.fn.dataTable;
             }
         };
         /**
+         * Convert a formatted number to a "computer" number. Can be replaced with
+         * DataTable.util.conv.numToDecimal with DT3.
+         *
+         * @param input Number to convert
+         * @returns
+         */
+        Criteria.prototype.numToDecimal = function (input) {
+            var settings = this.s.dt.settings()[0];
+            var decimal = settings.oLanguage.sDecimal;
+            var thousands = settings.oLanguage.sThousands;
+            if (typeof input === 'number') {
+                return input.toString();
+            }
+            if (thousands) {
+                var reThousands = new RegExp(DataTable.util.escapeRegex(thousands), 'g');
+                input = input.replace(reThousands, '');
+            }
+            if (decimal) {
+                var reDecimal = new RegExp(DataTable.util.escapeRegex(decimal));
+                input = input.replace(reDecimal, '.');
+            }
+            return input;
+        };
+        /**
          * Gets the details required to rebuild the criteria
          */
         Criteria.prototype.getDetails = function (deFormatDates) {
@@ -336,16 +351,7 @@ var DataTable = $.fn.dataTable;
                 ["num", "num-fmt", "html-num", "html-num-fmt"].includes(this.s.type) &&
                 (settings.oLanguage.sDecimal !== '' || settings.oLanguage.sThousands !== '')) {
                 for (i = 0; i < this.s.value.length; i++) {
-                    var splitRD = [this.s.value[i].toString()];
-                    if (settings.oLanguage.sDecimal !== '') {
-                        splitRD = this.s.value[i].split(settings.oLanguage.sDecimal);
-                    }
-                    if (settings.oLanguage.sThousands !== '') {
-                        for (var j = 0; j < splitRD.length; j++) {
-                            splitRD[j] = splitRD[j].replace(settings.oLanguage.sThousands, ',');
-                        }
-                    }
-                    this.s.value[i] = splitRD.join('.');
+                    this.s.value[i] = this.numToDecimal(this.s.value[i]);
                 }
             }
             else if (this.s.type !== null && deFormatDates) {
