@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
-        <version>1.8.4</version>
+        <version>2.0.0-beta.1</version>
         <id>datatables.net-searchbuilder</id>
         <description>This is SearchBuilder for DataTables</description>
-        <repository type="git" url="https://github.com/DataTables/Dist-DataTables-SearchBuilder.git"/>
+        <repository type="git" url="https://github.com/DataTables/SearchBuilder"/>
         <authors>SpryMedia Ltd</authors>
         <projectUrl>http://datatables.net</projectUrl>
         <license type="expression">MIT</license>
-        <tags>SearchBuilder  Filtering  Search  Datatables jQuery table</tags>
+        <tags>SearchBuilder  Filtering  Search  Datatables table</tags>
         <dependencies>
-            <dependency id="datatables.net" version="2.3.2"/>
+            <dependency id="datatables.net" version="3.0.0-0"/>
         </dependencies>
         <contentFiles>
             <files include="**/*" buildAction="Content"/>
         </contentFiles>
+        <readme>Readme.md</readme>
     </metadata>
     <files>
+        <file src="Readme.md" target=""/>
         <file src="js/dataTables.searchBuilder.js" target="content\Scripts"/>
         <file src="js/dataTables.searchBuilder.js" target="contentFiles\any\any\wwwroot\js"/>
         <file src="js/dataTables.searchBuilder.min.js" target="content\Scripts"/>
@@ -27,4 +29,3 @@
         <file src="js/dataTables.searchBuilder.mjs" target="contentFiles\any\any\wwwroot\js"/>
     </files>
 </package>
-
