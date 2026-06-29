@@ -679,15 +679,20 @@ interface ApiSearchBuilder<T> extends Api<T> {
     container(): Dom;
     /**
      * Gets the details of the current SearchBuilder setup
+     *
+     * @param deFormatDates Boolean flag that indicates whether to de format any
+     *   dates that are found into an ISO8601 format.
      */
-    getDetails(): IDetails$1;
+    getDetails(deFormatDates?: boolean): IDetails$1;
     /**
      * Rebuild the search to a given state.
      *
      * @param state Object of the same structure that is returned from
      *   searchBuilder.getDetails(). This contains all of the details needed to
      *   rebuild the state.
+     * @param redraw Indicate if the host DataTable should be redrawn or not.
+     *   Defaults to `true`.
      * @returns self for chaining
      */
-    rebuild(state: IDetails$1): Api<T>;
+    rebuild(state?: IDetails$1, redraw?: boolean): Api<T>;
 }
