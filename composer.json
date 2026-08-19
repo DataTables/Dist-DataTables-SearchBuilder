@@ -1,6 +1,6 @@
 {
     "name": "datatables.net/datatables.net-searchbuilder",
-    "description": "SearchBuilder adds user defined complex search to the DataTable with the capability to search the DataTable by creating groups and conditions. This is SearchBuilder for DataTables",
+    "description": "SearchBuilder for DataTables",
     "support": {
         "forum": "https://datatables.net/forums",
         "source": "https://github.com/DataTables/Dist-DataTables-SearchBuilder"
@@ -26,6 +26,6 @@
         "table"
     ],
     "require": {
-        "datatables.net/datatables.net": ">=1.12.1"
+        "datatables.net/datatables.net": "^3"
     }
 }
