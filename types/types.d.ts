@@ -611,7 +611,7 @@ type DeepPartial<T> = T extends object ? {
     [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
 declare module 'datatables.net' {
-    interface Config {
+    interface Options {
         /**
          * SearchBuilder extension options
          */
@@ -620,7 +620,7 @@ declare module 'datatables.net' {
     interface Defaults {
         searchBuilder?: ConfigSearchBuilder;
     }
-    interface ConfigLanguage {
+    interface Language {
         /**
          * SearchBuilder language options
          */
@@ -634,7 +634,7 @@ declare module 'datatables.net' {
             conditions: Record<string, ICondition>;
         };
     }
-    interface ColumnContext {
+    interface ColumnOptions {
         searchBuilder?: {
             /** Set a default condition for this column */
             defaultCondition?: number | string;
