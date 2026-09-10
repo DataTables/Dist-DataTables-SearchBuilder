@@ -598,8 +598,8 @@ declare class Criteria {
      */
     private _populateValue;
     /**
-     * Provides throttling capabilities to SearchBuilder without having to use dt's _fnThrottle function
-     * This is because that function is not quite suitable for our needs as it runs initially rather than waiting
+     * Provides debounce capabilities to SearchBuilder. Makes use of DataTables'
+     * utility methods.
      *
      * @param args arguments supplied to the throttle function
      * @returns Function that is to be run that implements the throttling
@@ -634,7 +634,7 @@ declare module 'datatables.net' {
             conditions: Record<string, ICondition>;
         };
     }
-    interface ColumnOptions {
+    interface ColumnContext {
         searchBuilder?: {
             /** Set a default condition for this column */
             defaultCondition?: number | string;
