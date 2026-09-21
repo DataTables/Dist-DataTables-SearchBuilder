@@ -1,14 +1,13 @@
 {
     "name": "datatables.net-searchbuilder",
     "description": "SearchBuilder for DataTables",
-    "main": "js/dataTables.searchBuilder.js",
-    "module": "js/dataTables.searchBuilder.mjs",
+    "main": "./js/dataTables.searchBuilder.js",
+    "module": "./js/dataTables.searchBuilder.mjs",
     "types": "./types/types.d.ts",
     "version": "2.0.1",
     "files": [
-        "js/**/*.js",
-        "js/**/*.mjs",
-        "types/**/*.d.ts"
+        "js",
+        "types"
     ],
     "keywords": [
         "SearchBuilder",
@@ -32,5 +31,16 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/DataTables/SearchBuilder.git"
-    }
+    },
+    "exports": {
+        ".": {
+            "types": "./types/types.d.ts",
+            "import": "./js/dataTables.searchBuilder.mjs",
+            "default": "./js/dataTables.searchBuilder.mjs",
+            "require": "./js/dataTables.searchBuilder.js"
+        },
+        "./js/*": "./js/*",
+        "./package.json": "./package.json"
+    },
+    "sideEffects": true
 }
