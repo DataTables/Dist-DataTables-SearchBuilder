@@ -1,4 +1,4 @@
-/*! SearchBuilder 2.0.1 for DataTables
+/*! SearchBuilder 2.1.0 for DataTables
  * Copyright (c) SpryMedia Ltd - datatables.net/license
  */
 
@@ -3604,7 +3604,7 @@ class SearchBuilder {
         });
     }
 }
-SearchBuilder.version = '2.0.1';
+SearchBuilder.version = '2.1.0';
 SearchBuilder.classes = {
     button: 'dtsb-button',
     clearAll: 'dtsb-clearAll',
