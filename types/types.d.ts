@@ -667,6 +667,18 @@ declare module 'datatables.net' {
         Group: typeof Group;
         Criteria: typeof Criteria;
     }
+    interface AjaxData {
+        /** SearchBuilder Ajax information */
+        searchBuilder?: IDetails$1;
+    }
+    interface State {
+        /** SearchBuilder state object */
+        searchBuilder?: IDetails$1;
+    }
+    interface StateLoad {
+        /** SearchBuilder state object */
+        searchBuilder?: IDetails$1;
+    }
 }
 interface ConfigSearchBuilder extends Partial<IDefaults> {
 }
