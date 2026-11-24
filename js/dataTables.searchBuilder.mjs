@@ -3274,7 +3274,7 @@ class SearchBuilder {
      * @param details The details required to perform a rebuild
      */
     rebuild(details, redraw = true) {
-        this.dom.clearAll.trigger('click', false, [false]);
+        this.dom.clearAll.trigger('click', false);
         // If there are no details to rebuild then return
         if (details === undefined || details === null) {
             return this;
@@ -3414,7 +3414,7 @@ class SearchBuilder {
             // Otherwise load any predefined options
             else if (this.c.preDefined !== false) {
                 this.c.preDefined = this._applyPreDefDefaults(this.c.preDefined);
-                this.rebuild(this.c.preDefined, false);
+                this.rebuild(this.c.preDefined);
             }
         }
         this._setEmptyListener();
