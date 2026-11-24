@@ -10,13 +10,6 @@
 		});
 	}
 	else if (typeof exports === 'object') {
-		// CommonJS
-		var cjsRequires = function (root) {
-			if (! root.DataTable) {
-				require('datatables.net')(root);
-			}
-		};
-
 		if (typeof window === 'undefined') {
 			module.exports = function (root) {
 				if (! root) {
@@ -24,14 +17,20 @@
 					// root. This will give an error otherwise
 					root = window;
 				}
+				
+				var DataTable = root.DataTable ?
+					root.DataTable :
+					require('datatables.net')(root);
 
-				cjsRequires(root);
-				return factory(root, root.document, root.DataTable);
+				return factory(root, root.document, DataTable);
 			};
 		}
 		else {
-			cjsRequires(window);
-			module.exports = factory(window, window.document, window.DataTable);
+			var DataTable = window.DataTable ?
+				window.DataTable :
+				require('datatables.net');
+
+			module.exports = factory(window, window.document, DataTable);
 		}
 	}
 	else {
@@ -3315,7 +3314,7 @@ class SearchBuilder {
      * @param details The details required to perform a rebuild
      */
     rebuild(details, redraw = true) {
-        this.dom.clearAll.trigger('click', false);
+        this.dom.clearAll.trigger('click', false, [false]);
         // If there are no details to rebuild then return
         if (details === undefined || details === null) {
             return this;
@@ -3455,7 +3454,7 @@ class SearchBuilder {
             // Otherwise load any predefined options
             else if (this.c.preDefined !== false) {
                 this.c.preDefined = this._applyPreDefDefaults(this.c.preDefined);
-                this.rebuild(this.c.preDefined);
+                this.rebuild(this.c.preDefined, false);
             }
         }
         this._setEmptyListener();
